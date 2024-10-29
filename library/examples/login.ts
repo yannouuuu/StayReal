@@ -12,8 +12,7 @@ import {
 
 void async function main () {
   const phoneNumber = process.env.PHONE_NUMBER!;
-  const deviceID = process.env.DEVICE_ID!;
-  const session = createSession(deviceID);
+  const session = createSession(process.env.DEVICE_ID!);
   
   await vonage_request_code(session, phoneNumber, [
     {
