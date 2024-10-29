@@ -15,6 +15,7 @@ export { createSession } from "~/core/session";
 // so we can authenticate
 export * from "~/api/auth/vonage/request";
 export * from "~/api/auth/vonage/verify";
+export * from "~/api/moments/last";
 export * from "~/api/person/me";
 
 // so everyone can build their own fetcher

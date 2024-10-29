@@ -38,8 +38,11 @@ export interface PersonMe {
   biography: string
   location: string
   countryCode: string
-  /** @example "europe-west" */
-  region: string // NOTE: could be a server region identifer thing ?
+  /**
+   * used to know which region to check for the bereal moment
+   * @example "europe-west"
+   */
+  region: string
   /** @example "2024-04-12T22:07:19.431Z" */
   createdAt: string,
   isRealPeople: boolean
