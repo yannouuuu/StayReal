@@ -1,67 +1,32 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARKOSE : PUBLIC KEY</title>
+  <meta charset="utf-8">
+  <title>Authentication</title>
 </head>
 <body>
-  <iframe
-    id="arkoseFrame"
-    title="Arkose"
-    src="https://iframe.arkoselabs.com/CCB0863E-D45D-42E9-A6C8-9E8544E8B17E/lightbox.html"
-    style="display: none;"
-  ></iframe>
+  <div id="arkose"></div>
 
-  <script type="module">
-    // NOTE: the public key is also exported as `BEREAL_ARKOSE_PUBLIC_KEY` in the library
-    const publicKey = "CCB0863E-D45D-42E9-A6C8-9E8544E8B17E";
-    
-    /** @type {HTMLIFrameElement} */
-    const frame = document.getElementById('arkoseFrame');
+  <script src="https://client-api.arkoselabs.com/v2/CCB0863E-D45D-42E9-A6C8-9E8544E8B17E/api.js" data-callback="__setup_enforcement" async defer></script>
+  <script>
+    window["__setup_enforcement"] = (enforcement) => {
+      enforcement.setConfig({
+          selector: '#arkose',
+          mode: 'inline',
 
-    window.addEventListener('message', (event) => {
-      if (!event.data || typeof event.data === "object") return;
-      const data = JSON.parse(event.data);
-
-      // let's see what happens under the hood !
-      console.info(data);
-
-      switch (data.eventId) {
-        // once loaded, we can open the challenge (to complete)
-        case "challenge-loaded": {
-          const message = JSON.stringify({
-            publicKey,
-            eventId: "challenge-open"
-          });
-
-          frame.contentWindow.postMessage(message, "*");
-          break;
-        }
-
-        // once the challenge is completed,
-        // we show a prompt so we can copy the session token
-        case "challenge-complete":
-          prompt("session token", data.payload.sessionToken);
-          frame.style.display = "none";
-          break;
-        
-        case "challenge-show":
-          frame.style.display = "block";
-          break;
-        
-        case "challenge-hide":
-          frame.style.display = "none";
-          break;
-        
-        case "challenge-error":
-          alert("An error occurred during verification.");
-          break;
-        
-        default:
-          break;
-      }
-    });
+          onCompleted: (response) => {
+            prompt("GG", response.token);
+          },
+          onReady: () => {
+            console.log("Challenge ready. Please complete the challenge.");
+          },
+          onFailed: () => {
+            alert("Challenge failed. Please try again.");
+          },
+          onError: (response) => {
+            console.error(response.error);
+          }
+      });
+    };
   </script>
 </body>
 </html>
