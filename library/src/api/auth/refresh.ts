@@ -3,9 +3,6 @@ import { BEREAL_CLIENT_SECRET_KEY, BEREAL_DEFAULT_HEADERS } from "~/constants";
 import { BeRealError, type Tokens } from "~/models";
 
 /**
- * 
- * @param session 
- * @param fetcher 
  * @returns new tokens
  */
 export const auth_refresh = async (inputs: {
@@ -20,7 +17,7 @@ export const auth_refresh = async (inputs: {
       "Content-Type": "application/json",
     },
     content: JSON.stringify({
-      client_id: "android", // yes, we're using android here on purpose...
+      client_id: "android",
       grant_type: "refresh_token",
       client_secret: BEREAL_CLIENT_SECRET_KEY,
       refresh_token: inputs.refreshToken

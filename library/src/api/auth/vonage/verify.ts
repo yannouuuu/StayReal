@@ -20,7 +20,7 @@ export const vonage_verify_otp = async (inputs: {
     },
     content: JSON.stringify({
       code: inputs.otp,
-      client_id: "android", // yes, we're using android here on purpose...
+      client_id: "android",
       client_secret: BEREAL_CLIENT_SECRET_KEY,
       phone_number: inputs.phoneNumberUsed,
       device_id: inputs.deviceID

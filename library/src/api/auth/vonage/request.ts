@@ -32,7 +32,7 @@ export const vonage_request_code = async (inputs: {
     },
     content: JSON.stringify({
       tokens: inputs.tokens,
-      client_id: "android", // yes, we're using android here on purpose...
+      client_id: "android",
       client_secret: BEREAL_CLIENT_SECRET_KEY,
       phone_number: inputs.phoneNumber,
       device_id: inputs.deviceID
