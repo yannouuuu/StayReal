@@ -9,9 +9,6 @@ export {
   BEREAL_IOS_BUILD,
 } from "~/constants";
 
-// cute helpers
-export { createSession } from "~/core/session";
-
 // so we can authenticate
 export * from "~/api/auth/vonage/request";
 export * from "~/api/auth/vonage/verify";

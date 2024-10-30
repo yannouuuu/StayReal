@@ -1,6 +1,6 @@
 import { defaultFetcher, type Fetcher } from "@literate.ink/utilities";
 import { BEREAL_DEFAULT_HEADERS } from "~/constants";
-import type { Session } from "~/models";
+import { BeRealError, ExpiredTokenError } from "~/models/errors";
 
 export interface PersonMe {
   id: string
@@ -57,14 +57,24 @@ export interface PersonMe {
   isPrivate: boolean
 }
 
-export const person_me = async (session: Session, fetcher: Fetcher = defaultFetcher): Promise<PersonMe> => {
+export const person_me = async (inputs: {
+  deviceID: string
+  accessToken: string
+}, fetcher: Fetcher = defaultFetcher): Promise<PersonMe> => {
   const response = await fetcher({
     url: new URL("https://mobile.bereal.com/api/person/me"),
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(session.deviceID),
-      authorization: `Bearer ${session.accessToken}`
+      ...BEREAL_DEFAULT_HEADERS(inputs.deviceID),
+      authorization: `Bearer ${inputs.accessToken}`
     }
   });
+
+  if (response.status !== 200) {
+    if (response.status === 401)
+      throw new ExpiredTokenError();
+
+    throw new BeRealError("can't read user data, are you authenticated ?");
+  }
 
   return JSON.parse(response.content);
 };

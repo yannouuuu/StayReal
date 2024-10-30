@@ -1,6 +1,6 @@
 import { defaultFetcher, type Fetcher } from "@literate.ink/utilities";
 import { BEREAL_CLIENT_SECRET_KEY, BEREAL_DEFAULT_HEADERS } from "~/constants";
-import type { Session } from "~/models";
+import { BeRealError } from "~/models";
 
 export const VonageRequestCodeTokenIdentifier = {
   RECAPTCHA: "RE",
@@ -18,23 +18,27 @@ export interface VonageRequestCodeToken {
  * will send an otp code to the phone number.
  * you can use only the ARKOSE token here.
  */
-export const vonage_request_code = async (session: Session, phoneNumber: string, tokens: VonageRequestCodeToken[], fetcher: Fetcher = defaultFetcher): Promise<void> => {
+export const vonage_request_code = async (inputs: {
+  deviceID: string
+  phoneNumber: string
+  tokens: VonageRequestCodeToken[]
+}, fetcher: Fetcher = defaultFetcher): Promise<void> => {
   const response = await fetcher({
     url: new URL("https://auth.bereal.com/token/phone"),
     method: "POST",
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(session.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(inputs.deviceID),
       "Content-Type": "application/json",
     },
     content: JSON.stringify({
-      tokens,
+      tokens: inputs.tokens,
       client_id: "android", // yes, we're using android here on purpose...
       client_secret: BEREAL_CLIENT_SECRET_KEY,
-      phone_number: phoneNumber,
-      device_id: session.deviceID
+      phone_number: inputs.phoneNumber,
+      device_id: inputs.deviceID
     }),
   });
 
   if (response.status !== 204)
-    throw new Error("failed to request code from vonage");
+    throw new BeRealError("failed to request code from vonage");
 };

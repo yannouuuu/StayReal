@@ -1,6 +1,5 @@
 import { defaultFetcher, type Fetcher } from "@literate.ink/utilities";
 import { BEREAL_DEFAULT_HEADERS } from "~/constants";
-import type { Session } from "~/models";
 
 export interface MomentsLast {
   id: string
@@ -13,10 +12,13 @@ export interface MomentsLast {
   localDate: string
 }
 
-export const moments_last = async (session: Session, region: string, fetcher: Fetcher = defaultFetcher): Promise<MomentsLast> => {
+export const moments_last = async (inputs: {
+  deviceID: string,
+  region: string
+}, fetcher: Fetcher = defaultFetcher): Promise<MomentsLast> => {
   const response = await fetcher({
-    url: new URL(`https://mobile.bereal.com/api/bereal/moments/last/${region}`),
-    headers: BEREAL_DEFAULT_HEADERS(session.deviceID)
+    url: new URL(`https://mobile.bereal.com/api/bereal/moments/last/${inputs.region}`),
+    headers: BEREAL_DEFAULT_HEADERS(inputs.deviceID)
   });
 
   return JSON.parse(response.content);

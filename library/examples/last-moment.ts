@@ -1,20 +1,25 @@
 import "./_env"; // dotenv configuration
-import { createSession, moments_last, person_me } from "../src";
+import { moments_last, person_me } from "../src";
 
 void async function main () {
-  const session = createSession(process.env.DEVICE_ID!, {
-    access_token: process.env.ACCESS_TOKEN
-  });
+  const deviceID = process.env.DEVICE_ID!;
 
   let region: string;
   try { // get the region from the user, if possible
-    const me = await person_me(session);
+    const accessToken = process.env.ACCESS_TOKEN!;
+
+    const me = await person_me({
+      deviceID,
+      accessToken
+    });
+
     region = me.region;
   }
   catch { // default to europe-west because why not
     region = "europe-west";
   }
 
-  const last_moment = await moments_last(session, region);
+  // NOTE: you don't have to be authenticated to make this request !
+  const last_moment = await moments_last({ deviceID, region });
   console.dir(last_moment, { depth: Infinity }); 
 }();
