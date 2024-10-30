@@ -9,6 +9,7 @@ This project wouldn't be possible without the following projects:
 - <https://github.com/macedonga/beunblurred>
 - <https://github.com/s-alad/toofake>
 - <https://github.com/Smart123s/BeFake>
+- <https://bereal.fowled.dev>
 
 Most of *StayReal* is based on their research and code.
 
