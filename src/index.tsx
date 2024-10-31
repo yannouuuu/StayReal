@@ -21,6 +21,10 @@ const routes = [
     path: "/login",
     component: lazy(() => import("./views/login"))
   },
+  {
+    path: "/profile",
+    component: lazy(() => import("./views/profile"))
+  },
 ]
 
 render(() => (
