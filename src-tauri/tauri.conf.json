@@ -15,7 +15,6 @@
         "title": "StayReal",
         "width": 400,
         "height": 800,
-        // "resizable": true,
         "fullscreen": false
       }
     ],
