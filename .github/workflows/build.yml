@@ -146,11 +146,30 @@ jobs:
           pnpm tauri android init
           pnpm tauri android build
           
+      - name: Configure Xcode project for development build
+        if: matrix.target == 'ios'
+        run: |
+          cd src-tauri/gen/apple
+          # Set CODE_SIGN_IDENTITY to empty string for ad-hoc signing
+          /usr/libexec/PlistBuddy -c "Add :CODE_SIGN_IDENTITY string ''" stayreal.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Add :CODE_SIGN_IDENTITY[sdk=iphoneos*] string ''" stayreal.xcodeproj/project.pbxproj
+          # Disable code signing
+          /usr/libexec/PlistBuddy -c "Add :CODE_SIGNING_REQUIRED NO" stayreal.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Add :CODE_SIGNING_ALLOWED NO" stayreal.xcodeproj/project.pbxproj
+          
       - name: Build iOS App
         if: matrix.target == 'ios'
         run: |
           pnpm tauri ios init
-          pnpm tauri ios build
+          xcodebuild \
+            -project src-tauri/gen/apple/stayreal.xcodeproj \
+            -scheme stayreal_iOS \
+            -configuration Release \
+            -sdk iphoneos \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build
         
       - name: Upload Android artifacts
         if: matrix.target == 'android'
@@ -165,5 +184,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: StayReal-iOS
-          path: src-tauri/target/ios/release/*.ipa
+          path: src-tauri/gen/apple/build/Release-iphoneos/*.app
           if-no-files-found: error
