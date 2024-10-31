@@ -36,12 +36,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-  
+
       - name: Install pnpm
         run: |
           corepack enable
           corepack prepare pnpm@latest --activate
-  
+
       - name: Install dependencies
         run: pnpm install
 
@@ -77,52 +77,67 @@ jobs:
           if-no-files-found: ignore
 
   build-mobile:
-    runs-on: macos-latest
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest'
+            target: 'android'
+          - platform: 'macos-latest'
+            target: 'ios'
+      
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
-
+    
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-
+    
       - name: Install pnpm
         run: |
           corepack enable
           corepack prepare pnpm@latest --activate
-
+    
       - name: Install dependencies
         run: pnpm install
-
+    
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
-
+    
       - name: Install Cargo Mobile2
         run: |
           cargo install --git https://github.com/tauri-apps/cargo-mobile2.git
-
+    
       - name: Build Android
+        if: matrix.target == 'android'
         run: |
           cargo mobile android build --release
-
+    
       - name: Build iOS
+        if: matrix.target == 'ios'
         run: |
           cargo mobile ios build --release
-
+    
       - name: Upload Android artifacts
+        if: matrix.target == 'android'
         uses: actions/upload-artifact@v3
         with:
           name: StayReal-Android
           path: target/android/release/apk/*.apk
           if-no-files-found: ignore
-
+    
       - name: Upload iOS artifacts
+        if: matrix.target == 'ios'
         uses: actions/upload-artifact@v3
         with:
           name: StayReal-iOS
