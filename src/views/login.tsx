@@ -3,9 +3,12 @@ import { createStore } from "solid-js/store";
 import Arkose from "../components/arkose";
 import { BEREAL_ARKOSE_PUBLIC_KEY, vonage_request_code, vonage_verify_otp, VonageRequestCodeTokenIdentifier } from "../api";
 import { v4 as uuidv4 } from "uuid";
+import auth from "../stores/auth";
+import { useNavigate } from "@solidjs/router";
 
 const LoginView: Component = () => {
   let arkose: any;
+  const navigate = useNavigate();
 
   const [state, setState] = createStore({
     step: "phone" as ("phone" | "otp"),
@@ -47,7 +50,13 @@ const LoginView: Component = () => {
           otp: state.otp.trim()
         });
 
-        console.log(tokens)
+        auth.set({
+          deviceID: state.deviceID,
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token
+        });
+
+        navigate("/feed");
       }
     }
     catch (e) {
