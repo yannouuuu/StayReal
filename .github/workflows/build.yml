@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - '*'
-  workflow_dispatch:
 
 jobs:
   build-desktop:
@@ -37,17 +36,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: 'pnpm'
 
       - name: install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: latest
-
-      - name: setup node with pnpm caching
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: 'pnpm'
+        run: npm install -g pnpm
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -95,7 +87,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: 'pnpm'
+          cache: 'npm'
 
       - name: Install pnpm
         run: npm install -g pnpm
