@@ -1,7 +1,30 @@
 /* @refresh reload */
 import "virtual:uno.css";
 import "@unocss/reset/tailwind.css";
-import { render } from "solid-js/web";
-import LoginView from "./views/login";
 
-render(() => <LoginView />, document.getElementById("root") as HTMLElement);
+import { lazy } from "solid-js";
+import { render } from "solid-js/web";
+import { Router } from "@solidjs/router";
+
+import SplashView from "./views/splash";
+
+const routes = [
+  {
+    path: "/",
+    component: SplashView
+  },
+  {
+    path: "/feed",
+    component: lazy(() => import("./views/feed"))
+  },
+  {
+    path: "/login",
+    component: lazy(() => import("./views/login"))
+  },
+]
+
+render(() => (
+  <Router>
+    {routes}
+  </Router> 
+), document.getElementById("root") as HTMLDivElement);
