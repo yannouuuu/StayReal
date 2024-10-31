@@ -103,8 +103,9 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install Cargo Mobile
-        run: cargo install cargo-mobile
+      - name: Install Cargo Mobile2
+        run: |
+          cargo install --git https://github.com/tauri-apps/cargo-mobile2.git
 
       - name: Build Android
         run: |
