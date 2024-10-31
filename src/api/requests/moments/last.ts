@@ -1,3 +1,4 @@
+import auth from "../../../stores/auth";
 import { BEREAL_DEFAULT_HEADERS } from "../../constants";
 import { fetch } from "@tauri-apps/plugin-http";
 
@@ -12,12 +13,9 @@ export interface MomentsLast {
   localDate: string
 }
 
-export const moments_last = async (inputs: {
-  deviceID: string,
-  region: string
-}): Promise<MomentsLast> => {
-  const response = await fetch(`https://mobile.bereal.com/api/bereal/moments/last/${inputs.region}`, {
-    headers: BEREAL_DEFAULT_HEADERS(inputs.deviceID)
+export const moments_last = async (region: string): Promise<MomentsLast> => {
+  const response = await fetch(`https://mobile.bereal.com/api/bereal/moments/last/${region}`, {
+    headers: BEREAL_DEFAULT_HEADERS(auth.store.deviceID)
   });
 
   return response.json();

@@ -1,6 +1,7 @@
 import { BEREAL_DEFAULT_HEADERS } from "../../constants";
-import { BeRealError, ExpiredTokenError } from "../../models/errors";
 import { fetch } from "@tauri-apps/plugin-http";
+import { ApiMedia } from "../../types/media";
+import auth from "../../../stores/auth";
 
 export interface PersonMe {
   id: string
@@ -8,20 +9,10 @@ export interface PersonMe {
   /** @example "2005-10-06T00:00:00.000Z" */
   birthdate: string
   fullname: string
-  profilePicture: {
-    url: string
-    // 1000px for them
-    width: number
-    height: number
-  }
+  profilePicture: ApiMedia | null
   realmojis: Array<{
     emoji: string
-    media: {
-      url: string
-      // 500px for them
-      width: number
-      height: number
-    }
+    media: ApiMedia
   }>
   devices: Array<{
     clientVersion: string
@@ -46,7 +37,7 @@ export interface PersonMe {
   /** @example "2024-04-12T22:07:19.431Z" */
   createdAt: string,
   isRealPeople: boolean
-  userFreshness: "returning" // NOTE: should be an enum ?
+  userFreshness: "returning" | "new"
   streakLength: number
   /** @example "2024-10-14T10:05:31.618Z" */
   lastBtsPostAt: string
@@ -57,22 +48,18 @@ export interface PersonMe {
   isPrivate: boolean
 }
 
-export const person_me = async (inputs: {
-  deviceID: string
-  accessToken: string
-}): Promise<PersonMe> => {
+export const person_me = async (): Promise<PersonMe> => {
   const response = await fetch("https://mobile.bereal.com/api/person/me", {
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(inputs.deviceID),
-      authorization: `Bearer ${inputs.accessToken}`
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      authorization: `Bearer ${auth.store.accessToken}`
     }
   });
 
-  if (response.status !== 200) {
-    if (response.status === 401)
-      throw new ExpiredTokenError();
-
-    throw new BeRealError("can't read user data, are you authenticated ?");
+  // if token expired, refresh it and retry
+  if (response.status === 401) {
+    await auth.refresh();
+    return person_me();
   }
 
   return response.json();
