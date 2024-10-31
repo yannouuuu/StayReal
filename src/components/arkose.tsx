@@ -1,6 +1,6 @@
 import { createScriptLoader } from "@solid-primitives/script-loader";
 
-import { createSignal, onMount, type Component } from "solid-js";
+import { onMount, type Component } from "solid-js";
 
 const ARKOSE_DATA_CALLBACK = "__arkose__callback__";
 const Arkose: Component<{
@@ -8,8 +8,6 @@ const Arkose: Component<{
   onLoad: (arkose: any) => void
   onVerify: (token?: string) => void
 }> = (props) => {
-  const [loading, setLoading] = createSignal(true);
-
   createScriptLoader({
     src: `https://client-api.arkoselabs.com/v2/${props.key}/api.js`,
     async: true,
@@ -22,7 +20,6 @@ const Arkose: Component<{
     window[ARKOSE_DATA_CALLBACK] = (enforcement: any) => {
       enforcement.setConfig({
         onReady: () => {
-          setLoading(false);
           props.onLoad(enforcement);
         },
         onCompleted: (response: any) => {
@@ -35,11 +32,7 @@ const Arkose: Component<{
     };
   })
   
-  return (
-    <div>
-      {loading() && <p>Loading...</p>}
-    </div> 
-  )
+  return <></>
 };
 
 export default Arkose;
