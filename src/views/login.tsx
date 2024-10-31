@@ -69,59 +69,93 @@ const LoginView: Component = () => {
   }
   
   return (
-    <div>
-      <h1>Login</h1>
-
-      <form onSubmit={(event) => {
-        event.preventDefault();
-        runAuthentication();
-      }}>
-        <Arkose
-          key={BEREAL_ARKOSE_PUBLIC_KEY}
-          onLoad={(enforcement) => (arkose = enforcement)}
-          onVerify={(token) => {
-            if (token) {
-              setState("arkoseToken", token);
-              runAuthentication();
-            }
-          }}
-        />
-
-        <p>your device id: {state.deviceID}</p>
-        <Show when={state.loading}>
-          <p>we're loading...</p>
+    <main class="h-screen flex flex-col px-4 py-6">
+      <header class="flex items-center relative w-full h-8">
+        <Show when={state.step === "otp"}>
+          <button type="button"
+            onClick={() => {
+              setState({
+                arkoseToken: "",
+                step: "phone",
+                otp: "",
+              });
+            }}
+          >
+            {"<"}
+          </button>
         </Show>
 
-        <Show when={state.step === "phone"}>
-          <label>
-            Phone Number:
-            <input
-              type="text"
-              value={state.phoneNumber}
-              onInput={e => setState("phoneNumber", e.currentTarget.value)}
-            />
-          </label>
+        <h1 class="absolute inset-x-0 w-fit mx-auto text-2xl text-center text-white font-700">
+          StayReal.
+        </h1>
+      </header>
 
-          <button type="submit" disabled={state.loading}>
-            Send OTP
+      <p class="py-10 text-center font-600">
+        {state.step === "phone" ? "What's your phone number?" : "Check your number"}
+      </p>
+
+      <form
+        class="flex flex-col gap-4 h-full"
+        onSubmit={(event) => {
+          event.preventDefault();
+          runAuthentication();
+        }}
+      >
+        <Show when={state.step === "phone"}>
+          <Arkose
+            key={BEREAL_ARKOSE_PUBLIC_KEY}
+            onLoad={(enforcement) => (arkose = enforcement)}
+            onVerify={(token) => {
+              if (token) {
+                setState("arkoseToken", token);
+                runAuthentication();
+              }
+            }}
+          />
+
+          <input 
+            class="w-full max-w-280px mx-auto rounded-2xl py-3 px-4 text-white bg-white/5 text-2xl font-600 tracking-wide outline-none placeholder:text-white/40 focus:(outline outline-white outline-offset-2)"
+            type="text"
+            inputMode="tel"
+            value={state.phoneNumber}
+            onInput={e => setState("phoneNumber", e.currentTarget.value)}
+            placeholder="+33 6 12 34 56 78"
+          />
+
+          <p class="mt-8 text-sm text-center px-4 text-white/75">
+            By continuing, you agree that StayReal is not affiliated with BeReal and that you are using this service at your own risk.
+          </p>
+
+          <button type="submit" disabled={state.loading || !state.phoneNumber}
+            class="text-black bg-white rounded-2xl w-full py-3 mt-auto focus:(outline outline-white outline-offset-2) disabled:opacity-30"
+          >
+            Send Verification Text
           </button>
         </Show>
         <Show when={state.step === "otp"}>
-          <label>
-            OTP:
-            <input
-              type="text"
-              value={state.otp}
-              onInput={e => setState("otp", e.currentTarget.value)}
-            />
-          </label>
+          <input 
+            class="w-full max-w-160px mx-auto rounded-2xl py-3 px-4 text-white text-center bg-transparent text-2xl font-600 outline-none placeholder:text-white/40 tracking-widest focus:(outline outline-white outline-offset-2)"
+            type="text"
+            maxLength={6}
+            inputMode="numeric"
+            value={state.otp}
+            onInput={e => setState("otp", e.currentTarget.value)}
+            placeholder="••••••"
+          />
 
-          <button type="submit" disabled={state.loading}>
-            Verify OTP
+          <p class="mt-8 text-sm text-center px-4 text-white/75">
+            Verification code sent to {state.phoneNumber}
+          </p>
+
+          <button type="submit" disabled={state.loading || state.otp.length !== 6}
+            class="text-black bg-white rounded-2xl w-full py-3 mt-auto focus:(outline outline-white outline-offset-2) disabled:opacity-30"
+          >
+            Check Verification Code
           </button>
         </Show>
+        <p class="text-white/40 text-xs text-center">device-id: {state.deviceID}</p>
       </form>
-    </div>
+    </main>
   );
 };
 
