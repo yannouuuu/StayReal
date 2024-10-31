@@ -2,12 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- https://stackoverflow.com/a/27127145 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi">
     <meta name="theme-color" content="#000000">
     <title>StayReal</title>
+
+    <style>
+      /* https://stackoverflow.com/a/60516252 */
+      :root {
+        touch-action: pan-x pan-y;
+        height: 100% 
+      }
+    </style>
   </head>
 
-  <body class="bg-#1e1e1e text-white">
+  <body class="font-sans bg-black text-white select-none">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
 
