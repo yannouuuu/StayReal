@@ -109,9 +109,16 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Android SDK
+      - name: Setup Android SDK & NDK
         if: matrix.target == 'android'
         uses: android-actions/setup-android@v3
+
+      - name: Install Android NDK
+        if: matrix.target == 'android'
+        run: |
+          echo "y" | sdkmanager --install "ndk;25.2.9519653"
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
+          echo "NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -133,6 +140,8 @@ jobs:
 
       - name: Build Android App
         if: matrix.target == 'android'
+        env:
+          NDK_HOME: ${{ env.NDK_HOME }}
         run: |
           pnpm tauri android init
           pnpm tauri android build
