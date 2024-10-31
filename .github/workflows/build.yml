@@ -104,15 +104,15 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install Cargo Mobile
-        run: cargo install cargo-mobile2
+        run: cargo install cargo-mobile
 
       - name: Build Android
         run: |
-          cargo mobile2 android build --release
-          
+          cargo mobile android build --release
+
       - name: Build iOS
         run: |
-          cargo mobile2 ios build --release
+          cargo mobile ios build --release
 
       - name: Upload Android artifacts
         uses: actions/upload-artifact@v3
