@@ -102,35 +102,59 @@ jobs:
           corepack enable
           corepack prepare pnpm@latest --activate
 
-      - name: Install Android SDK and NDK
-        run: |
-          mkdir -p $HOME/Android/Sdk
-          echo "y" | sdkmanager --sdk_root=$HOME/Android/Sdk --install "platform-tools" "platforms;android-30" "ndk;21.3.6528147"
-          echo "NDK_HOME=$HOME/Android/Sdk/ndk/21.3.6528147" >> $GITHUB_ENV
+      - name: Setup Java
+        if: matrix.target == 'android'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
 
+      - name: Setup Android SDK
+        if: matrix.target == 'android'
+        uses: android-actions/setup-android@v3
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install iOS dependencies
+        if: matrix.target == 'ios'
+        run: |
+          rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
+          xcode-select --install || true
+          
+      - name: Install Android dependencies
+        if: matrix.target == 'android'
+        run: |
+          rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+          cargo install cargo-ndk
+          
       - name: Install dependencies
         run: pnpm install
-        
-      - name: Build Mobile App
+
+      - name: Build Android App
+        if: matrix.target == 'android'
         run: |
-          if [ "${{ matrix.target }}" == "android" ]; then
-            pnpm tauri android build
-          else
-            pnpm tauri ios build
-          fi
+          pnpm tauri android init
+          pnpm tauri android build
+          
+      - name: Build iOS App
+        if: matrix.target == 'ios'
+        run: |
+          pnpm tauri ios init
+          pnpm tauri ios build
         
       - name: Upload Android artifacts
         if: matrix.target == 'android'
         uses: actions/upload-artifact@v3
         with:
           name: StayReal-Android
-          path: target/android/release/apk/*.apk
-          if-no-files-found: ignore
+          path: src-tauri/target/android/release/app/build/outputs/apk/universal/release/*.apk
+          if-no-files-found: error
         
       - name: Upload iOS artifacts
         if: matrix.target == 'ios'
         uses: actions/upload-artifact@v3
         with:
           name: StayReal-iOS
-          path: target/ios/release/*.ipa
-          if-no-files-found: ignore
+          path: src-tauri/target/ios/release/*.ipa
+          if-no-files-found: error
