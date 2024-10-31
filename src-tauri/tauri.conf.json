@@ -33,5 +33,15 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "tauri": {
+    "mobile": {
+      "android": {
+        "package": "com.vexcited.stayreal"
+      },
+      "ios": {
+        "developmentTeam": "YOUR_TEAM_ID"
+      }
+    }
   }
 }

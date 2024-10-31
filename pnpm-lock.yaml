@@ -48,6 +48,12 @@ importers:
       '@tauri-apps/cli':
         specifier: ^2
         version: 2.0.4
+      '@tauri-apps/cli-darwin-arm64':
+        specifier: ^2.0.4
+        version: 2.0.4
+      '@tauri-apps/cli-darwin-x64':
+        specifier: ^2.0.4
+        version: 2.0.4
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -806,7 +812,6 @@ packages:
   '@tauri-apps/cli-darwin-arm64@2.0.4':
     resolution: {integrity: sha512-siH7rOHobb16rPbc11k64p1mxIpiRCkWmzs2qmL5IX21Gx9K5onI3Tk67Oqpf2uNupbYzItrOttaDT4NHFC7tw==}
     engines: {node: '>= 10'}
-    cpu: [arm64]
     os: [darwin]
 
   '@tauri-apps/cli-darwin-x64@2.0.4':
@@ -2163,11 +2168,9 @@ snapshots:
 
   '@tauri-apps/api@2.0.3': {}
 
-  '@tauri-apps/cli-darwin-arm64@2.0.4':
-    optional: true
+  '@tauri-apps/cli-darwin-arm64@2.0.4': {}
 
-  '@tauri-apps/cli-darwin-x64@2.0.4':
-    optional: true
+  '@tauri-apps/cli-darwin-x64@2.0.4': {}
 
   '@tauri-apps/cli-linux-arm-gnueabihf@2.0.4':
     optional: true
