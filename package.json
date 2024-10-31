@@ -1,10 +1,33 @@
 {
-  "name": "@stayreal/monorepo",
+  "name": "stayreal",
+  "version": "0.1.0",
   "author": "Mikkel ALMONTE--RINGAUD <vexitofficial@gmail.com>",
   "repository": "https://github.com/Vexcited/StayReal",
+  "type": "module",
+  "scripts": {
+    "dev:web": "vite",
+    "build:web": "vite build",
+    "tauri": "tauri"
+  },
   "license": "GPL-3.0-or-later",
-  "workspaces": [
-    "library",
-    "app"
-  ]
+  "dependencies": {
+    "@noble/hashes": "^1.5.0",
+    "@scure/base": "^1.1.9",
+    "@solid-primitives/script-loader": "^2.2.0",
+    "@solidjs/router": "^0.15.0",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-http": "~2",
+    "@tauri-apps/plugin-shell": "^2",
+    "@unocss/reset": "^0.63.6",
+    "solid-js": "^1.9.3",
+    "stayreal": "workspace:*",
+    "uuid": "^11.0.2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "typescript": "^5.6.3",
+    "unocss": "^0.63.6",
+    "vite": "^5.3.1",
+    "vite-plugin-solid": "^2.10.2"
+  }
 }

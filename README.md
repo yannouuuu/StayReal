@@ -1,6 +1,6 @@
 # StayReal
 
-A work in progress library and open-source app for BeReal.
+A work in progress open-source client for BeReal.
 
 ## Credits
 
