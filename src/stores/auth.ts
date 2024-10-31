@@ -1,6 +1,7 @@
 import { createRoot } from "solid-js";
 import { createStore } from "solid-js/store";
 import { makePersisted } from "@solid-primitives/storage"
+import { auth_refresh } from "../api";
 
 export default createRoot(() => {
   const [store, set] = makePersisted(createStore({
@@ -9,5 +10,14 @@ export default createRoot(() => {
     refreshToken: "",
   }), { name: "auth" });
 
-  return { store, set };
+  const refresh = async () => {
+    const tokens = await auth_refresh();
+
+    set({
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token,
+    });
+  };
+
+  return { store, set, refresh };
 });
