@@ -113,7 +113,7 @@ jobs:
 
       - name: Build iOS
         run: |
-          cargo mobile ios build --release
+          cargo mobile ios build --release --unsigned
 
       - name: Upload Android artifacts
         uses: actions/upload-artifact@v3
