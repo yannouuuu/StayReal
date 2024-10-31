@@ -1,6 +1,6 @@
 /* @refresh reload */
-import "virtual:uno.css";
 import "@unocss/reset/tailwind.css";
+import "virtual:uno.css";
 
 import { lazy } from "solid-js";
 import { render } from "solid-js/web";
