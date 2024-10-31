@@ -5,7 +5,7 @@ const ProfileView: Component = () => {
   const [me] = createResource(person_me);
 
   return (
-    <div class="bg-black min-h-100vh">
+    <>
       <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent py-2">
         <nav class="flex items-center justify-between px-4">
           <a href="/feed">
@@ -76,10 +76,8 @@ const ProfileView: Component = () => {
             </>
           )}
         </Show>
-        
       </main>
-
-    </div>
+    </>
   )
 };
 
