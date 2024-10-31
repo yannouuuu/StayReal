@@ -1,5 +1,6 @@
 /* @refresh reload */
 import "@unocss/reset/tailwind.css";
+import '@fontsource-variable/inter';
 import "virtual:uno.css";
 
 import { lazy } from "solid-js";
