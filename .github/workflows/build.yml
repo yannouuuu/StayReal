@@ -104,8 +104,9 @@ jobs:
 
       - name: Install Android SDK and NDK
         run: |
-          echo "y" | sdkmanager --install "platform-tools" "platforms;android-30" "ndk;21.3.6528147"
-          echo "NDK_HOME=$(dirname $(dirname $(which ndk-build)))" >> $GITHUB_ENV
+          mkdir -p $HOME/Android/Sdk
+          echo "y" | sdkmanager --sdk_root=$HOME/Android/Sdk --install "platform-tools" "platforms;android-30" "ndk;21.3.6528147"
+          echo "NDK_HOME=$HOME/Android/Sdk/ndk/21.3.6528147" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: pnpm install
