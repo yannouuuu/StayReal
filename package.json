@@ -23,6 +23,7 @@
     "@unocss/reset": "^0.63.6",
     "solid-js": "^1.9.3",
     "stayreal": "workspace:*",
+    "swiper": "^11.1.14",
     "uuid": "^11.0.2"
   },
   "devDependencies": {

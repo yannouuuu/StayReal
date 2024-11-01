@@ -44,6 +44,9 @@ importers:
       stayreal:
         specifier: workspace:*
         version: 'link:'
+      swiper:
+        specifier: ^11.1.14
+        version: 11.1.14
       uuid:
         specifier: ^11.0.2
         version: 11.0.2
@@ -1522,6 +1525,10 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
 
+  swiper@11.1.14:
+    resolution: {integrity: sha512-VbQLQXC04io6AoAjIUWuZwW4MSYozkcP9KjLdrsG/00Q/yiwvhz9RQyt0nHXV10hi9NVnDNy1/wv7Dzq1lkOCQ==}
+    engines: {node: '>= 4.7.0'}
+
   thenify-all@1.6.0:
     resolution: {integrity: sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo64+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==}
     engines: {node: '>=0.8'}
@@ -2988,6 +2995,8 @@ snapshots:
       mz: 2.7.0
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
+
+  swiper@11.1.14: {}
 
   thenify-all@1.6.0:
     dependencies:
