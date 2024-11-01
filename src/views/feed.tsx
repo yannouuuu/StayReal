@@ -112,7 +112,7 @@ const FeedView: Component = () => {
           {feed => (
             <>
               <Show when={feed().userPosts} fallback={
-                <div class="text-center flex flex-col gap-1">
+                <div class="text-center flex flex-col gap-1 px-4">
                   <p class="">
                     You haven't posted any BeReal today !
                   </p>
