@@ -1,12 +1,13 @@
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
-import unocss from "unocss/vite"
+import icons from "unplugin-icons/vite";
+import unocss from "unocss/vite";
 
 const host = process.env.TAURI_DEV_HOST;
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [unocss(), solid()],
+  plugins: [unocss(), icons({ compiler: "solid" }), solid()],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //

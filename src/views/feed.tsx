@@ -1,68 +1,146 @@
-import { createResource, For, Show, type Component } from "solid-js";
-import { feeds_friends } from "../api/requests/feeds/friends";
+import { createEffect, createResource, createSignal, For, onCleanup, Show, type Component } from "solid-js";
+import { feeds_friends, PostsOverview } from "../api/requests/feeds/friends";
+import UserPostedRealMojis from "../components/feed/realmojis";
+import { moments_last, person_me } from "../api";
+import FeedFriendsOverview from "../components/feed/friends/Overview";
+import MdiPeople from '~icons/mdi/people';
+
+import "swiper/css";
+import Swiper from "swiper";
 
 const FeedView: Component = () => {
   const [feed] = createResource(feeds_friends);
+  const [me] = createResource(person_me);
+  const [moment] = createResource(me, (me) => moments_last(me.region))
+
+  const SwipingUserPosts: Component<{overview: PostsOverview}> = (props) => {
+    let container: HTMLDivElement | undefined;
+    let pagination: HTMLDivElement | undefined;
+
+    const [activeIndex, setActiveIndex] = createSignal(0);
+    const activePost = () => props.overview.posts[activeIndex()];
+
+    createEffect(() => {
+      if (!container || !pagination) return;
+
+      const swiper = new Swiper(container, {
+        spaceBetween: 12,
+        slidesPerView: "auto",
+        centeredSlides: true,
+        
+        pagination: {
+          el: pagination
+        },
+
+        on: {
+          slideChange: () => setActiveIndex(swiper.activeIndex)
+        }
+      });
+
+      onCleanup(() => swiper.destroy());
+    });
+
+    return (
+      <div>
+        <div class="swiper" ref={container}>
+          <div class="swiper-wrapper py-5">
+            <For each={props.overview.posts}>
+              {(post, index) => (
+                <div class="relative swiper-slide w-fit! transition-all duration-300"
+                  style={{
+                    transform: activeIndex() === index() ? "scale(1)" : "scale(.9)",
+                    opacity: activeIndex() === index() ? 1 : .5
+                  }}
+                >
+                  <img class="h-11 w-auto absolute top-1 left-1 z-10 rounded-md border border-black shadow-lg" src={post.secondary.url} />
+                  <img class="rounded-lg h-140px" src={post.primary.url} />
+
+                  <div class="absolute flex justify-center z-20 -bottom-4 inset-x-0 -space-x-2">
+                    <UserPostedRealMojis post={post} />
+                  </div>
+                </div>
+              )}
+            </For>
+          </div>
+
+          <div ref={pagination} />
+        </div>
+
+        <p class="text-sm text-center">
+          {activePost().caption}
+        </p>
+        <p class="text-sm text-center text-white/50">
+          {new Date(activePost().postedAt).toLocaleString()}
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div>
       <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent py-2">
-        <nav class="flex items-center justify-between px-4">
-          <p>friends</p>
-          <p class="text-lg text-center text-white font-600">StayReal.</p>
+        <nav class="flex items-center justify-between px-4 py-1">
+          <MdiPeople class="text-xl" />
+
+          <p class="absolute inset-x-0 w-fit mx-auto text-2xl text-center text-white font-700">StayReal.</p>
+
           <a href="/profile">
-            <img src={feed()?.userPosts.user.profilePicture.url} alt={feed()?.userPosts.user.username} class="w-8 h-8 rounded-full" />
+            <Show when={me()?.profilePicture}
+              fallback={
+                <div>
+                  <p>{me()?.username[0] || "?"}</p>
+                </div>
+              }
+            >
+              {profilePicture => (
+                <img
+                  class="w-8 h-8 rounded-full"
+                  src={profilePicture().url}
+                  alt={me()?.username}
+                />
+              )}
+            </Show>
           </a>
         </nav>
       </header>
 
-      <main class="pt-16">
-        <Show when={feed()} fallback={<p>loading...</p>}>
+      <main class="py-16">
+        <Show when={feed()} fallback={
+          <p class="text-center">
+            finding your feed...
+          </p>
+        }>
           {feed => (
             <>
-              <div class="flex overflow-x-auto">
-                <For each={feed().userPosts.posts}>
-                  {post => (
-                    <div class="max-w-140px w-full flex-shrink-0">
-                      <div class="relative h-auto">
-                        <img class="h-16 w-auto absolute top-2 left-2 z-10 rounded-lg border border-black shadow-lg" src={post.secondary.url} />
-                        <img class="rounded-xl" src={post.primary.url} />
-                      </div>
-
-                      <p class="text-sm">
-                        {post.caption}
+              <Show when={feed().userPosts} fallback={
+                <div class="text-center flex flex-col gap-1 px-4">
+                  <p class="">
+                    You haven't posted any BeReal today !
+                  </p>
+                  <Show when={moment()}>
+                    {moment => (
+                      <p class="text-white/50">
+                        Started at {new Date(moment().startDate).toLocaleTimeString()},
+                        you're late of {new Date().getTime() - new Date(moment().endDate).getTime()} milliseconds
                       </p>
-                    </div>
-                  )}
+                    )}
+                  </Show>
+                </div>
+              }>
+                {overview => <SwipingUserPosts overview={overview()} />}
+              </Show>
+
+              <div class="flex flex-col gap-6 mt-8">
+                <For each={[...feed().friendsPosts].sort((a, b) => new Date(b.posts[b.posts.length - 1].postedAt).getTime() - new Date(a.posts[a.posts.length - 1].postedAt).getTime())}>
+                  {overview => <FeedFriendsOverview overview={overview} />}
                 </For>
               </div>
 
-              <div>
-                <For each={[...feed().friendsPosts].sort((a, b) => new Date(b.posts[0].postedAt).getTime() - new Date(a.posts[0].postedAt).getTime())}>
-                  {overview => (
-                    <div>
-                      <div class="flex items-center gap-2">
-                        <img class="w-8 h-8 rounded-full" src={overview.user.profilePicture.url} alt={overview.user.username} />
-                        <p>{overview.user.username}</p>
-                      </div>
-                      
-                      <For each={overview.posts}>
-                        {post => (
-                          <div class="max-w-420px">
-                            <p>Late of {post.lateInSeconds} seconds</p>
-                            <p>{new Date(post.postedAt).toLocaleTimeString()}</p>
-
-                            <div class="relative">
-                              <img class="h-40 w-auto absolute top-4 left-4 z-10 rounded-lg border border-black shadow-lg" src={post.secondary.url} />
-                              <img class="rounded-xl" src={post.primary.url} />
-                            </div>
-                          </div>
-                        )}
-                      </For>
-                    </div>
-                  )}
-                </For>
-              </div>
+              <section class="pt-16 px-8">
+                <p class="text-center text-white/50">
+                  You're at the end of your feed, come back later !
+                </p>
+              </section>
             </>
           )}
         </Show>
