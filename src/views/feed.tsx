@@ -136,7 +136,7 @@ const FeedView: Component = () => {
                 </For>
               </div>
 
-              <section class="pt-16">
+              <section class="pt-16 px-8">
                 <p class="text-center text-white/50">
                   You're at the end of your feed, come back later !
                 </p>
