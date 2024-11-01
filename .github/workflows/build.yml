@@ -203,11 +203,13 @@ jobs:
         with:
           name: StayReal-Android
           path: |
-            src-tauri/gen/android/app/build/outputs/apk/debug/*.apk
-            src-tauri/gen/android/app/build/outputs/apk/release/*.apk
-            src-tauri/gen/android/app/build/outputs/bundle/release/*.aab
+            src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.apk
+            src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.aab
+            src-tauri/gen/android/app/build/outputs/apk/debug/universalRelease/*.apk
+            src-tauri/gen/android/app/build/outputs/apk/release/universalRelease/*.apk
+            src-tauri/gen/android/app/build/outputs/bundle/release/universalRelease/*.aab
           if-no-files-found: warn
-        
+          
       # - name: Upload iOS artifacts
       #   if: matrix.target == 'ios'
       #   uses: actions/upload-artifact@v3
