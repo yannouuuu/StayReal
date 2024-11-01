@@ -101,7 +101,8 @@ export interface PostsOverview {
 }
 
 export interface FeedsFriends {
-  userPosts: PostsOverview
+  // null if user has no posts for the on going moment
+  userPosts: PostsOverview | null
   friendsPosts: Array<PostsOverview>
     
   remainingPosts: number
