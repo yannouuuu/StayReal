@@ -1,4 +1,4 @@
-# StayReal. Continuous Integration, maintained by its contributors, created by @yannouuuu
+# StayReal. Continuous Integration, created by @yannouuuu, maintained by its contributors
 name: 'StayReal. | Build Desktop and Mobile package'
 
 on:
