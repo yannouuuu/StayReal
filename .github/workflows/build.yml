@@ -63,21 +63,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           args: ${{ matrix.args }}
-
-      - name: List all build outputs
-        run: |
-          echo "Listing all build outputs:"
-          [ -d src-tauri/gen/android/app/build/outputs ] && ls -R src-tauri/gen/android/app/build/outputs || echo "No Android outputs"
-          [ -d src-tauri/gen/ios/build ] && ls -R src-tauri/gen/ios/build || echo "No iOS outputs"
-          [ -d src-tauri/target/release/bundle/dmg ] && ls -R src-tauri/target/release/bundle/dmg || echo "No DMG outputs"
-          [ -d src-tauri/target/release/bundle/macos ] && ls -R src-tauri/target/release/bundle/macos || echo "No macOS outputs"
-          [ -d src-tauri/target/release/bundle/rpm ] && ls -R src-tauri/target/release/bundle/rpm || echo "No RPM outputs"
-          [ -d src-tauri/target/release/bundle/appimage ] && ls -R src-tauri/target/release/bundle/appimage || echo "No AppImage outputs"
-          [ -d src-tauri/target/release/bundle/deb ] && ls -R src-tauri/target/release/bundle/deb || echo "No DEB outputs"
-          [ -d src-tauri/target/release/*.exe ] && ls -R src-tauri/target/release/*.exe || echo "No EXE outputs"
-          [ -d src-tauri/target/release/bundle/msi ] && ls -R src-tauri/target/release/bundle/msi || echo "No MSI outputs"
-          [ -d src-tauri/target/release/bundle/nsis ] && ls -R src-tauri/target/release/bundle/nsis || echo "No NSIS outputs"
-
+          
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
