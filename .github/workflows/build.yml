@@ -1,4 +1,4 @@
-name: 'build'
+name: 'Build'
 
 on:
   push:
@@ -7,122 +7,119 @@ on:
   pull_request:
     branches:
       - '*'
+
 jobs:
   build-desktop:
-    permissions:
-      contents: write
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - platform: 'macos-latest'
-            args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest'
-            args: '--target x86_64-apple-darwin'
-          - platform: 'ubuntu-22.04'
-            args: ''
-          - platform: 'windows-latest'
-            args: ''
+        platform: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: Install dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libgtk-3-dev libappindicator3-dev librsvg2-dev patchelf
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 'lts/*'
 
       - name: Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - name: Build frontend
+        run: pnpm build:web
 
-      - name: Rust cache
-        uses: swatinem/rust-cache@v2
-        with:
-          workspaces: './src-tauri -> target'
+      - name: Build the app
+        run: pnpm tauri build
 
-      - name: install frontend dependencies
-        run: pnpm install
-
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: ${{ matrix.args }}
-
-      - name: Upload artifacts
+      - name: Upload artifacts (macOS)
+        if: matrix.platform == 'macos-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: StayReal-${{ matrix.platform }}
+          name: StayReal-macOS
+          path: src-tauri/target/release/bundle/macos/*.dmg
+          if-no-files-found: error
+
+      - name: Upload artifacts (Ubuntu)
+        if: matrix.platform == 'ubuntu-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: StayReal-Linux
           path: |
-            src-tauri/target/release/bundle/dmg/*.dmg
-            src-tauri/target/release/bundle/deb/*.deb
-            src-tauri/target/release/bundle/appimage/*.AppImage
-            src-tauri/target/release/bundle/msi/*.msi
+            src-tauri/target/release/bundle/linux/*.deb
+            src-tauri/target/release/bundle/linux/*.AppImage
+          if-no-files-found: error
+
+      - name: Upload artifacts (Windows)
+        if: matrix.platform == 'windows-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: StayReal-Windows
+          path: |
+            src-tauri/target/release/bundle/windows/*.msi
             src-tauri/target/release/*.exe
-          if-no-files-found: ignore
+          if-no-files-found: error
 
   build-mobile:
-    permissions:
-      contents: write
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - platform: 'macos-latest'
-            target: 'android'
-          - platform: 'macos-latest'
-            target: 'ios'
-        
+        platform: [macos-latest]
+        target: [android, ios]
+
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
-        
-      - name: Setup Node
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
-        
-      - name: Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
+          node-version: 'lts/*'
 
-      - name: Setup Java
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Java (Android only)
         if: matrix.target == 'android'
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Android SDK & NDK
+      - name: Setup Android SDK (Android only)
         if: matrix.target == 'android'
         uses: android-actions/setup-android@v3
 
-      - name: Install Android NDK
+      - name: Install Android NDK (Android only)
         if: matrix.target == 'android'
         run: |
-          echo "y" | sdkmanager --install "ndk;25.2.9519653"
+          sdkmanager --install "ndk;25.2.9519653"
           echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
           echo "NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
 
-      - name: Install Rust stable
+      - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install iOS dependencies
@@ -131,44 +128,17 @@ jobs:
           rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
           xcode-select --install || true
 
-      - name: Install the Apple certificate and provisioning profile
-        if: matrix.target == 'ios'
-        env:
-          BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE }}
-          P12_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
-          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_PROVISION_PROFILE }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: |
-          # create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-
-          # import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
-
-          # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-
-          # apply provisioning profile
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
-          
-      - name: Install Android dependencies
+      - name: Install Android targets (Android only)
         if: matrix.target == 'android'
         run: |
           rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
           cargo install cargo-ndk
-          
+
       - name: Install dependencies
         run: pnpm install
+
+      - name: Build frontend
+        run: pnpm build:web
 
       - name: Build Android App
         if: matrix.target == 'android'
@@ -177,18 +147,13 @@ jobs:
         run: |
           pnpm tauri android init
           pnpm tauri android build
-          
+
       - name: Build iOS App
         if: matrix.target == 'ios'
-        env:
-          TEAM_ID: ${{ secrets.TEAM_ID }}
         run: |
-          # Update the Xcode project with the team ID
-          /usr/libexec/PlistBuddy -c "Set :TEAM_ID $TEAM_ID" src-tauri/gen/apple/stayreal.xcodeproj/project.pbxproj
-          
           pnpm tauri ios init
           pnpm tauri ios build
-        
+
       - name: Upload Android artifacts
         if: matrix.target == 'android'
         uses: actions/upload-artifact@v3
@@ -197,9 +162,8 @@ jobs:
           path: |
             src-tauri/gen/android/app/build/outputs/apk/debug/*.apk
             src-tauri/gen/android/app/build/outputs/apk/release/*.apk
-            src-tauri/gen/android/app/build/outputs/bundle/release/*.aab
           if-no-files-found: warn
-        
+
       - name: Upload iOS artifacts
         if: matrix.target == 'ios'
         uses: actions/upload-artifact@v3
