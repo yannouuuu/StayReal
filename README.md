@@ -21,7 +21,7 @@ A work in progress open-source client for BeReal.
   - [x] Swipper for my posts
   - [x] Users
   - [x] Posts
-  - [ ] Swipper for multiple posts
+  - [x] Swipper for multiple posts
   - [ ] Comments
   - [ ] Reactions
 - [ ] Post
