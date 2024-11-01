@@ -160,9 +160,9 @@ jobs:
         with:
           name: StayReal-Android
           path: |
-            src-tauri/gen/android/app/build/outputs/apk/debug/*.apk
-            src-tauri/gen/android/app/build/outputs/apk/release/*.apk
-          if-no-files-found: warn
+            src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
+            src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.aab
+          if-no-files-found: error
 
       - name: Upload iOS artifacts
         if: matrix.target == 'ios'
