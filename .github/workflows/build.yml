@@ -73,10 +73,11 @@ jobs:
       with:
         name: StayReal-${{ matrix.platform }}
         path: |
-          src-tauri/target/release/bundle/dmg/*.dmg
-          src-tauri/target/release/bundle/deb/*.deb
-          src-tauri/target/release/bundle/appimage/*.AppImage
-          src-tauri/target/release/bundle/msi/*.msi
+          src-tauri/target/release/bundle/**/*.app
+          src-tauri/target/release/bundle/**/*.dmg
+          src-tauri/target/release/bundle/linux/*.deb
+          src-tauri/target/release/bundle/linux/*.AppImage
+          src-tauri/target/release/bundle/windows/*.msi
           src-tauri/target/release/*.exe
         if-no-files-found: ignore
 
@@ -105,7 +106,7 @@ jobs:
       run: |
         corepack enable
         corepack prepare pnpm@latest --activate
-        
+
     - name: Setup Java
       if: matrix.target == 'android'
       uses: actions/setup-java@v3
