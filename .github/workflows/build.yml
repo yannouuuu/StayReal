@@ -1,4 +1,4 @@
-name: 'build'
+name: 'StayReal. | Build Desktop and Mobile package'
 
 on:
   push:
