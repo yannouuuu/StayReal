@@ -18,7 +18,7 @@ A work in progress open-source client for BeReal.
 - [ ] Feed
   - [x] My posts
   - [ ] Comments on my posts
-  - [ ] Swipper for my posts
+  - [x] Swipper for my posts
   - [x] Users
   - [x] Posts
   - [ ] Swipper for multiple posts
