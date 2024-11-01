@@ -52,12 +52,19 @@ jobs:
       - name: Build the app
         run: pnpm tauri build
 
-      - name: Upload artifacts (macOS)
+      - name: List build directory (macOS)
+        if: matrix.platform == 'macos-latest'
+        run: |
+          ls -R src-tauri/target/release/bundle/
+
+      - name: Upload macOS artifacts
         if: matrix.platform == 'macos-latest'
         uses: actions/upload-artifact@v3
         with:
           name: StayReal-macOS
-          path: src-tauri/target/release/bundle/macos/*.dmg
+          path: |
+            src-tauri/target/release/bundle/**/*.app
+            src-tauri/target/release/bundle/**/*.dmg
           if-no-files-found: error
 
       - name: Upload artifacts (Ubuntu)
