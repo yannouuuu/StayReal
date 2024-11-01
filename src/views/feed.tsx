@@ -3,6 +3,7 @@ import { feeds_friends, PostsOverview } from "../api/requests/feeds/friends";
 import UserPostedRealMojis from "../components/feed/realmojis";
 import { moments_last, person_me } from "../api";
 import FeedFriendsOverview from "../components/feed/friends/Overview";
+import MdiPeople from '~icons/mdi/people';
 
 import "swiper/css";
 import Swiper from "swiper";
@@ -79,7 +80,7 @@ const FeedView: Component = () => {
     <div>
       <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent py-2">
         <nav class="flex items-center justify-between px-4 py-1">
-          <p>friends</p>
+          <MdiPeople class="text-xl" />
 
           <p class="absolute inset-x-0 w-fit mx-auto text-2xl text-center text-white font-700">StayReal.</p>
 

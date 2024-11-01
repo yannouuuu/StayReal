@@ -1,5 +1,6 @@
 import { Component, createEffect, createSignal, For, onCleanup } from "solid-js";
 import type { PostsOverview } from "../../../api/requests/feeds/friends";
+import MdiDotsVertical from '~icons/mdi/dots-vertical';
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -43,14 +44,18 @@ const FeedFriendsOverview: Component<{
 
   return (
     <div>
-      <div class="flex items-center gap-2 px-4 pb-2">
-        <img class="w-8 h-8 rounded-full" src={props.overview.user.profilePicture.url} alt={props.overview.user.username} />
-        <div class="flex flex-col">
-          <p class="font-600">{props.overview.user.username}</p>
-          <p class="text-sm text-white/60">
-            {new Date(activePost().postedAt).toLocaleTimeString()} - Late of {activePost().lateInSeconds} seconds
-          </p>
+      <div class="flex items-center justify-between gap-4 px-4 pb-2">
+        <div class="flex items-center gap-2">
+          <img class="w-8 h-8 rounded-full" src={props.overview.user.profilePicture.url} alt={props.overview.user.username} />
+          <div class="flex flex-col">
+            <p class="font-600">{props.overview.user.username}</p>
+            <p class="text-sm text-white/60">
+              {new Date(activePost().postedAt).toLocaleTimeString()} - Late of {activePost().lateInSeconds} seconds
+            </p>
+          </div>
         </div>
+
+        <MdiDotsVertical class="text-xl" />
       </div>
       
       <div class="swiper relative" ref={container}>
