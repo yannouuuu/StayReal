@@ -23,6 +23,9 @@ importers:
       '@solid-primitives/storage':
         specifier: ^4.2.1
         version: 4.2.1(solid-js@1.9.3)
+      '@solid-primitives/stream':
+        specifier: ^0.6.14
+        version: 0.6.14(solid-js@1.9.3)
       '@solidjs/router':
         specifier: ^0.15.0
         version: 0.15.0(solid-js@1.9.3)
@@ -814,6 +817,11 @@ packages:
       solid-start:
         optional: true
 
+  '@solid-primitives/stream@0.6.14':
+    resolution: {integrity: sha512-6x3RUSpX3Towa3YYpG+mJZp/7FijhTLUbalvyqhMVxkVEYFn7ri6+2rjPryHIO+T5FwjSkiWspipCM6NGY82Ng==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
   '@solid-primitives/utils@6.2.3':
     resolution: {integrity: sha512-CqAwKb2T5Vi72+rhebSsqNZ9o67buYRdEJrIFzRXz3U59QqezuuxPsyzTSVCacwS5Pf109VRsgCJQoxKRoECZQ==}
     peerDependencies:
@@ -835,7 +843,6 @@ packages:
   '@tauri-apps/cli-darwin-x64@2.0.4':
     resolution: {integrity: sha512-zIccfbCoZMfmUpnk6PFCV0keFyfVj1A9XV3Oiiitj/dkTZ9CQvzjhX3XC0XcK4rsTWegfr2PjSrK06aiPAROAw==}
     engines: {node: '>= 10'}
-    cpu: [x64]
     os: [darwin]
 
   '@tauri-apps/cli-linux-arm-gnueabihf@2.0.4':
@@ -2217,6 +2224,11 @@ snapshots:
       solid-js: 1.9.3
 
   '@solid-primitives/storage@4.2.1(solid-js@1.9.3)':
+    dependencies:
+      '@solid-primitives/utils': 6.2.3(solid-js@1.9.3)
+      solid-js: 1.9.3
+
+  '@solid-primitives/stream@0.6.14(solid-js@1.9.3)':
     dependencies:
       '@solid-primitives/utils': 6.2.3(solid-js@1.9.3)
       solid-js: 1.9.3

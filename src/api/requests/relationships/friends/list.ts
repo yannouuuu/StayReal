@@ -1,9 +1,18 @@
 import auth from "../../../../stores/auth";
 import { BEREAL_DEFAULT_HEADERS } from "../../../constants";
 import { fetch } from "@tauri-apps/plugin-http";
+import { ApiMedia } from "../../../types/media";
 
 export interface RelationshipsFriends {
-  // TODO: typing
+  data: Array<{
+    id: string
+    username: string
+    fullname: string
+    profilePicture?: ApiMedia
+    status: "accepted"
+  }>
+  next: unknown | null // NOTE: not sure, probably because of the "page" query parameter
+  total: number
 }
 
 export const relationships_friends = async (): Promise<RelationshipsFriends> => {

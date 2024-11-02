@@ -2,38 +2,68 @@ import { createEffect, createResource, createSignal, For, onCleanup, Show, type 
 import { feeds_friends, PostsOverview } from "../api/requests/feeds/friends";
 import UserPostedRealMojis from "../components/feed/realmojis";
 import { moments_last, person_me } from "../api";
-import FeedFriendsOverview from "../components/feed/friends/Overview";
+import FeedFriendsOverview from "../components/feed/friends/overview";
 import MdiPeople from '~icons/mdi/people';
+import MdiRefresh from '~icons/mdi/refresh'
+import MdiPlus from '~icons/mdi/plus'
 
 import "swiper/css";
 import Swiper from "swiper";
+import { useNavigate } from "@solidjs/router";
 
 const FeedView: Component = () => {
-  const [feed] = createResource(feeds_friends);
+  const navigate = useNavigate();
   const [me] = createResource(person_me);
-  const [moment] = createResource(me, (me) => moments_last(me.region))
+  const [moment, { refetch: refetchMoment }] = createResource(me, (me) => moments_last(me.region))
+  const [feed, { refetch: refetchFeed }] = createResource(feeds_friends);
+
+  const [isRefreshing, setIsRefreshing] = createSignal(false);
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+
+      await refetchMoment();
+      await refetchFeed();
+    }
+    finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const SwipingUserPosts: Component<{overview: PostsOverview}> = (props) => {
     let container: HTMLDivElement | undefined;
-    let pagination: HTMLDivElement | undefined;
 
-    const [activeIndex, setActiveIndex] = createSignal(0);
+    const [activeIndex, setActiveIndex] = createSignal(props.overview.posts.length - 1);
     const activePost = () => props.overview.posts[activeIndex()];
 
     createEffect(() => {
-      if (!container || !pagination) return;
+      if (!container) return;
 
       const swiper = new Swiper(container, {
         spaceBetween: 12,
         slidesPerView: "auto",
         centeredSlides: true,
-        
-        pagination: {
-          el: pagination
-        },
+        initialSlide: props.overview.posts.length - 1,
 
         on: {
-          slideChange: () => setActiveIndex(swiper.activeIndex)
+          slideChange: (swiper) => {
+            if (swiper.activeIndex === swiper.slides.length - 1) {
+              // prevent sliding to the "add post" slide
+              swiper.slideTo(swiper.slides.length - 2);
+            }
+            else {
+              setActiveIndex(swiper.activeIndex)
+            }
+          },
+          click: (swiper) => {
+            // when clicking on the "add post" slide, redirect to upload page
+            if (swiper.clickedIndex === swiper.slides.length - 1) {
+              navigate("/upload");
+            }
+            else {
+              swiper.slideTo(swiper.clickedIndex);
+            }
+          }
         }
       });
 
@@ -61,9 +91,11 @@ const FeedView: Component = () => {
                 </div>
               )}
             </For>
-          </div>
 
-          <div ref={pagination} />
+            <div class="scale-90! swiper-slide rounded-lg h-140px! border-2 border-white/75 px-4 flex! items-center justify-center w-100px! text-center">
+              <MdiPlus class="text-3xl" />
+            </div>
+          </div>
         </div>
 
         <p class="text-sm text-center">
@@ -73,8 +105,8 @@ const FeedView: Component = () => {
           {new Date(activePost().postedAt).toLocaleString()}
         </p>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div>
@@ -84,23 +116,38 @@ const FeedView: Component = () => {
 
           <p class="absolute inset-x-0 w-fit mx-auto text-2xl text-center text-white font-700">StayReal.</p>
 
-          <a href="/profile">
-            <Show when={me()?.profilePicture}
-              fallback={
-                <div>
-                  <p>{me()?.username[0] || "?"}</p>
-                </div>
-              }
+          <div class="flex gap-4 items-center">
+            <button
+              type="button"
+              onClick={handleRefresh}
+              disabled={isRefreshing()}
+              title="Refresh feed & last moment"
             >
-              {profilePicture => (
-                <img
-                  class="w-8 h-8 rounded-full"
-                  src={profilePicture().url}
-                  alt={me()?.username}
-                />
-              )}
-            </Show>
-          </a>
+              <MdiRefresh class="text-white text-2xl rounded-full p-1"
+                classList={{
+                  "animate-spin text-white/50 bg-white/10": isRefreshing()
+                }}
+              />
+            </button>
+
+            <a href="/profile">
+              <Show when={me()?.profilePicture}
+                fallback={
+                  <div>
+                    <p>{me()?.username[0] || "?"}</p>
+                  </div>
+                }
+              >
+                {profilePicture => (
+                  <img
+                    class="w-8 h-8 rounded-full"
+                    src={profilePicture().url}
+                    alt={me()?.username}
+                  />
+                )}
+              </Show>
+            </a>
+          </div>
         </nav>
       </header>
 
@@ -113,15 +160,19 @@ const FeedView: Component = () => {
           {feed => (
             <>
               <Show when={feed().userPosts} fallback={
-                <div class="text-center flex flex-col gap-1 px-4">
-                  <p class="">
+                <div class="text-center flex flex-col gap-1 px-4 mx-4 bg-white/10 py-4 rounded-2xl">
+                  <p class="mb-4">
                     You haven't posted any BeReal today !
                   </p>
+
+                  <a href="/upload" class="block text-center py-3 font-600 bg-white text-black rounded-2xl">
+                    StayReal by posting a BeReal.
+                  </a>
+
                   <Show when={moment()}>
                     {moment => (
-                      <p class="text-white/50">
-                        Started at {new Date(moment().startDate).toLocaleTimeString()},
-                        you're late of {new Date().getTime() - new Date(moment().endDate).getTime()} milliseconds
+                      <p class="text-white/50 mt-1 text-xs">
+                        Last moment was at {new Date(moment().startDate).toLocaleTimeString()}
                       </p>
                     )}
                   </Show>
