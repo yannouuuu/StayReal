@@ -9,7 +9,12 @@
   </p>
 </div>
 
-## ✨ Features
+#
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/features.svg">
+  <img alt="description" src=".github/assets/light_features.svg">
+</picture>
 
 - [x] Authentication
   - Accounts with parental control are not supported, if you have one, please open an issue so we can work on it.
@@ -55,15 +60,30 @@ Only the necessary data is stored on the device, and the application does not co
 - [x] No analytics
 - [x] No ads
 
-## 🚀 Getting Started
+#
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/getting_started.svg">
+  <img alt="getting_started" src=".github/assets/light_getting_started.svg">
+</picture>
 
 There's currently no release available, but you can build the application yourself or find pre-built binaries in the actions tab.
 
-## 📸 Screenshots
+#
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screenshots.svg">
+  <img alt="screenshots" src=".github/assets/light_screenshots.svg">
+</picture>
 
 Coming soon, we're currently working on the UI so it's not ready yet.
 
-## 🛠️ Development
+#
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/development.svg">
+  <img alt="development" src=".github/assets/light_development.svg">
+</picture>
 
 ### Prerequisites
 
@@ -94,7 +114,12 @@ pnpm tauri build
 pnpm tauri android build
 ```
 
-## 🙏 Acknowledgments
+#
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/acknowledgments.svg">
+  <img alt="acknowledgments" src=".github/assets/light_acknowledgments.svg">
+</picture>
 
 This project would not have been possible without the significant contributions of the following projects :
 
@@ -104,7 +129,12 @@ This project would not have been possible without the significant contributions 
 - [Fowled BeReal API Documentation](https://bereal.fowled.dev)
 - [userbradley's researches on BeReal API](https://github.com/userbradley/BeReal)
 
-## 📄 License
+#
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/licence.svg">
+  <img alt="licence" src=".github/assets/light_licence_.svg">
+</picture>
 
 This project is under the GPL-3.0 license.
 For more details, please refer to the [LICENSE.md](./LICENSE.md) file.
