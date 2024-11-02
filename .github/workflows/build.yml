@@ -95,8 +95,6 @@ jobs:
         include:
           - platform: 'ubuntu-22.04'
             target: 'android'
-          # - platform: 'macos-latest'
-          #   target: 'ios'
         
     runs-on: ${{ matrix.platform }}
     steps:
@@ -165,29 +163,28 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' # Only run on main/master branch
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get version from Cargo.toml
-        id: get_version
+      - name: Generate release tag
+        id: tag
         run: |
-          version=$(grep '^version = ' src-tauri/Cargo.toml | cut -d '"' -f2)
-          echo "version=$version" >> $GITHUB_OUTPUT
+          sha=${GITHUB_SHA::7}
+          ts=$(date +%s)
+          echo "tag=nightly-${sha}-${ts}" >> $GITHUB_OUTPUT
 
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
           path: releases
 
-      - name: Create Release
-        id: create_release
+      - name: Create Pre-release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          name: Release v${{ steps.get_version.outputs.version }}
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "Nightly build ${{ steps.tag.outputs.tag }}"
           draft: false
           prerelease: true
           files: |
@@ -200,7 +197,9 @@ jobs:
             releases/**/*.exe
             releases/**/*.apk
           body: |
-            Pre-release version v${{ steps.get_version.outputs.version }}
+            Automated nightly build from branch: ${{ github.ref_name }}
+            
+            Commit: ${{ github.sha }}
             
             **Note**: This is an automated pre-release build. Use with caution.
             
