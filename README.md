@@ -1,7 +1,7 @@
 <div align="center">
   <img alt="StayReal, an open-source client application for BeReal" src=".github/assets/banner.svg" width="100%" />
   <br/>
-  <h3>An open-source client application for BeReal, built with Tauri</h3>
+  <h3>An open-source, lightweight and privacy-focused BeReal alternative client</h3>
 </div>
 
 ## ✨ Features
