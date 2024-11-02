@@ -68,5 +68,5 @@ This project is under the GPL-3.0 license. For more details, please refer to the
 <br/>
 
 <div align="center">
-Developed with Tauri & ❤️
+  <h3>Developed with Tauri & ❤️</h3>
 </div>
