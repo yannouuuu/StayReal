@@ -1,7 +1,12 @@
 <div align="center">
   <img alt="StayReal, an open-source client application for BeReal" src=".github/assets/banner.svg" width="100%" />
   <br/>
-  <h3>An open-source, lightweight and privacy-focused BeReal alternative client</h3>
+  <p align="center">
+      <picture>
+          <source media="(prefers-color-scheme: dark)" srcset=".github/assets/description_dark.svg">
+          <img alt="description" src=".github/assets/description_light.svg">
+      </picture>
+  </p>
 </div>
 
 ## ✨ Features
