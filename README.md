@@ -1,8 +1,10 @@
-# StayReal
+<div align="center">
+  <img alt="StayReal, an open-source client application for BeReal" src=".github/assets/banner.svg" width="100%" />
+  <br/>
+  <h3>An open-source client application for BeReal, built with Tauri</h3>
+</div>
 
-A work in progress open-source client for BeReal.
-
-## Features
+## ✨ Features
 
 - [x] Authentication
   - [x] Send OTP
@@ -30,17 +32,40 @@ A work in progress open-source client for BeReal.
 - [ ] Add friend
 - [ ] Friends
 
-## Credits
+## 🛠️ Development
 
-This project wouldn't be possible without the following projects:
+### Prerequisites
 
-- <https://github.com/macedonga/beunblurred>
-- <https://github.com/s-alad/toofake>
-- <https://github.com/Smart123s/BeFake>
-- <https://bereal.fowled.dev>
+- [Node.js](https://nodejs.org/)
+- [Rust](https://www.rust-lang.org/)
+- [Tauri v2](https://v2.tauri.app/fr/start/prerequisites/)
 
-Most of *StayReal* is based on their research and code.
+### Installation
 
-## License
+```bash
+# Clone the project
+git clone https://github.com/Vexcited/StayReal.git
 
-This project is licensed under the GPL-3.0 License - see the [LICENSE.md](./LICENSE.md) file for details.
+# Install dependencies
+cd stayreal
+pnpm install
+
+# Launch in development
+pnpm run tauri dev
+```
+
+## 🙏 Acknowledgments
+This project would not have been possible without the significant contributions of the following projects:
+- [BeUnblurred](https://github.com/macedonga/beunblurred)
+- [TooFake](https://github.com/s-alad/toofake)
+- [BeFake](https://github.com/Smart123s/BeFake)
+- [Fowled BeReal API Documentation](https://bereal.fowled.dev)
+
+## 📄 License
+This project is under the GPL-3.0 license. For more details, please refer to the [LICENSE.md](./LICENSE.md) file.
+
+<br/>
+
+<div align="center">
+  <h3>Developed with Tauri & ❤️</h3>
+</div>
