@@ -10,7 +10,7 @@
     "shell:allow-open",
     {
       "identifier": "http:default",
-      "allow": [{ "url": "https://*.bereal.com" }]
+      "allow": [{ "url": "https://*.bereal.com" }, { "url": "https://storage.googleapis.com" }]
     }
   ]
 }
