@@ -42,7 +42,6 @@ Here are more advanced features that are not in the original application.
 - [ ] Upload from gallery (not only camera)
 - [ ] Manual camera (there is no delay between primary image and secondary image)
 - [ ] Cache data to device local database (for faster reloading and offline access)
-- [ ] 
 
 ## Privacy
 
