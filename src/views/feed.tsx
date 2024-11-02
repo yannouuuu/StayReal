@@ -2,7 +2,7 @@ import { createEffect, createResource, createSignal, For, onCleanup, Show, type 
 import { feeds_friends, PostsOverview } from "../api/requests/feeds/friends";
 import UserPostedRealMojis from "../components/feed/realmojis";
 import { moments_last, person_me } from "../api";
-import FeedFriendsOverview from "../components/feed/friends/Overview";
+import FeedFriendsOverview from "../components/feed/friends/overview";
 import MdiPeople from '~icons/mdi/people';
 
 import "swiper/css";
