@@ -1,12 +1,10 @@
 <div align="center">
-
-![StayReal, an open-source client application for BeReal](.github/assets/banner.png)
-<br/>
-An open-source client application for BeReal, built with Tauri
-
+  <img alt="StayReal, an open-source client application for BeReal" src=".github/assets/banner.svg" width="100%" />
+  <br/>
+  An open-source client application for BeReal, built with Tauri
 </div>
 
-## ✨ Fonctionnalités
+## ✨ Features
 
 - [x] Authentication
   - [x] Send OTP
@@ -65,6 +63,8 @@ This project would not have been possible without the significant contributions 
 
 ## 📄 License
 This project is under the GPL-3.0 license. For more details, please refer to the LICENSE.md file.
+
+<br/><br/>
 
 <div align="center">
 Developed with Tauri & ❤️
