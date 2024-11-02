@@ -153,3 +153,52 @@ jobs:
             src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.apk
             src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
           if-no-files-found: warn
+
+  create-release:
+    needs: [build-desktop, build-mobile]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate release tag
+        id: tag
+        run: |
+          sha=${GITHUB_SHA::7}
+          ts=$(date +%s)
+          echo "tag=nightly-${sha}-${ts}" >> $GITHUB_OUTPUT
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: releases
+
+      - name: Create Pre-release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "Nightly build ${{ steps.tag.outputs.tag }}"
+          draft: false
+          prerelease: true
+          files: |
+            releases/**/*.dmg
+            releases/**/*.app
+            releases/**/*.deb
+            releases/**/*.rpm
+            releases/**/*.AppImage
+            releases/**/*.msi
+            releases/**/*.exe
+            releases/**/*.apk
+          body: |
+            Automated nightly build from branch: ${{ github.ref_name }}
+            
+            Commit: ${{ github.sha }}
+            
+            **Note**: This is an automated pre-release build. Use with caution.
+            
+            ### Included Artifacts:
+            - Desktop builds for Windows, macOS (Intel & Apple Silicon), and Linux
+            - Android build
