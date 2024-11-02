@@ -5,10 +5,14 @@ import { moments_last, person_me } from "../api";
 import FeedFriendsOverview from "../components/feed/friends/overview";
 import MdiPeople from '~icons/mdi/people';
 import MdiRefresh from '~icons/mdi/refresh'
+import MdiPlus from '~icons/mdi/plus'
+
 import "swiper/css";
 import Swiper from "swiper";
+import { useNavigate } from "@solidjs/router";
 
 const FeedView: Component = () => {
+  const navigate = useNavigate();
   const [me] = createResource(person_me);
   const [moment, { refetch: refetchMoment }] = createResource(me, (me) => moments_last(me.region))
   const [feed, { refetch: refetchFeed }] = createResource(feeds_friends);
@@ -28,25 +32,38 @@ const FeedView: Component = () => {
 
   const SwipingUserPosts: Component<{overview: PostsOverview}> = (props) => {
     let container: HTMLDivElement | undefined;
-    let pagination: HTMLDivElement | undefined;
 
-    const [activeIndex, setActiveIndex] = createSignal(0);
+    const [activeIndex, setActiveIndex] = createSignal(props.overview.posts.length - 1);
     const activePost = () => props.overview.posts[activeIndex()];
 
     createEffect(() => {
-      if (!container || !pagination) return;
+      if (!container) return;
 
       const swiper = new Swiper(container, {
         spaceBetween: 12,
         slidesPerView: "auto",
         centeredSlides: true,
-        
-        pagination: {
-          el: pagination
-        },
+        initialSlide: props.overview.posts.length - 1,
 
         on: {
-          slideChange: (swiper) => setActiveIndex(swiper.activeIndex)
+          slideChange: (swiper) => {
+            if (swiper.activeIndex === swiper.slides.length - 1) {
+              // prevent sliding to the "add post" slide
+              swiper.slideTo(swiper.slides.length - 2);
+            }
+            else {
+              setActiveIndex(swiper.activeIndex)
+            }
+          },
+          click: (swiper) => {
+            // when clicking on the "add post" slide, redirect to upload page
+            if (swiper.clickedIndex === swiper.slides.length - 1) {
+              navigate("/upload");
+            }
+            else {
+              swiper.slideTo(swiper.clickedIndex);
+            }
+          }
         }
       });
 
@@ -74,9 +91,11 @@ const FeedView: Component = () => {
                 </div>
               )}
             </For>
-          </div>
 
-          <div ref={pagination} />
+            <div class="scale-90! swiper-slide rounded-lg h-140px! border-2 border-white/75 px-4 flex! items-center justify-center w-100px! text-center">
+              <MdiPlus class="text-3xl" />
+            </div>
+          </div>
         </div>
 
         <p class="text-sm text-center">
@@ -85,10 +104,6 @@ const FeedView: Component = () => {
         <p class="text-sm text-center text-white/50">
           {new Date(activePost().postedAt).toLocaleString()}
         </p>
-
-        <a href="/upload" class="mt-4 block text-center w-fit mx-auto px-6 py-3 font-600 bg-white text-black rounded-2xl">
-          Post a new BeReal.
-        </a>
       </div>
     );
   };
