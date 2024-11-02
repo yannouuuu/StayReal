@@ -6,6 +6,8 @@
 
 ## ✨ Features
 
+These are the basic features that are also in the original application.
+
 - [x] Authentication
   - [x] Send OTP
   - [x] Verify OTP
@@ -26,11 +28,29 @@
   - [x] Swipper for multiple posts
   - [ ] Comments
   - [ ] Reactions
-- [ ] Post
+- [x] Post
 - [ ] Comment
 - [ ] React with realmoji
 - [ ] Add friend
 - [ ] Friends
+- [ ] Notifications
+  - *Not sure if this is going to be implemented, because it looks hard to do within Tauri*
+
+Here are more advanced features that are not in the original application.
+
+- [ ] Light mode
+- [ ] Upload from gallery (not only camera)
+- [ ] Manual camera (there is no delay between primary image and secondary image)
+- [ ] Cache data to device local database (for faster reloading and offline access)
+- [ ] 
+
+## Privacy
+
+- [x] No tracking
+- [x] No analytics
+- [x] No ads
+
+Only the necessary data is stored on the device, and the application does not collect any personal information.
 
 ## 🛠️ Development
 
