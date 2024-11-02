@@ -4,14 +4,27 @@ import UserPostedRealMojis from "../components/feed/realmojis";
 import { moments_last, person_me } from "../api";
 import FeedFriendsOverview from "../components/feed/friends/overview";
 import MdiPeople from '~icons/mdi/people';
-
+import MdiRefresh from '~icons/mdi/refresh'
 import "swiper/css";
 import Swiper from "swiper";
 
 const FeedView: Component = () => {
-  const [feed] = createResource(feeds_friends);
   const [me] = createResource(person_me);
-  const [moment] = createResource(me, (me) => moments_last(me.region))
+  const [moment, { refetch: refetchMoment }] = createResource(me, (me) => moments_last(me.region))
+  const [feed, { refetch: refetchFeed }] = createResource(feeds_friends);
+
+  const [isRefreshing, setIsRefreshing] = createSignal(false);
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+
+      await refetchMoment();
+      await refetchFeed();
+    }
+    finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const SwipingUserPosts: Component<{overview: PostsOverview}> = (props) => {
     let container: HTMLDivElement | undefined;
@@ -73,12 +86,12 @@ const FeedView: Component = () => {
           {new Date(activePost().postedAt).toLocaleString()}
         </p>
 
-        <a href="/upload" class="block text-center mt-4 text-white/50">
-          share a new BeReal
+        <a href="/upload" class="mt-4 block text-center w-fit mx-auto px-6 py-3 font-600 bg-white text-black rounded-2xl">
+          Post a new BeReal.
         </a>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div>
@@ -88,23 +101,38 @@ const FeedView: Component = () => {
 
           <p class="absolute inset-x-0 w-fit mx-auto text-2xl text-center text-white font-700">StayReal.</p>
 
-          <a href="/profile">
-            <Show when={me()?.profilePicture}
-              fallback={
-                <div>
-                  <p>{me()?.username[0] || "?"}</p>
-                </div>
-              }
+          <div class="flex gap-4 items-center">
+            <button
+              type="button"
+              onClick={handleRefresh}
+              disabled={isRefreshing()}
+              title="Refresh feed & last moment"
             >
-              {profilePicture => (
-                <img
-                  class="w-8 h-8 rounded-full"
-                  src={profilePicture().url}
-                  alt={me()?.username}
-                />
-              )}
-            </Show>
-          </a>
+              <MdiRefresh class="text-white text-2xl rounded-full p-1"
+                classList={{
+                  "animate-spin text-white/50 bg-white/10": isRefreshing()
+                }}
+              />
+            </button>
+
+            <a href="/profile">
+              <Show when={me()?.profilePicture}
+                fallback={
+                  <div>
+                    <p>{me()?.username[0] || "?"}</p>
+                  </div>
+                }
+              >
+                {profilePicture => (
+                  <img
+                    class="w-8 h-8 rounded-full"
+                    src={profilePicture().url}
+                    alt={me()?.username}
+                  />
+                )}
+              </Show>
+            </a>
+          </div>
         </nav>
       </header>
 
@@ -117,15 +145,19 @@ const FeedView: Component = () => {
           {feed => (
             <>
               <Show when={feed().userPosts} fallback={
-                <div class="text-center flex flex-col gap-1 px-4">
-                  <p class="">
+                <div class="text-center flex flex-col gap-1 px-4 mx-4 bg-white/10 py-4 rounded-2xl">
+                  <p class="mb-4">
                     You haven't posted any BeReal today !
                   </p>
+
+                  <a href="/upload" class="block text-center py-3 font-600 bg-white text-black rounded-2xl">
+                    StayReal by posting a BeReal.
+                  </a>
+
                   <Show when={moment()}>
                     {moment => (
-                      <p class="text-white/50">
-                        Started at {new Date(moment().startDate).toLocaleTimeString()},
-                        you're late of {new Date().getTime() - new Date(moment().endDate).getTime()} milliseconds
+                      <p class="text-white/50 mt-1 text-xs">
+                        Last moment was at {new Date(moment().startDate).toLocaleTimeString()}
                       </p>
                     )}
                   </Show>
