@@ -1,6 +1,6 @@
 <div align="center">
   <img alt="StayReal, an open-source client application for BeReal" src=".github/assets/banner.svg" width="100%" />
-  <br/>
+  <br/><br/>
   <strong>An open-source client application for BeReal, built with Tauri</strong>
 </div>
 
