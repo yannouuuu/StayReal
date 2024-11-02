@@ -120,8 +120,8 @@ pnpm tauri android build
 #
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/acknowledgments.svg">
-  <img alt="acknowledgments" src=".github/assets/light_acknowledgments.svg">
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/acknowledgment.svg">
+  <img alt="acknowledgments" src=".github/assets/light_acknowledgment.svg">
 </picture>
 <br/>
 
