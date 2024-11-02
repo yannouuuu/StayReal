@@ -62,7 +62,7 @@ This project would not have been possible without the significant contributions 
 - [Fowled BeReal API Documentation](https://bereal.fowled.dev)
 
 ## 📄 License
-This project is under the GPL-3.0 license. For more details, please refer to the LICENSE.md file.
+This project is under the GPL-3.0 license. For more details, please refer to the [LICENSE.md](./LICENSE.md) file.
 
 <br/>
 
