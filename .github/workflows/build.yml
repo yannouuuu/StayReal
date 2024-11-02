@@ -1,13 +1,10 @@
-# StayReal. Continuous Integration, created by @yannouuuu, maintained by its contributors
-name: 'StayReal. | Build Desktop and Mobile package'
+name: 'Build Desktop and Mobile'
 
 on:
   push:
     branches:
       - '*'
-  pull_request:
-    branches:
-      - '*'
+
 jobs:
   build-desktop:
     permissions:
@@ -145,7 +142,6 @@ jobs:
         env:
           NDK_HOME: ${{ env.NDK_HOME }}
         run: |
-          pnpm tauri android init
           pnpm tauri android build
           
       - name: Upload Android artifacts

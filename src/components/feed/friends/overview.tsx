@@ -13,7 +13,7 @@ const FeedFriendsOverview: Component<{
   let container: HTMLDivElement | undefined;
   let pagination: HTMLDivElement | undefined;
 
-  const [activeIndex, setActiveIndex] = createSignal(0);
+  const [activeIndex, setActiveIndex] = createSignal(props.overview.posts.length - 1);
   const activePost = () => props.overview.posts[activeIndex()];
 
   createEffect(() => {
@@ -24,18 +24,17 @@ const FeedFriendsOverview: Component<{
       centeredSlides: true,
       watchOverflow: false,
 
+      // initial to the latest post
+      initialSlide: props.overview.posts.length - 1,
+
       modules: [Pagination],
-      
       pagination: {
         enabled: true,
         el: pagination
       },
 
       on: {
-        slideChange: () => {
-          console.log(swiper.activeIndex)
-          setActiveIndex(swiper.activeIndex)
-        }
+        slideChange: (swiper) => setActiveIndex(swiper.activeIndex)
       }
     });
 
