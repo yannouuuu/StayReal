@@ -3,8 +3,8 @@
   <br/>
   <p align="center">
       <picture>
-          <source media="(prefers-color-scheme: dark)" srcset=".github/assets/description_light.svg">
-          <img alt="description" src=".github/assets/description_dark.svg">
+          <source media="(prefers-color-scheme: dark)" srcset=".github/assets/description_light.svg" style="width: 100%; height: auto;">
+          <img alt="description" src=".github/assets/description_dark.svg" style="width: 100%; height: auto;">
       </picture>
   </p>
 </div>
