@@ -32,10 +32,7 @@ const FeedFriendsOverview: Component<{
       },
 
       on: {
-        slideChange: () => {
-          console.log(swiper.activeIndex)
-          setActiveIndex(swiper.activeIndex)
-        }
+        slideChange: (swiper) => setActiveIndex(swiper.activeIndex)
       }
     });
 

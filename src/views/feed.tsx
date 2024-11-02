@@ -33,7 +33,7 @@ const FeedView: Component = () => {
         },
 
         on: {
-          slideChange: () => setActiveIndex(swiper.activeIndex)
+          slideChange: (swiper) => setActiveIndex(swiper.activeIndex)
         }
       });
 
@@ -72,6 +72,10 @@ const FeedView: Component = () => {
         <p class="text-sm text-center text-white/50">
           {new Date(activePost().postedAt).toLocaleString()}
         </p>
+
+        <a href="/upload" class="block text-center mt-4 text-white/50">
+          share a new BeReal
+        </a>
       </div>
     )
   }
