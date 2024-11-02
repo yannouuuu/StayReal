@@ -1,6 +1,6 @@
 <div align="center">
 
-![StayReal, an open-source client application for BeReal]()
+![StayReal, an open-source client application for BeReal](.github/assets/banner.png)
 <br/>
 An open-source client application for BeReal, built with Tauri
 
