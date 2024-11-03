@@ -8,7 +8,7 @@ const FriendsView: Component = () => {
   return (
     <div class="pt-[env(safe-area-inset-top)] pb-20vh mb-[env(safe-area-inset-bottom)]">
       <header class="mb-12">
-        <nav class="flex items-center justify-end px-4 pt-1">
+        <nav class="flex items-center justify-end px-4 pb-2 pt-4">
           <a href="/feed">
             <MdiChevronRight class="text-xl" />
           </a>

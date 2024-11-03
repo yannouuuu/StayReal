@@ -8,7 +8,7 @@ const ProfileView: Component = () => {
   return (
     <>
       <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent pb-2 pt-[env(safe-area-inset-top)]">
-        <nav class="flex items-center justify-between px-4">
+        <nav class="flex items-center justify-between px-4 pb-2 pt-4">
           <a href="/feed">
             <MdiChevronLeft class="text-xl" />
           </a>
