@@ -51,7 +51,7 @@ const FeedFriendsOverview: Component<{
           <div class="flex flex-col">
             <p class="font-600">{props.overview.user.username}</p>
             <p class="text-sm text-white/60">
-              {new Date(activePost().postedAt).toLocaleTimeString()} - Late of {activePost().lateInSeconds} seconds
+              {new Date(activePost().postedAt).toLocaleTimeString()} - Late of {props.overview.posts[0].lateInSeconds} seconds
             </p>
           </div>
         </div>
