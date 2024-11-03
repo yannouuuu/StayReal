@@ -70,7 +70,7 @@ const LoginView: Component = () => {
   
   return (
     <main class="h-100dvh flex flex-col px-4 py-6">
-      <header class="flex items-center relative w-full h-8">
+      <header class="flex items-center relative w-full h-8 mt-[env(safe-area-inset-top)]">
         <Show when={state.step === "otp"}>
           <button type="button"
             onClick={() => {
@@ -95,7 +95,7 @@ const LoginView: Component = () => {
       </p>
 
       <form
-        class="flex flex-col gap-4 h-full"
+        class="flex flex-col gap-4 h-full mb-[env(safe-area-inset-bottom)]"
         onSubmit={(event) => {
           event.preventDefault();
           runAuthentication();

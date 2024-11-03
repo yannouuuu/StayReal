@@ -1,15 +1,16 @@
 import { createResource, For, Show, type Component } from "solid-js";
 import { person_me } from "../api";
+import MdiChevronLeft from '~icons/mdi/chevron-left'
 
 const ProfileView: Component = () => {
   const [me] = createResource(person_me);
 
   return (
     <>
-      <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent py-2">
+      <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent pb-2 pt-[env(safe-area-inset-top)]">
         <nav class="flex items-center justify-between px-4">
           <a href="/feed">
-            back
+            <MdiChevronLeft class="text-xl" />
           </a>
 
           <a href="/settings">
@@ -18,7 +19,7 @@ const ProfileView: Component = () => {
         </nav>
       </header>
 
-      <main class="pt-16 space-y-8">
+      <main class="pt-16 space-y-8 mt-[env(safe-area-inset-top)]">
         <Show when={me()} fallback={<p>loading...</p>}>
           {me => (
             <>

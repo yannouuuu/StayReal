@@ -27,9 +27,11 @@ const FeedView: Component = () => {
 
   return (
     <div>
-      <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent py-2">
+      <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent pt-[env(safe-area-inset-top)]">
         <nav class="flex items-center justify-between px-4 py-1">
-          <MdiPeople class="text-xl" />
+          <a href="/friends">
+            <MdiPeople class="text-xl" />
+          </a>
 
           <p class="absolute inset-x-0 w-fit mx-auto text-2xl text-center text-white font-700">StayReal.</p>
 
@@ -68,9 +70,9 @@ const FeedView: Component = () => {
         </nav>
       </header>
 
-      <main class="py-16">
+      <main class="py-16 mt-[env(safe-area-inset-top)]">
         <Show when={feed()} fallback={
-          <p class="text-center">
+          <p class="text-center text-white/50">
             finding your feed...
           </p>
         }>
