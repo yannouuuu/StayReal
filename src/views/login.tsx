@@ -69,7 +69,7 @@ const LoginView: Component = () => {
   }
   
   return (
-    <main class="h-screen flex flex-col px-4 py-6">
+    <main class="h-100dvh flex flex-col px-4 py-6">
       <header class="flex items-center relative w-full h-8">
         <Show when={state.step === "otp"}>
           <button type="button"

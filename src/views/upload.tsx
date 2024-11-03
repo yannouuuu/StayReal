@@ -141,7 +141,7 @@ const UploadView: Component = () => {
   };
 
   return (
-    <div class="min-h-screen grid gap-4 rows-[auto_1fr_auto]">
+    <div class="min-h-100dvh grid gap-4 rows-[auto_1fr_auto]">
       <header class="py-4">
         <nav class="flex items-center justify-between px-4">
           <a href="/feed">
