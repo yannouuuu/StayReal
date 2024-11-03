@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import Swiper from "swiper";
 import { Pagination } from "swiper/modules";
+import FeedFriendsPost from "./post";
 
 const FeedFriendsOverview: Component<{
   overview: PostsOverview
@@ -68,10 +69,7 @@ const FeedFriendsOverview: Component<{
                 }}
               >
                 <div class="relative">
-                  <div class="z-20 relative mx-auto w-fit">
-                    <img class="z-30 h-40 w-auto absolute top-4 left-4 rounded-xl border-2 border-black shadow-lg" src={post.secondary.url} />
-                    <img class="rounded-2xl w-auto max-h-80vh" src={post.primary.url} />
-                  </div>
+                  <FeedFriendsPost post={post} />
 
                   {/* overlay */}
                   <div class="z-25 absolute inset-x-0 h-50px bottom-0 bg-gradient-to-t from-black/50 to-transparent" />
