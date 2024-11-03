@@ -30,6 +30,10 @@ const routes = [
     path: "/upload",
     component: lazy(() => import("./views/upload"))
   },
+  {
+    path: "/friends",
+    component: lazy(() => import("./views/friends"))
+  }
 ]
 
 render(() => (
