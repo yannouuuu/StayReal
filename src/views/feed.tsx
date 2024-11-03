@@ -1,18 +1,13 @@
-import { createEffect, createResource, createSignal, For, onCleanup, Show, type Component } from "solid-js";
-import { feeds_friends, PostsOverview } from "../api/requests/feeds/friends";
-import UserPostedRealMojis from "../components/feed/realmojis";
+import { createResource, createSignal, For, Show, type Component } from "solid-js";
+import { feeds_friends } from "../api/requests/feeds/friends";
 import { moments_last, person_me } from "../api";
 import FeedFriendsOverview from "../components/feed/friends/overview";
 import MdiPeople from '~icons/mdi/people';
 import MdiRefresh from '~icons/mdi/refresh'
-import MdiPlus from '~icons/mdi/plus'
 
-import "swiper/css";
-import Swiper from "swiper";
-import { useNavigate } from "@solidjs/router";
+import FeedUserOverview from "../components/feed/user/overview";
 
 const FeedView: Component = () => {
-  const navigate = useNavigate();
   const [me] = createResource(person_me);
   const [moment, { refetch: refetchMoment }] = createResource(me, (me) => moments_last(me.region))
   const [feed, { refetch: refetchFeed }] = createResource(feeds_friends);
@@ -28,84 +23,6 @@ const FeedView: Component = () => {
     finally {
       setIsRefreshing(false);
     }
-  };
-
-  const SwipingUserPosts: Component<{overview: PostsOverview}> = (props) => {
-    let container: HTMLDivElement | undefined;
-
-    const [activeIndex, setActiveIndex] = createSignal(props.overview.posts.length - 1);
-    const activePost = () => props.overview.posts[activeIndex()];
-
-    createEffect(() => {
-      if (!container) return;
-
-      const swiper = new Swiper(container, {
-        spaceBetween: 12,
-        slidesPerView: "auto",
-        centeredSlides: true,
-        initialSlide: props.overview.posts.length - 1,
-
-        on: {
-          slideChange: (swiper) => {
-            if (swiper.activeIndex === swiper.slides.length - 1) {
-              // prevent sliding to the "add post" slide
-              swiper.slideTo(swiper.slides.length - 2);
-            }
-            else {
-              setActiveIndex(swiper.activeIndex)
-            }
-          },
-          click: (swiper) => {
-            // when clicking on the "add post" slide, redirect to upload page
-            if (swiper.clickedIndex === swiper.slides.length - 1) {
-              navigate("/upload");
-            }
-            else {
-              swiper.slideTo(swiper.clickedIndex);
-            }
-          }
-        }
-      });
-
-      onCleanup(() => swiper.destroy());
-    });
-
-    return (
-      <div>
-        <div class="swiper" ref={container}>
-          <div class="swiper-wrapper py-5">
-            <For each={props.overview.posts}>
-              {(post, index) => (
-                <div class="relative swiper-slide w-fit! transition-all duration-300"
-                  style={{
-                    transform: activeIndex() === index() ? "scale(1)" : "scale(.9)",
-                    opacity: activeIndex() === index() ? 1 : .5
-                  }}
-                >
-                  <img class="h-11 w-auto absolute top-1 left-1 z-10 rounded-md border border-black shadow-lg" src={post.secondary.url} />
-                  <img class="rounded-lg h-140px" src={post.primary.url} />
-
-                  <div class="absolute flex justify-center z-20 -bottom-4 inset-x-0 -space-x-2">
-                    <UserPostedRealMojis post={post} />
-                  </div>
-                </div>
-              )}
-            </For>
-
-            <div class="scale-90! swiper-slide rounded-lg h-140px! border-2 border-white/75 px-4 flex! items-center justify-center w-100px! text-center">
-              <MdiPlus class="text-3xl" />
-            </div>
-          </div>
-        </div>
-
-        <p class="text-sm text-center">
-          {activePost().caption}
-        </p>
-        <p class="text-sm text-center text-white/50">
-          {new Date(activePost().postedAt).toLocaleString()}
-        </p>
-      </div>
-    );
   };
 
   return (
@@ -178,7 +95,7 @@ const FeedView: Component = () => {
                   </Show>
                 </div>
               }>
-                {overview => <SwipingUserPosts overview={overview()} />}
+                {overview => <FeedUserOverview overview={overview()} />}
               </Show>
 
               <div class="flex flex-col gap-6 mt-8">
