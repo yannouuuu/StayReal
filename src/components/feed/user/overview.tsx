@@ -1,6 +1,6 @@
 import { createEffect, createSignal, For, onCleanup, type Component } from "solid-js";
 import type { PostsOverview } from "../../../api/requests/feeds/friends";
-import UserPostedRealMojis from "../realmojis";
+import PostRealMojis from "../realmojis";
 import { useNavigate } from "@solidjs/router";
 import MdiPlus from '~icons/mdi/plus'
 
@@ -63,8 +63,8 @@ const FeedUserOverview: Component<{overview: PostsOverview}> = (props) => {
                 <img class="h-11 w-auto absolute top-1 left-1 z-10 rounded-md border border-black shadow-lg" src={post.secondary.url} />
                 <img class="rounded-lg h-140px" src={post.primary.url} />
 
-                <div class="absolute flex justify-center z-20 -bottom-4 inset-x-0 -space-x-2">
-                  <UserPostedRealMojis post={post} />
+                <div class="absolute flex justify-center z-20 -bottom-4 inset-x-0">
+                  <PostRealMojis post={post} />
                 </div>
               </div>
             )}

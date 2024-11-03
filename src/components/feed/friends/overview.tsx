@@ -7,6 +7,7 @@ import "swiper/css/pagination";
 import Swiper from "swiper";
 import { Pagination } from "swiper/modules";
 import FeedFriendsPost from "./post";
+import PostRealMojis from "../realmojis";
 
 const FeedFriendsOverview: Component<{
   overview: PostsOverview
@@ -73,6 +74,12 @@ const FeedFriendsOverview: Component<{
 
                   {/* overlay */}
                   <div class="z-25 absolute inset-x-0 h-50px bottom-0 bg-gradient-to-t from-black/50 to-transparent" />
+                
+                  <div>
+                    <div class="absolute z-30 bottom-4 left-4">
+                      <PostRealMojis post={post} />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
