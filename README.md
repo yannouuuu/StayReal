@@ -1,8 +1,17 @@
-<div align="center">
-  <img alt="StayReal, an open-source client application for BeReal" src=".github/assets/banner.svg" width="100%" />
-  <br/>
-  <h3>An open-source client application for BeReal, built with Tauri</h3>
-</div>
+<p align="center">
+  <img width="100%" src=".github/assets/banner.svg" alt="Banner">
+</p>
+<p align="center">
+  <b>An open-source, lightweight and privacy-focused BeReal alternative client.</b>
+</p>
+<p align="center">
+  <a href="https://github.com/Vexcited/StayReal/actions/workflows/build.yml">
+    <img src="https://github.com/Vexcited/StayReal/actions/workflows/build.yml/badge.svg?branch=main" alt="Build Badge">
+  </a>
+  <a href="./LICENSE.md">
+    <img src="https://img.shields.io/github/license/Vexcited/StayReal.svg?color=green" alt="License Badge">
+  </a>
+</p>
 
 ## ✨ Features
 
@@ -62,9 +71,11 @@ Coming soon, we're currently working on the UI so it's not ready yet.
 
 ### Prerequisites
 
-Follow the instructions on the [Tauri documentation](https://tauri.app/start/prerequisites/) to setup your environment depending on your operating system and target platform.
+Follow the instructions on the [&nearr;&nbsp;Tauri documentation](https://tauri.app/start/prerequisites/) to setup your environment depending on your operating system and target platform.
 
-### Installation
+Also, make sure you have [&nearr;&nbsp;pnpm](https://pnpm.io) installed since it's the package manager used in this project.
+
+### Quick start
 
 ```bash
 git clone https://github.com/Vexcited/StayReal && cd StayReal
@@ -79,7 +90,7 @@ pnpm tauri dev
 pnpm tauri android dev
 ```
 
-### Build
+### Build for release
 
 ```bash
 # Build for desktop
@@ -91,15 +102,14 @@ pnpm tauri android build
 
 ## 🙏 Acknowledgments
 
-This project would not have been possible without the significant contributions of the following projects :
+A lot of similar projects and researches have been made, and we would like to thank the authors for their work.
 
-- [BeUnblurred](https://github.com/macedonga/beunblurred) ;
-- [TooFake](https://github.com/s-alad/toofake) ;
-- [BeFake (Python API)](https://github.com/Smart123s/BeFake) ;
-- [Fowled BeReal API Documentation](https://bereal.fowled.dev)
-- [userbradley's researches on BeReal API](https://github.com/userbradley/BeReal)
+- [&nearr;&nbsp;BeFake, a BeReal Python API wrapper](https://github.com/Smart123s/BeFake)
+- [&nearr;&nbsp;TooFake, an alternative web client](https://github.com/s-alad/toofake)
+- [&nearr;&nbsp;BeUnblurred, an alternative web client](https://github.com/macedonga/beunblurred)
+- [&nearr;&nbsp;Fowled's researches on the app](https://bereal.fowled.dev)
+- [&nearr;&nbsp;userbradley's researches on the API](https://github.com/userbradley/BeReal)
 
 ## 📄 License
 
-This project is under the GPL-3.0 license.
-For more details, please refer to the [LICENSE.md](./LICENSE.md) file.
+StayReal is licensed under the [&nearr;&nbsp;GNU General Public License v3.0 (GPL-3.0)](./LICENSE.md), a copyleft license that ensures users’ freedom to run, study, share, and modify the software. Licensed works, modifications, and larger works must also be distributed under GPL-3.0, and source code must be provided or made available.

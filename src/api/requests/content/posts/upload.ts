@@ -37,7 +37,7 @@ export const upload_content = async (url: string, headers: Record<string, string
   });
 
   if (response.status !== 200)
-    throw new Error("failed to upload content");
+    throw new Error("failed to upload content, image may be too big!");
 };
 
 export const content_posts_create = async (inputs: {

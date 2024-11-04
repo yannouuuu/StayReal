@@ -6,6 +6,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import Swiper from "swiper";
 import { Pagination } from "swiper/modules";
+import FeedFriendsPost from "./post";
+import PostRealMojis from "../realmojis";
 
 const FeedFriendsOverview: Component<{
   overview: PostsOverview
@@ -49,7 +51,7 @@ const FeedFriendsOverview: Component<{
           <div class="flex flex-col">
             <p class="font-600">{props.overview.user.username}</p>
             <p class="text-sm text-white/60">
-              {new Date(activePost().postedAt).toLocaleTimeString()} - Late of {activePost().lateInSeconds} seconds
+              {new Date(activePost().postedAt).toLocaleTimeString()} - Late of {props.overview.posts[0].lateInSeconds} seconds
             </p>
           </div>
         </div>
@@ -68,13 +70,16 @@ const FeedFriendsOverview: Component<{
                 }}
               >
                 <div class="relative">
-                  <div class="z-20 relative mx-auto w-fit">
-                    <img class="z-30 h-40 w-auto absolute top-4 left-4 rounded-xl border-2 border-black shadow-lg" src={post.secondary.url} />
-                    <img class="rounded-2xl w-auto max-h-80vh" src={post.primary.url} />
-                  </div>
+                  <FeedFriendsPost post={post} />
 
                   {/* overlay */}
                   <div class="z-25 absolute inset-x-0 h-50px bottom-0 bg-gradient-to-t from-black/50 to-transparent" />
+                
+                  <div>
+                    <div class="absolute z-30 bottom-4 left-4">
+                      <PostRealMojis post={post} />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
