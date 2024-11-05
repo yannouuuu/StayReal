@@ -85,7 +85,7 @@ export interface PostsOverview {
   user: {
     id: string
     username: string
-    profilePicture?: ApiMedia
+    profilePicture: ApiMedia | null
     type: "USER"
     countryCode?: string
   }
