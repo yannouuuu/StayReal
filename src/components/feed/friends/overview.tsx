@@ -1,4 +1,4 @@
-import { Component, createEffect, createSignal, For, onCleanup } from "solid-js";
+import { Component, createEffect, createSignal, For, onCleanup, Show } from "solid-js";
 import type { PostsOverview } from "../../../api/requests/feeds/friends";
 import MdiDotsVertical from '~icons/mdi/dots-vertical';
 
@@ -47,7 +47,19 @@ const FeedFriendsOverview: Component<{
     <div>
       <div class="flex items-center justify-between gap-4 px-4 pb-2">
         <div class="flex items-center gap-2">
-          <img class="w-8 h-8 rounded-full" src={props.overview.user.profilePicture.url} alt={props.overview.user.username} />
+        <Show when={props.overview.user.profilePicture} fallback={
+            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+              <p class="text-center font-500">{props.overview.user.username[0]}</p>
+            </div>
+          }>
+            {profilePicture => (
+              <img
+                class="w-8 h-8 rounded-full"
+                src={profilePicture().url}
+                alt={props.overview.user.username}
+              />
+            )}
+          </Show>
           <div class="flex flex-col">
             <p class="font-600">{props.overview.user.username}</p>
             <p class="text-sm text-white/60">
