@@ -248,10 +248,10 @@ jobs:
 
       - name: (Android) install Java
         if: matrix.os == 'android'
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '17'
 
       - if: matrix.os == 'android'
         uses: android-actions/setup-android@v3
