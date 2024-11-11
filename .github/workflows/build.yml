@@ -130,13 +130,13 @@ jobs:
 
       - name: (Linux) (x86_64) build
         if: matrix.target == 'x86_64-unknown-linux-gnu'
-        run: pnpm tauri build --target ${{ matrix.target }} --bundles deb -- --config target.x86_64-unknown-linux-gnu.linker=\'x86_64-linux-gnu-gcc\'
+        run: pnpm tauri build --target ${{ matrix.target }} --bundles deb,rpm,appimage -- --config target.x86_64-unknown-linux-gnu.linker=\'x86_64-linux-gnu-gcc\'
         env:
           RUSTFLAGS: -Awarnings
 
       - name: (Linux) (ARMv7) build
         if: matrix.target == 'armv7-unknown-linux-gnueabihf'
-        run: pnpm tauri build --target ${{ matrix.target }} --bundles deb -- --config target.armv7-unknown-linux-gnueabihf.linker=\'arm-linux-gnueabihf-gcc\'
+        run: pnpm tauri build --target ${{ matrix.target }} --bundles deb,rpm -- --config target.armv7-unknown-linux-gnueabihf.linker=\'arm-linux-gnueabihf-gcc\'
         env:
           RUSTFLAGS: -Awarnings -L/usr/lib/arm-linux-gnueabihf
           CC: arm-linux-gnueabihf-gcc
@@ -145,7 +145,7 @@ jobs:
   
       - name: (Linux) (ARM64) build
         if: matrix.target == 'aarch64-unknown-linux-gnu'
-        run: pnpm tauri build --target ${{ matrix.target }} --bundles deb -- --config target.aarch64-unknown-linux-gnu.linker=\'aarch64-linux-gnu-gcc\'
+        run: pnpm tauri build --target ${{ matrix.target }} --bundles deb,rpm -- --config target.aarch64-unknown-linux-gnu.linker=\'aarch64-linux-gnu-gcc\'
         env:
           RUSTFLAGS: -Awarnings -L/usr/lib/aarch64-linux-gnu
           CC: aarch64-linux-gnu-gcc
@@ -201,10 +201,34 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'ubuntu-22.04'
-            target: 'android'
+          - platform: ubuntu-22.04
+            os: android
+            target-full: 'aarch64-linux-android'
+            target-short: 'aarch64'
+          - platform: ubuntu-22.04
+            os: android
+            target-full: 'armv7-linux-androideabi'
+            target-short: 'armv7'
+          - platform: ubuntu-22.04
+            os: android
+            target-full: 'i686-linux-android'
+            target-short: 'i686'
+          - platform: ubuntu-22.04
+            os: android
+            target-full: 'x86_64-linux-android'
+            target-short: 'x86_64'
           # - platform: 'macos-latest'
-          #   target: 'ios'
+          #   os: 'ios'
+          #   target-full: 'aarch64-apple-ios'
+          #   target-short: 'aarch64'
+          # - platform: 'macos-latest'
+          #   os: 'ios'
+          #   target-full: 'aarch64-apple-ios-sim'
+          #   target-short: 'aarch64-sim'
+          # - platform: 'macos-latest'
+          #   os: 'ios'
+          #   target-full: 'x86_64-apple-ios'
+          #   target-short: 'x86_64'
         
     runs-on: ${{ matrix.platform }}
     steps:
@@ -222,35 +246,35 @@ jobs:
       - name: install frontend dependencies
         run: pnpm install
 
-      - name: Setup Java
-        if: matrix.target == 'android'
+      - name: (Android) install Java
+        if: matrix.os == 'android'
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
-      - name: Setup Android SDK & NDK
-        if: matrix.target == 'android'
+      - if: matrix.os == 'android'
         uses: android-actions/setup-android@v3
 
-      - name: Install Android NDK
-        if: matrix.target == 'android'
+      - name: (Android) install NDK
+        if: matrix.os == 'android'
         run: |
           echo "y" | sdkmanager --install "ndk;25.2.9519653"
           echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
           echo "NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
 
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target-full }}
 
-      # - name: Install iOS dependencies
-      #   if: matrix.target == 'ios'
+      # - name: (iOS) install dependencies
+      #   if: matrix.os == 'ios'
       #   run: |
       #     rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
       #     xcode-select --install || true
 
       # - name: Install the Apple certificate and provisioning profile
-      #   if: matrix.target == 'ios'
+      #   if: matrix.os == 'ios'
       #   env:
       #     BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE }}
       #     P12_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
@@ -279,46 +303,39 @@ jobs:
       #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
       #     cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
           
-      - name: Install Android dependencies
-        if: matrix.target == 'android'
+      - name: (Android) install dependencies
+        if: matrix.os == 'android'
         run: |
-          rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
           cargo install cargo-ndk
 
-      - name: Build Android App
-        if: matrix.target == 'android'
+      - name: (Android) build
+        if: matrix.os == 'android'
         env:
           NDK_HOME: ${{ env.NDK_HOME }}
         run: |
-          pnpm tauri android build
+          pnpm tauri android build --target ${{ matrix.target-short }}
           
-      # - name: Build iOS App
-      #   if: matrix.target == 'ios'
+      # - name: (iOS) build
+      #   if: matrix.os == 'ios'
       #   env:
       #     TEAM_ID: ${{ secrets.TEAM_ID }}
       #   run: |
       #     # Update the Xcode project with the team ID
       #     /usr/libexec/PlistBuddy -c "Set :TEAM_ID $TEAM_ID" src-tauri/gen/apple/stayreal.xcodeproj/project.pbxproj
-          
-      #     pnpm tauri ios init
       #     pnpm tauri ios build
         
-      - name: Upload Android artifacts
-        if: matrix.target == 'android'
+      - name: (Android) upload unsigned .apk
+        if: matrix.os == 'android'
         uses: actions/upload-artifact@v4
         with:
-          name: stayreal-android
+          name: stayreal-android-${{ matrix.target-short }}-apk
           path: |
-            src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.apk
             src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
-          if-no-files-found: warn
           
-      # - name: Upload iOS artifacts
+      # - name: (iOS) upload .ipa
       #   if: matrix.target == 'ios'
       #   uses: actions/upload-artifact@v4
       #   with:
-      #     name: StayReal-iOS
+      #     name: stayreal-ios-${{ matrix.target-short }}-ipa
       #     path: |
       #       src-tauri/gen/ios/build/*.ipa
-      #       src-tauri/gen/ios/build/*.app
-      #     if-no-files-found: warn
