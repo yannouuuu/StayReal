@@ -13,6 +13,83 @@
   </a>
 </p>
 
+## 📥 Download
+
+<table align="center">
+  <tr>
+    <th>
+      <img src=".github/assets/windows.svg" width="50%" align="center" />
+      <br><p align="center">Windows</p>
+    </th>
+    <th>
+      <img src=".github/assets/apple.svg" width="50%" align="center" />
+      <br><p align="center">macOS</p>
+    </th>
+    <th>
+      <img src=".github/assets/linux.svg" width="50%" align="center" />
+      <br><p align="center">Linux</p>
+    </th>
+  </tr>
+
+  <tr>
+    <td width="30%">
+      <div align="center">
+        <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-pc-windows-msvc-msi.zip">&nearr;&nbsp;MSI</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-pc-windows-msvc-nsis.zip">&nearr;&nbsp;NSIS</a>
+        <br>
+        <b>aarch64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-aarch64-pc-windows-msvc-nsis.zip">&nearr;&nbsp;NSIS</a>
+      </div>
+    </td>
+    <td width="30%">
+      <div align="center">
+        <b>aarch64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-aarch64-apple-darwin-dmg.zip">&nearr;&nbsp;DMG</a>
+        <br>
+        <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-apple-darwin-dmg.zip">&nearr;&nbsp;DMG</a>
+      </div>
+    </td>
+    <td width="30%">
+      <div align="center">
+        <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-unknown-linux-gnu-deb.zip">&nearr;&nbsp;DEB</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-unknown-linux-gnu-rpm.zip">&nearr;&nbsp;RPM</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-unknown-linux-gnu-appimage.zip">&nearr;&nbsp;AppImage</a>
+        <br>
+        <b>aarch64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-aarch64-unknown-linux-gnu-deb.zip">&nearr;&nbsp;DEB</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-aarch64-unknown-linux-gnu-rpm.zip">&nearr;&nbsp;RPM</a>
+        <br>
+        <b>armv7</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-armv7-unknown-linux-gnueabihf-deb.zip">&nearr;&nbsp;DEB</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-armv7-unknown-linux-gnueabihf-rpm.zip">&nearr;&nbsp;RPM</a>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<table align="center">
+  <tr>
+    <th>
+      <img src=".github/assets/android.svg" width="30%" align="center" />
+      <br><p align="center">Android (.apk)</p>
+    </th>
+    <th>
+      <img src=".github/assets/apple.svg" width="30%" align="center" />
+      <br><p align="center">iOS (.ipa)</p>
+    </th>
+  </tr>
+
+  <tr>
+    <td width="30%">
+      <div align="center">
+        <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-aarch64-apk.zip">&nearr;&nbsp;aarch64</a>
+        <br>
+        <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-x86_64-apk.zip">&nearr;&nbsp;x86_64</a>
+        <br>
+        <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-armv7-apk.zip">&nearr;&nbsp;armv7</a>
+        <br>
+        <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-i686-apk.zip">&nearr;&nbsp;i686</a>
+      </div>
+    </td>
+    <td width="30%">
+      <div align="center">
+        Sadly, no build is available for iOS yet.
+      </div>
+    </td>
+  </tr>
+</table>
+
 ## ✨ Features
 
 - [x] Authentication
@@ -31,7 +108,7 @@
   - [x] Posts
   - [x] Swipper for multiple posts
   - [ ] Comments
-  - [ ] Reactions
+  - [x] Reactions
 - [x] Post a BeReal
 - [ ] Comment under a post
 - [ ] React to a post with your realmojis
@@ -39,15 +116,15 @@
 - [ ] Friends recommendations
 - [ ] Listing of friends
 - [ ] Notifications
-  - [ ] Background fetch
-  - Probably unknown if it's possible to do it with Tauri, if you have any idea, please open an issue or a PR.
+  - [ ] Update in background on desktop (possible)
+  - [ ] Update in background on mobile (might not be possible, it's currently unknown)
 
 ### Advanced
 
 Some advanced features that are not in the original application.
 
 - [ ] Light mode
-- [ ] Upload from gallery (not only camera)
+- [x] Upload from gallery (not only camera)
 - [ ] Manual camera (there is no delay between primary image and secondary image)
 - [ ] Cache data to device local database (for faster reloading and offline access)
 
@@ -58,14 +135,6 @@ Only the necessary data is stored on the device, and the application does not co
 - [x] No tracking
 - [x] No analytics
 - [x] No ads
-
-## 🚀 Getting Started
-
-There's currently no release available, but you can build the application yourself or find pre-built binaries in the actions tab.
-
-## 📸 Screenshots
-
-Coming soon, we're currently working on the UI so it's not ready yet.
 
 ## 🛠️ Development
 
@@ -99,6 +168,8 @@ pnpm tauri build
 # Build for Android
 pnpm tauri android build
 ```
+
+If you want to know more about the pipeline used to build the application, you can check the [&nearr;&nbsp;GitHub Actions workflow](./.github/workflows/build.yml).
 
 ## 🙏 Acknowledgments
 
