@@ -152,42 +152,42 @@ jobs:
           PKG_CONFIG_SYSROOT_DIR: /usr/lib/aarch64-linux-gnu
           PKG_CONFIG_PATH: /usr/lib/aarch64-linux-gnu/pkgconfig
       
-      - name: (Windows) (only x86) upload .msi
+      - name: (Windows) (only x86) distribute .msi
         if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: stayreal-${{ matrix.target }}-msi
           path: src-tauri/target/${{ matrix.target }}/release/bundle/msi/*.msi
 
-      - name: (Windows) upload NSIS
+      - name: (Windows) distribute NSIS (.exe)
         if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: stayreal-${{ matrix.target }}-nsis
           path: src-tauri/target/${{ matrix.target }}/release/bundle/nsis/*.exe
 
-      - name: (Linux) upload .deb
+      - name: (Linux) distribute .deb
         if: matrix.platform == 'ubuntu-22.04'
         uses: actions/upload-artifact@v4
         with:
           name: stayreal-${{ matrix.target }}-deb
           path: src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb
 
-      - name: (Linux) upload .rpm
+      - name: (Linux) distribute .rpm
         if: matrix.platform == 'ubuntu-22.04'
         uses: actions/upload-artifact@v4
         with:
           name: stayreal-${{ matrix.target }}-rpm
           path: src-tauri/target/${{ matrix.target }}/release/bundle/rpm/*.rpm
 
-      - name: (Linux) upload .appimage
+      - name: (Linux) distribute .appimage
         if: matrix.platform == 'ubuntu-22.04'
         uses: actions/upload-artifact@v4
         with:
           name: stayreal-${{ matrix.target }}-appimage
           path: src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage
         
-      - name: (macOS) upload .dmg
+      - name: (macOS) distribute .dmg
         if: matrix.platform == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
@@ -337,7 +337,7 @@ jobs:
       #     /usr/libexec/PlistBuddy -c "Set :TEAM_ID $TEAM_ID" src-tauri/gen/apple/stayreal.xcodeproj/project.pbxproj
       #     pnpm tauri ios build
         
-      - name: (Android) upload unsigned .apk
+      - name: (Android) distribute (signed) .apk
         if: matrix.os == 'android'
         uses: actions/upload-artifact@v4
         with:
@@ -345,7 +345,7 @@ jobs:
           path: |
             src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
           
-      # - name: (iOS) upload .ipa
+      # - name: (iOS) distribute .ipa
       #   if: matrix.target == 'ios'
       #   uses: actions/upload-artifact@v4
       #   with:
