@@ -317,7 +317,7 @@ jobs:
         env:
           NDK_HOME: ${{ env.NDK_HOME }}
         run: |
-          pnpm tauri android build --target ${{ matrix.target-short }}
+          pnpm tauri android build --target ${{ matrix.target-short }} --apk
           
       # - name: (iOS) build
       #   if: matrix.os == 'ios'
