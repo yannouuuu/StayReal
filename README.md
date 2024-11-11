@@ -17,17 +17,17 @@
 
 <table align="center">
   <tr>
-    <th>
-      <img src=".github/assets/windows.svg" width="50%" align="center" />
-      <br><p align="center">Windows</p>
+    <th><br>
+      <img src=".github/assets/windows.svg" width="40%" align="center" />
+      <br><br><p align="center" bottom="15px">Windows</p>
     </th>
-    <th>
-      <img src=".github/assets/apple.svg" width="50%" align="center" />
-      <br><p align="center">macOS</p>
+    <th><br>
+      <img src=".github/assets/apple.svg" width="40%" align="center" />
+      <br><br><p align="center">macOS</p>
     </th>
-    <th>
-      <img src=".github/assets/linux.svg" width="50%" align="center" />
-      <br><p align="center">Linux</p>
+    <th><br>
+      <img src=".github/assets/linux.svg" width="30%" align="center" />
+      <br><br><p align="center">Linux</p>
     </th>
   </tr>
 
@@ -46,7 +46,7 @@
         <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-apple-darwin-dmg.zip">&nearr;&nbsp;DMG</a>
       </div>
     </td>
-    <td width="30%">
+    <td width="40%">
       <div align="center">
         <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-unknown-linux-gnu-deb.zip">&nearr;&nbsp;DEB</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-unknown-linux-gnu-rpm.zip">&nearr;&nbsp;RPM</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-unknown-linux-gnu-appimage.zip">&nearr;&nbsp;AppImage</a>
         <br>
@@ -60,13 +60,13 @@
 
 <table align="center">
   <tr>
-    <th>
-      <img src=".github/assets/android.svg" width="30%" align="center" />
-      <br><p align="center">Android (.apk)</p>
+    <th><br>
+      <img src=".github/assets/android.svg" width="20%" align="center" />
+      <br><br><p align="center">Android (.apk)</p>
     </th>
-    <th>
-      <img src=".github/assets/apple.svg" width="30%" align="center" />
-      <br><p align="center">iOS (.ipa)</p>
+    <th><br>
+      <img src=".github/assets/apple.svg" width="20%" align="center" />
+      <br><br><p align="center">iOS (.ipa)</p>
     </th>
   </tr>
 
