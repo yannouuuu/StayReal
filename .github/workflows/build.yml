@@ -267,6 +267,10 @@ jobs:
         with:
           targets: ${{ matrix.target-full }}
 
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
       # - name: (iOS) install dependencies
       #   if: matrix.os == 'ios'
       #   run: |
