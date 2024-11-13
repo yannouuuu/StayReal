@@ -31,10 +31,13 @@ const LoginView: Component = () => {
     try {
       setState("loading", true);
 
+      // make sure there's no whitespace in the phone number
+      const phoneNumber = state.phoneNumber.split(" ").join("").trim();
+
       if (state.step === "phone") {
         await vonage_request_code({
           deviceID: state.deviceID,
-          phoneNumber: state.phoneNumber.trim(),
+          phoneNumber,
           tokens: [{
             identifier: VonageRequestCodeTokenIdentifier.ARKOSE,
             token: state.arkoseToken
@@ -46,7 +49,7 @@ const LoginView: Component = () => {
       else if (state.step === "otp") {
         const tokens = await vonage_verify_otp({
           deviceID: state.deviceID,
-          phoneNumberUsed: state.phoneNumber.trim(),
+          phoneNumberUsed: phoneNumber,
           otp: state.otp.trim()
         });
 
@@ -85,14 +88,14 @@ const LoginView: Component = () => {
           </button>
         </Show>
 
-        <h1 class="absolute inset-x-0 w-fit mx-auto text-2xl text-center text-white font-700">
+        <div class="absolute inset-x-0 w-fit mx-auto text-2xl text-center text-white font-700" role="banner">
           StayReal.
-        </h1>
+        </div>
       </header>
 
-      <p class="py-10 text-center font-600">
+      <h1 class="my-10 w-fit mx-auto text-center font-600">
         {state.step === "phone" ? "What's your phone number?" : "Check your number"}
-      </p>
+      </h1>
 
       <form
         class="flex flex-col gap-4 h-full mb-[env(safe-area-inset-bottom)]"
@@ -153,7 +156,7 @@ const LoginView: Component = () => {
             Check Verification Code
           </button>
         </Show>
-        <p class="text-white/40 text-xs text-center">device-id: {state.deviceID}</p>
+        <p class="text-white/40 text-xs text-center" aria-hidden="true">device-id: {state.deviceID}</p>
       </form>
     </main>
   );

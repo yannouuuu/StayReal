@@ -49,7 +49,7 @@ const FeedUserOverview: Component<{overview: PostsOverview}> = (props) => {
   });
 
   return (
-    <div>
+    <article role="article">
       <div class="swiper" ref={container}>
         <div class="swiper-wrapper py-5">
           <For each={props.overview.posts}>
@@ -60,8 +60,16 @@ const FeedUserOverview: Component<{overview: PostsOverview}> = (props) => {
                   opacity: activeIndex() === index() ? 1 : .5
                 }}
               >
-                <img class="h-11 w-auto absolute top-1 left-1 z-10 rounded-md border border-black shadow-lg" src={post.secondary.url} />
-                <img class="rounded-lg h-140px" src={post.primary.url} />
+                <img
+                  class="h-11 w-auto absolute top-1 left-1 z-10 rounded-md border border-black shadow-lg"
+                  src={post.secondary.url}
+                  alt="Secondary image"
+                />
+                <img
+                  class="rounded-lg h-140px"
+                  src={post.primary.url}
+                  alt="Primary image"
+                />
 
                 <div class="absolute flex justify-center z-20 -bottom-4 inset-x-0">
                   <PostRealMojis post={post} />
@@ -70,19 +78,24 @@ const FeedUserOverview: Component<{overview: PostsOverview}> = (props) => {
             )}
           </For>
 
-          <div class="scale-90! swiper-slide rounded-lg h-140px! border-2 border-white/75 px-4 flex! items-center justify-center w-100px! text-center">
+          <a href="/upload"
+            class="scale-90! swiper-slide rounded-lg h-140px! border-2 border-white/75 px-4 flex! items-center justify-center w-100px! text-center"
+            aria-label="Make a new BeReal."
+          >
             <MdiPlus class="text-3xl" />
-          </div>
+          </a>
         </div>
       </div>
 
-      <p class="text-sm text-center">
+      <p class="text-sm text-center w-fit mx-auto">
         {activePost().caption}
       </p>
       <p class="text-sm text-center text-white/50">
-        {new Date(activePost().postedAt).toLocaleString()}
+        <time>
+          {new Date(activePost().postedAt).toLocaleString()}
+        </time>
       </p>
-    </div>
+    </article>
   );
 };
 

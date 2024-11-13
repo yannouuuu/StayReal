@@ -29,11 +29,13 @@ const FeedView: Component = () => {
     <div>
       <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent pt-[env(safe-area-inset-top)]">
         <nav class="flex items-center justify-between px-4 pb-2 pt-4">
-          <a href="/friends">
+          <a href="/friends" aria-label="Relationships">
             <MdiPeople class="text-xl" />
           </a>
 
-          <p class="absolute inset-x-0 w-fit mx-auto text-2xl text-center text-white font-700">StayReal.</p>
+          <p class="absolute inset-x-0 w-fit mx-auto text-2xl text-center text-white font-700" role="banner">
+            StayReal.
+          </p>
 
           <div class="flex gap-4 items-center">
             <button
@@ -49,7 +51,7 @@ const FeedView: Component = () => {
               />
             </button>
 
-            <a href="/profile">
+            <a href="/profile" aria-label="My profile">
               <Show when={me()?.profilePicture}
                 fallback={
                   <div>

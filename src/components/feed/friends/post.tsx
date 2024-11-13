@@ -9,10 +9,17 @@ const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
 
   return (
     <div class="z-20 relative mx-auto w-fit">
-      <img class="z-30 h-40 w-auto absolute top-4 left-4 rounded-xl border-2 border-black shadow-lg" src={secondaryURL()}
+      <img
+        class="z-30 h-40 w-auto absolute top-4 left-4 rounded-xl border-2 border-black shadow-lg"
         onClick={() => setIsReversed(prev => !prev)}
+        alt="Secondary image"
+        src={secondaryURL()}
       />
-      <img class="rounded-2xl w-auto max-h-80vh" src={primaryURL()} />
+      <img
+        class="rounded-2xl w-auto max-h-80vh"
+        alt="Primary image"
+        src={primaryURL()}
+      />
     </div>
   );
 };
