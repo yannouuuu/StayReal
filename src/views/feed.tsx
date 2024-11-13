@@ -6,6 +6,7 @@ import MdiPeople from '~icons/mdi/people';
 import MdiRefresh from '~icons/mdi/refresh'
 
 import FeedUserOverview from "../components/feed/user/overview";
+import PullableScreen from "../components/pullable-screen";
 
 const FeedView: Component = () => {
   const [me] = createResource(person_me);
@@ -71,52 +72,56 @@ const FeedView: Component = () => {
           </div>
         </nav>
       </header>
-
-      <main class="py-16 mt-[env(safe-area-inset-top)]">
-        <Show when={feed()} fallback={
-          <p class="text-center text-white/50">
-            finding your feed...
-          </p>
-        }>
-          {feed => (
-            <>
-              <Show when={feed().userPosts} fallback={
-                <div class="text-center flex flex-col gap-1 px-4 mx-4 bg-white/10 py-4 rounded-2xl">
-                  <p class="mb-4">
-                    You haven't posted any BeReal today !
-                  </p>
-
-                  <a href="/upload" class="block text-center py-3 font-600 bg-white text-black rounded-2xl">
-                    StayReal by posting a BeReal.
-                  </a>
-
-                  <Show when={moment()}>
-                    {moment => (
-                      <p class="text-white/50 mt-1 text-xs">
-                        Last moment was at {new Date(moment().startDate).toLocaleTimeString()}
+      
+      <div class="py-16 mt-[env(safe-area-inset-top)]">
+        <PullableScreen onRefresh={handleRefresh}>
+          <main>
+            <Show when={feed()} fallback={
+              <p class="text-center text-white/50">
+                finding your feed...
+              </p>
+            }>
+              {feed => (
+                <>
+                  <Show when={feed().userPosts} fallback={
+                    <div class="text-center flex flex-col gap-1 px-4 mx-4 bg-white/10 py-4 rounded-2xl">
+                      <p class="mb-4">
+                        You haven't posted any BeReal today !
                       </p>
-                    )}
+
+                      <a href="/upload" class="block text-center py-3 font-600 bg-white text-black rounded-2xl">
+                        StayReal by posting a BeReal.
+                      </a>
+
+                      <Show when={moment()}>
+                        {moment => (
+                          <p class="text-white/50 mt-1 text-xs">
+                            Last moment was at {new Date(moment().startDate).toLocaleTimeString()}
+                          </p>
+                        )}
+                      </Show>
+                    </div>
+                  }>
+                    {overview => <FeedUserOverview overview={overview()} />}
                   </Show>
-                </div>
-              }>
-                {overview => <FeedUserOverview overview={overview()} />}
-              </Show>
 
-              <div class="flex flex-col gap-6 mt-8">
-                <For each={[...feed().friendsPosts].sort((a, b) => new Date(b.posts[b.posts.length - 1].postedAt).getTime() - new Date(a.posts[a.posts.length - 1].postedAt).getTime())}>
-                  {overview => <FeedFriendsOverview overview={overview} />}
-                </For>
-              </div>
+                  <div class="flex flex-col gap-6 mt-8">
+                    <For each={[...feed().friendsPosts].sort((a, b) => new Date(b.posts[b.posts.length - 1].postedAt).getTime() - new Date(a.posts[a.posts.length - 1].postedAt).getTime())}>
+                      {overview => <FeedFriendsOverview overview={overview} />}
+                    </For>
+                  </div>
 
-              <section class="pt-16 px-8">
-                <p class="text-center text-white/50">
-                  You're at the end of your feed, come back later !
-                </p>
-              </section>
-            </>
-          )}
-        </Show>
-      </main>
+                  <section class="pt-16 px-8">
+                    <p class="text-center text-white/50">
+                      You're at the end of your feed, come back later !
+                    </p>
+                  </section>
+                </>
+              )}
+            </Show>
+          </main>
+        </PullableScreen>
+      </div>
     </div>
   )
 };
