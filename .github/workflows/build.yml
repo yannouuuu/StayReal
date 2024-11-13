@@ -6,7 +6,7 @@ name: 'Build Desktop and Mobile'
 on:
   push:
     branches:
-      - '*'
+      - 'main'
 
 jobs:
   build-desktop:
