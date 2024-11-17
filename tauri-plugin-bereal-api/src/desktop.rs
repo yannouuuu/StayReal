@@ -36,10 +36,10 @@ impl<R: Runtime> BerealApi<R> {
     let bereal_timezone = iana_time_zone::get_timezone().unwrap();
 
     let timestamp = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("time went backwards")
-        .as_secs()
-        .to_string();
+      .duration_since(UNIX_EPOCH)
+      .expect("time went backwards")
+      .as_secs()
+      .to_string();
 
     let data = format!("{}{}{}", device_id, bereal_timezone, timestamp);
     let data = data.as_bytes();

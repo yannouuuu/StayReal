@@ -34,15 +34,12 @@ export default createRoot(() => {
   onMount(async () => {
     try {
       const tokens = await getAuthDetails();
-      console.log("authenticated before", tokens);
       setStore({
         loading: false,
         ...tokens
       });
     }
     catch { // probably never authenticated before
-
-      console.log("never authenticated before");
       setStore({ loading: false });
     }
   });
