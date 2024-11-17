@@ -84,7 +84,7 @@
     </td>
     <td width="30%">
       <div align="center">
-        Sadly, no build is available for iOS yet.
+        iOS is currently not supported, the internal API needs an implementation in Swift.
       </div>
     </td>
   </tr>
@@ -115,9 +115,7 @@
 - [ ] Accept a friend request
 - [ ] Friends recommendations
 - [ ] Listing of friends
-- [ ] Notifications
-  - [ ] Update in background on desktop (possible)
-  - [ ] Update in background on mobile (might not be possible, it's currently unknown)
+- [ ] Notifications (work in progress)
 
 ### Advanced
 
