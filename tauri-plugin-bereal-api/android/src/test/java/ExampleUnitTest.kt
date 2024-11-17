@@ -1,4 +1,4 @@
-package com.vexcited.stayreal.bereal.api
+package com.vexcited.stayreal.api
 
 import org.junit.Test
 
