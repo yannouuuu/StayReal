@@ -27,12 +27,6 @@ const BEREAL_HMAC_KEY_HEX: &str = "353630333766346166323266623639363066336364303
 
 pub struct BerealApi<R: Runtime>(AppHandle<R>);
 impl<R: Runtime> BerealApi<R> {
-  // pub fn ping(&self, payload: PingRequest) -> crate::Result<PingResponse> {
-  //   Ok(PingResponse {
-  //     value: payload.value,
-  //   })
-  // }
-
   fn data_dir(&self) -> PathBuf {
     self.0.path().app_local_data_dir().unwrap()
   }
@@ -88,7 +82,6 @@ impl<R: Runtime> BerealApi<R> {
 
   pub fn set_auth_details(&self, payload: AuthDetails) -> crate::Result<()> {
     let credentials_file_path = self.data_dir().join("credentials.json");
-    println!("writing credentials to: {:?}", credentials_file_path);
 
     if let Some(parent) = credentials_file_path.parent() {
       std::fs::create_dir_all(parent)?;
