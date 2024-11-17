@@ -10,9 +10,9 @@ mod desktop;
 #[cfg(mobile)]
 mod mobile;
 
-mod commands;
 mod error;
 mod models;
+mod commands;
 
 pub use error::{Error, Result};
 
@@ -21,7 +21,8 @@ use desktop::BerealApi;
 #[cfg(mobile)]
 use mobile::BerealApi;
 
-/// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the mobile-bereal-api APIs.
+/// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`]
+/// to access the bereal-api APIs.
 pub trait BerealApiExt<R: Runtime> {
   fn bereal_api(&self) -> &BerealApi<R>;
 }
@@ -36,9 +37,13 @@ impl<R: Runtime, T: Manager<R>> crate::BerealApiExt<R> for T {
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
   Builder::new("bereal-api")
     .invoke_handler(tauri::generate_handler![
-      commands::ping
+      commands::set_auth_details,
+      commands::get_auth_details,
+      commands::clear_auth_details,
+      commands::refresh_token,
     ])
     .setup(|app, api| {
+
       #[cfg(mobile)]
       let bereal_api = mobile::init(app, api)?;
 
