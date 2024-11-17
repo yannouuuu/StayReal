@@ -115,7 +115,7 @@ export interface FeedsFriends {
 export const feeds_friends = async (): Promise<FeedsFriends> => {
   const response = await fetch("https://mobile.bereal.com/api/feeds/friends-v1", {
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`
     }
   });

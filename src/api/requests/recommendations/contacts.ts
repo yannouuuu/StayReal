@@ -22,7 +22,7 @@ export const recommendations_contacts = async (phoneNumbers: Array<string>): Pro
   response = await fetch(url, {
     method: "POST",
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`,
       "Content-Type": "application/json"
     },
@@ -39,7 +39,7 @@ export const recommendations_contacts = async (phoneNumbers: Array<string>): Pro
 
   response = await fetch(url, {
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`
     }
   });

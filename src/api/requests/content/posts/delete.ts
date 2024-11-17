@@ -6,7 +6,7 @@ export const content_posts_delete = async (postId: string): Promise<void> => {
   const response = await fetch(`https://mobile.bereal.com/api/content/posts/${postId}`, {
     method: "DELETE",
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`
     }
   });

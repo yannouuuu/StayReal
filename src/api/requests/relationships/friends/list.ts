@@ -18,7 +18,7 @@ export interface RelationshipsFriends {
 export const relationships_friends = async (): Promise<RelationshipsFriends> => {
   const response = await fetch("https://mobile.bereal.com/api/relationships/friends", {
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`
     }
   });

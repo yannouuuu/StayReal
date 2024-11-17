@@ -11,7 +11,7 @@ export const content_realmojis_put = async (postId: string, postUserId: string, 
   const response = await fetch(`https://mobile.bereal.com/api/content/realmojis?postId=${postId}&postUserId=${postUserId}`, {
     method: "PUT",
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`,
       "Content-Type": "application/json",
     },

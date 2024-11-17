@@ -29,7 +29,7 @@ export interface PersonProfile {
 export const person_profile = async (id: string): Promise<PersonProfile> => {
   const response = await fetch(`https://mobile.bereal.com/api/person/profiles/${id}?withPost=true`, {
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`
     }
   });

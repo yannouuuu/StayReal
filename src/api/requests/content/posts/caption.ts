@@ -8,7 +8,7 @@ export const content_posts_caption = async (postId: string, caption: string, tag
   const response = await fetch(`https://mobile.bereal.com/api/content/posts/caption/${postId}`, {
     method: "PATCH",
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`,
       "Content-Type": "application/json",
     },

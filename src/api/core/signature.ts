@@ -10,7 +10,8 @@ export const createBeRealSignature = (deviceID: string): string => {
   
   const data = utf8ToBytes(`${deviceID}${BEREAL_TIMEZONE}${timestamp}`);
   const hash = hmac(sha256, BEREAL_HMAC_KEY, base64.encode(data));
-  const bytes = concatBytes(utf8ToBytes(`1:${timestamp}:`), hash);
+  const prefix = utf8ToBytes(`1:${timestamp}:`);
+  const bytes = concatBytes(prefix, hash);
 
   return base64.encode(bytes);
 };

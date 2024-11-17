@@ -18,7 +18,7 @@ export interface RecommendationsFriends {
 export const recommendations_friends = async (limit = 5, source = "onboarding"): Promise<RecommendationsFriends> => {
   const response = await fetch(`https://mobile.bereal.com/api/recommendations/friends?source=${source}&limit=${limit}`, {
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`
     }
   });
