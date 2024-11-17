@@ -50,8 +50,8 @@ const LoginView: Component = () => {
           otp: state.otp.trim()
         });
 
-        auth.set({
-          deviceID: state.deviceID,
+        auth.save({
+          deviceId: state.deviceID,
           accessToken: tokens.access_token,
           refreshToken: tokens.refresh_token
         });
