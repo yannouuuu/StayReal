@@ -33,6 +33,10 @@ const routes = [
   {
     path: "/friends",
     component: lazy(() => import("./views/friends"))
+  },
+  {
+    path: "/settings",
+    component: lazy(() => import("./views/settings"))
   }
 ]
 
