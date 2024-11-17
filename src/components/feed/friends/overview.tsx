@@ -56,15 +56,25 @@ const FeedFriendsOverview: Component<{
               <img
                 class="w-8 h-8 rounded-full"
                 src={profilePicture().url}
-                alt={props.overview.user.username}
+                alt={`Profile picture of ${props.overview.user.username}`}
               />
             )}
           </Show>
           <div class="flex flex-col">
-            <p class="font-600">{props.overview.user.username}</p>
-            <p class="text-sm text-white/60">
-              {new Date(activePost().postedAt).toLocaleTimeString()} - Late of {props.overview.posts[0].lateInSeconds} seconds
+            <p class="font-600 w-fit">
+              {props.overview.user.username}
             </p>
+            <div class="text-sm text-white/60 flex flex-wrap gap-1.5">
+              <time>
+                <span class="tts-only">Posted at</span> {new Date(activePost().postedAt).toLocaleTimeString()}
+              </time>
+              <Show when={props.overview.posts[0].lateInSeconds > 0}>
+                <span aria-hidden="true">-</span>
+                <p>
+                  Late of {props.overview.posts[0].lateInSeconds} seconds
+                </p>
+              </Show>
+            </div>
           </div>
         </div>
 

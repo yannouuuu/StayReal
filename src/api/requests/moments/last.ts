@@ -13,6 +13,5 @@ export interface MomentsLast {
 
 export const moments_last = async (region: string): Promise<MomentsLast> => {
   const response = await fetch(`https://mobile.bereal.com/api/bereal/moments/last/${region}`);
-
   return response.json();
 };

@@ -44,6 +44,9 @@ importers:
       '@unocss/reset':
         specifier: ^0.63.6
         version: 0.63.6
+      pulltorefreshjs:
+        specifier: ^0.1.22
+        version: 0.1.22
       solid-js:
         specifier: ^1.9.3
         version: 1.9.3
@@ -69,6 +72,9 @@ importers:
       '@tauri-apps/cli-darwin-x64':
         specifier: ^2.0.4
         version: 2.0.4
+      '@types/pulltorefreshjs':
+        specifier: ^0.1.7
+        version: 0.1.7
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -919,6 +925,9 @@ packages:
   '@types/node@22.8.2':
     resolution: {integrity: sha512-NzaRNFV+FZkvK/KLCsNdTvID0SThyrs5SHB6tsD/lajr22FGC73N2QeDPM2wHtVde8mgcXuSsHQkH5cX1pbPLw==}
 
+  '@types/pulltorefreshjs@0.1.7':
+    resolution: {integrity: sha512-Y0g/yfuycIvpvUmP97n5NE2+HDAOwfREGVERjhMWw2Y0ODh5wvbflcQ5gXPZ+ihgoq+BQZjA1DL8apw2wAsJXA==}
+
   '@unocss/astro@0.63.6':
     resolution: {integrity: sha512-5Fjlv6dpQo6o2PUAcEv8p24G8rn8Op79xLFofq2V+iA/Q32G9/UsxTLOpj+yc+q0YdJrFfDCT2X/3pvVY8Db5g==}
     peerDependencies:
@@ -1448,6 +1457,9 @@ packages:
   postcss@8.4.47:
     resolution: {integrity: sha512-56rxCq7G/XfB4EkXq9Egn5GCqugWvDFjafDOThIdMBsI15iqPqR5r15TfSr1YPYeEI19YeaXMCbY6u88Y76GLQ==}
     engines: {node: ^10 || ^12 || >=14}
+
+  pulltorefreshjs@0.1.22:
+    resolution: {integrity: sha512-haxNVEHnS4NCQA7NeG7TSV69z4uqy/N7nfPRuc4dPWe8H6ygUrMjdNeohE+6v0lVVX/ukSjbLYwPUGUYtFKfvQ==}
 
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
@@ -2319,6 +2331,8 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
+  '@types/pulltorefreshjs@0.1.7': {}
+
   '@unocss/astro@0.63.6(rollup@4.24.2)(typescript@5.6.3)(vite@5.4.10(@types/node@22.8.2))':
     dependencies:
       '@unocss/core': 0.63.6
@@ -2947,6 +2961,8 @@ snapshots:
       nanoid: 3.3.7
       picocolors: 1.1.1
       source-map-js: 1.2.1
+
+  pulltorefreshjs@0.1.22: {}
 
   punycode@2.3.1: {}
 
