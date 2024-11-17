@@ -1,23 +1,51 @@
-import { createRoot } from "solid-js";
+import { createRoot, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
-import { makePersisted } from "@solid-primitives/storage"
-import { auth_refresh } from "../api";
+import { refreshToken, getAuthDetails, type AuthDetails, setAuthDetails, clearAuthDetails } from "tauri-plugin-bereal-api";
 
 export default createRoot(() => {
-  const [store, set] = makePersisted(createStore({
-    deviceID: "",
+  const [store, setStore] = createStore<{ loading: boolean } & AuthDetails>({
+    loading: true,
+    deviceId: "",
     accessToken: "",
     refreshToken: "",
-  }), { name: "auth" });
+  });
 
   const refresh = async () => {
-    const tokens = await auth_refresh();
-
-    set({
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token,
-    });
+    await refreshToken(); // refresh it natively
+    const mutation = await getAuthDetails();
+    setStore({ ...mutation });
   };
 
-  return { store, set, refresh };
+  const save = async (mutation: AuthDetails) => {
+    await setAuthDetails(mutation);
+    setStore(mutation);
+  };
+
+  const logout = async () => {
+    await clearAuthDetails();
+    setStore({
+      loading: false,
+      deviceId: "",
+      accessToken: "",
+      refreshToken: "",
+    });
+  }
+
+  onMount(async () => {
+    try {
+      const tokens = await getAuthDetails();
+      console.log("authenticated before", tokens);
+      setStore({
+        loading: false,
+        ...tokens
+      });
+    }
+    catch { // probably never authenticated before
+
+      console.log("never authenticated before");
+      setStore({ loading: false });
+    }
+  });
+
+  return { store, save, refresh, logout };
 });
