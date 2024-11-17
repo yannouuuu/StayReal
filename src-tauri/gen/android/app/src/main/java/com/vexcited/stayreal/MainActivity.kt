@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 class MainActivity : TauriActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    schedulePeriodicHttpRequest(this)
+    // schedulePeriodicHttpRequest(this)
   }
 }
 
