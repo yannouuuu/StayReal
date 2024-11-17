@@ -19,6 +19,8 @@
           "url": "https://storage.googleapis.com"
         }
       ]
-    }
+    },
+    "store:default",
+    "bereal-api:default"
   ]
 }

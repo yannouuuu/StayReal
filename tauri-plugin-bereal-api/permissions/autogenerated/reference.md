@@ -2,7 +2,10 @@
 
 Default permissions for the plugin
 
-- `allow-ping`
+- `allow-get-auth-details`
+- `allow-set-auth-details`
+- `allow-clear-auth-details`
+- `allow-refresh-token`
 
 ## Permission Table
 
@@ -16,12 +19,12 @@ Default permissions for the plugin
 <tr>
 <td>
 
-`bereal-api:allow-ping`
+`bereal-api:allow-clear-auth-details`
 
 </td>
 <td>
 
-Enables the ping command without any pre-configured scope.
+Enables the clear_auth_details command without any pre-configured scope.
 
 </td>
 </tr>
@@ -29,12 +32,90 @@ Enables the ping command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:deny-ping`
+`bereal-api:deny-clear-auth-details`
 
 </td>
 <td>
 
-Denies the ping command without any pre-configured scope.
+Denies the clear_auth_details command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:allow-get-auth-details`
+
+</td>
+<td>
+
+Enables the get_auth_details command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:deny-get-auth-details`
+
+</td>
+<td>
+
+Denies the get_auth_details command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:allow-refresh-token`
+
+</td>
+<td>
+
+Enables the refresh_token command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:deny-refresh-token`
+
+</td>
+<td>
+
+Denies the refresh_token command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:allow-set-auth-details`
+
+</td>
+<td>
+
+Enables the set_auth_details command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:deny-set-auth-details`
+
+</td>
+<td>
+
+Denies the set_auth_details command without any pre-configured scope.
 
 </td>
 </tr>
