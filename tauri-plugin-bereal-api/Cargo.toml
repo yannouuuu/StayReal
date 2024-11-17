@@ -12,6 +12,14 @@ links = "tauri-plugin-bereal-api"
 tauri = { version = "2.1.0" }
 serde = "1.0"
 thiserror = "2"
+serde_json = "1.0.132"
+anyhow = "1.0.93"
+reqwest = "0.12.9"
+iana-time-zone = "0.1.61"
+hex = "0.4.3"
+sha2 = "0.10.8"
+hmac = "0.12.1"
+base64 = "0.22.1"
 
 [build-dependencies]
 tauri-plugin = { version = "2.0.2", features = ["build"] }
