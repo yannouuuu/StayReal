@@ -1,14 +1,6 @@
 use tauri::{ AppHandle, command, Runtime };
 use crate::{ BerealApiExt, models::* };
 
-// #[command]
-// pub(crate) async fn ping<R: Runtime>(
-//   app: AppHandle<R>,
-//   payload: PingRequest,
-// ) -> Result<PingResponse> {
-//   app.bereal_api().ping(payload)
-// }
-
 #[command]
 pub(crate) async fn set_auth_details<R: Runtime>(
   app: AppHandle<R>,

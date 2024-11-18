@@ -15,6 +15,7 @@ pub enum Error {
   Io(#[from] std::io::Error),
   #[error("forbidden path: {0}")]
   PathForbidden(PathBuf),
+  #[cfg(not(any(target_os = "android", target_os = "ios")))]
   #[error(transparent)]
   Reqwest(#[from] reqwest::Error),
   #[cfg(target_os = "android")]
