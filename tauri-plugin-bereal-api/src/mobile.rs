@@ -40,7 +40,7 @@ impl<R: Runtime> BerealApi<R> {
       .map_err(Into::into)
   }
 
-  pub fn refresh_token(&self) -> crate::Result<()> {
+  pub async fn refresh_token(&self) -> crate::Result<()> {
     self.0.run_mobile_plugin("refreshToken", ())
       .map_err(Into::into)
   }

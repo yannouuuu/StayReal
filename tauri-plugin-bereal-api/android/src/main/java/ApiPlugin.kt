@@ -7,25 +7,30 @@ import app.tauri.annotation.TauriPlugin
 import app.tauri.plugin.JSObject
 import app.tauri.plugin.Plugin
 import app.tauri.plugin.Invoke
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @InvokeArg
-class SetAuthDetailsArgs {
+internal class SetAuthDetailsArgs {
   lateinit var deviceId: String
   lateinit var accessToken: String
   lateinit var refreshToken: String
 }
 
+val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
 @TauriPlugin
 class ApiPlugin(private val activity: Activity): Plugin(activity) {
-  // private val implementation = Example()
-  private val authentication = Authentication(activity)
   private val requests = Requests(activity)
 
   @Command
   fun setAuthDetails (invoke: Invoke) {
     val args = invoke.parseArgs(SetAuthDetailsArgs::class.java)
 
-    authentication.set(
+    requests.authentication.set(
       AuthenticationDetails(
         deviceId = args.deviceId,
         accessToken = args.accessToken,
@@ -40,7 +45,7 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
   fun getAuthDetails (invoke: Invoke) {
     val ret = JSObject()
 
-    val details = authentication.get()
+    val details = requests.authentication.get()
     ret.put("deviceId", details.deviceId)
     ret.put("accessToken", details.accessToken)
     ret.put("refreshToken", details.refreshToken)
@@ -50,20 +55,25 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
 
   @Command
   fun clearAuthDetails (invoke: Invoke) {
-    authentication.clear()
+    requests.authentication.clear()
     invoke.resolve()
   }
 
   @Command
   fun refreshToken (invoke: Invoke) {
-    var details = authentication.get()
-    details = requests.refreshToken(details)
+    scope.launch {
+      try {
+        requests.refreshToken()
 
-    // Save the new details directly to the shared preferences.
-    authentication.set(details)
-
-    // We don't return anything, if we need the
-    // new details we can call `getAuthDetails()` client-side.
-    invoke.resolve()
+        withContext(Dispatchers.Main) {
+          invoke.resolve()
+        }
+      }
+      catch (e: Exception) {
+        withContext(Dispatchers.Main) {
+          invoke.reject(e.message)
+        }
+      }
+    }
   }
 }
