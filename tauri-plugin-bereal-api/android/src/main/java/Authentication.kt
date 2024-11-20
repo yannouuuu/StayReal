@@ -10,7 +10,7 @@ data class AuthenticationDetails (
 )
 
 class Authentication (private val context: Context) {
-  private val preferencesName = "AuthenticationPreferences"
+  private val preferencesName = "Authentication"
 
   fun set (details: AuthenticationDetails) {
     val sharedPreferences: SharedPreferences = context.getSharedPreferences(
