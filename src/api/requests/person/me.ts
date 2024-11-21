@@ -2,6 +2,7 @@ import { BEREAL_DEFAULT_HEADERS } from "../../constants";
 import { fetch } from "@tauri-apps/plugin-http";
 import { ApiMedia } from "../../types/media";
 import auth from "../../../stores/auth";
+import { setRegion } from "tauri-plugin-bereal-api";
 
 export interface PersonMe {
   id: string
@@ -62,5 +63,8 @@ export const person_me = async (): Promise<PersonMe> => {
     return person_me();
   }
 
-  return response.json();
+  const json = await response.json() as PersonMe;
+  await setRegion(json.region);
+
+  return json;
 };
