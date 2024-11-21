@@ -29,3 +29,18 @@ pub(crate) async fn refresh_token<R: Runtime>(
 ) -> crate::Result<()> {
   app.bereal_api().refresh_token().await
 }
+
+#[command]
+pub(crate) async fn set_region<R: Runtime>(
+  app: AppHandle<R>,
+  payload: SetRegionArgs
+) -> crate::Result<()> {
+  app.bereal_api().set_region(payload)
+}
+
+#[command]
+pub(crate) async fn fetch_last_moment<R: Runtime>(
+  app: AppHandle<R>
+) -> crate::Result<Moment> {
+  app.bereal_api().fetch_last_moment().await
+}

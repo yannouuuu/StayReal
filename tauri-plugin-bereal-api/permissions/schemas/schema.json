@@ -305,6 +305,16 @@
           "const": "deny-clear-auth-details"
         },
         {
+          "description": "Enables the fetch_last_moment command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-fetch-last-moment"
+        },
+        {
+          "description": "Denies the fetch_last_moment command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-fetch-last-moment"
+        },
+        {
           "description": "Enables the get_auth_details command without any pre-configured scope.",
           "type": "string",
           "const": "allow-get-auth-details"
@@ -333,6 +343,16 @@
           "description": "Denies the set_auth_details command without any pre-configured scope.",
           "type": "string",
           "const": "deny-set-auth-details"
+        },
+        {
+          "description": "Enables the set_region command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-set-region"
+        },
+        {
+          "description": "Denies the set_region command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-set-region"
         },
         {
           "description": "Default permissions for the plugin",

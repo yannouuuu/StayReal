@@ -6,6 +6,8 @@ Default permissions for the plugin
 - `allow-set-auth-details`
 - `allow-clear-auth-details`
 - `allow-refresh-token`
+- `allow-set-region`
+- `allow-fetch-last-moment`
 
 ## Permission Table
 
@@ -38,6 +40,32 @@ Enables the clear_auth_details command without any pre-configured scope.
 <td>
 
 Denies the clear_auth_details command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:allow-fetch-last-moment`
+
+</td>
+<td>
+
+Enables the fetch_last_moment command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:deny-fetch-last-moment`
+
+</td>
+<td>
+
+Denies the fetch_last_moment command without any pre-configured scope.
 
 </td>
 </tr>
@@ -116,6 +144,32 @@ Enables the set_auth_details command without any pre-configured scope.
 <td>
 
 Denies the set_auth_details command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:allow-set-region`
+
+</td>
+<td>
+
+Enables the set_region command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:deny-set-region`
+
+</td>
+<td>
+
+Denies the set_region command without any pre-configured scope.
 
 </td>
 </tr>

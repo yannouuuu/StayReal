@@ -134,4 +134,49 @@ impl<R: Runtime> BerealApi<R> {
     
     Ok(())
   }
+
+  fn get_preferences(&self) -> crate::Result<Preferences> {
+    let preferences_file_path = self.data_dir().join("preferences.json");
+    let preferences = std::fs::read_to_string(preferences_file_path).map_err(crate::Error::Io)?;
+    serde_json::from_str(&preferences).map_err(Into::into)
+  }
+
+  fn set_preferences(&self, preferences: Preferences) -> crate::Result<()> {
+    let preferences_file_path = self.data_dir().join("preferences.json");
+
+    if let Some(parent) = preferences_file_path.parent() {
+      std::fs::create_dir_all(parent)?;
+    }
+
+    std::fs::write(preferences_file_path, serde_json::to_string(&preferences).unwrap())
+      .map_err(Into::into)
+  }
+
+  pub fn set_region(&self, payload: SetRegionArgs) -> crate::Result<()> {
+    let mut preferences = self.get_preferences().unwrap_or_default();
+    preferences.region = payload.region;
+    self.set_preferences(preferences)?;
+
+    Ok(())
+  }
+
+  pub async fn fetch_last_moment(&self) -> crate::Result<Moment> {
+    let preferences = self.get_preferences()?;
+
+    let client = reqwest::Client::new();
+    let response = client.get(format!("https://mobile.bereal.com/api/bereal/moments/last/{}", &preferences.region))
+      .send()
+      .await?;
+
+    let body: serde_json::Value = response.json().await?;
+
+    let moment = Moment {
+      id: body["id"].as_str().unwrap().to_string(),
+      region: body["region"].as_str().unwrap().to_string(),
+      start_date: body["startDate"].as_str().unwrap().to_string(),
+      end_date: body["endDate"].as_str().unwrap().to_string(),
+    };
+
+    Ok(moment)
+  }
 }

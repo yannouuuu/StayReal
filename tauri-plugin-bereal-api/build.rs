@@ -2,7 +2,9 @@ const COMMANDS: &[&str] = &[
   "set_auth_details",
   "get_auth_details",
   "clear_auth_details",
-  "refresh_token"
+  "refresh_token",
+  "set_region",
+  "fetch_last_moment"
 ];
 
 fn main() {

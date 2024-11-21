@@ -41,6 +41,8 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
       commands::get_auth_details,
       commands::clear_auth_details,
       commands::refresh_token,
+      commands::set_region,
+      commands::fetch_last_moment,
     ])
     .setup(|app, api| {
 

@@ -44,4 +44,14 @@ impl<R: Runtime> BerealApi<R> {
     self.0.run_mobile_plugin("refreshToken", ())
       .map_err(Into::into)
   }
+
+  pub fn set_region(&self, payload: SetRegionArgs) -> crate::Result<()> {
+    self.0.run_mobile_plugin("setRegion", payload)
+      .map_err(Into::into)
+  }
+
+  pub async fn fetch_last_moment(&self) -> crate::Result<Moment> {
+    self.0.run_mobile_plugin("fetchLastMoment", ())
+      .map_err(Into::into)
+  }
 }

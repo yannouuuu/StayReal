@@ -12,7 +12,6 @@ import java.util.Locale
 import java.util.TimeZone
 import org.json.JSONObject
 import java.io.IOException
-import com.android.build.gradle.internal.cxx.json.jsonStringOf
 
 class Requests (private val context: Context) {
   val authentication = Authentication(context)
@@ -96,7 +95,7 @@ class Requests (private val context: Context) {
     val jsonBody = JSONObject(body)
 
     return Moment(
-      momentId = jsonBody.getString("id"),
+      id = jsonBody.getString("id"),
       startDate = jsonBody.getString("start_date"),
       endDate = jsonBody.getString("end_date"),
       region = jsonBody.getString("region")
