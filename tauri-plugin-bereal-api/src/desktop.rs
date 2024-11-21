@@ -1,7 +1,7 @@
 use std::{collections::HashMap, path::PathBuf};
 
 use serde::de::DeserializeOwned;
-use tauri::{plugin::PluginApi, AppHandle, Manager, Runtime};
+use tauri::{plugin::{PermissionState, PluginApi}, AppHandle, Manager, Runtime};
 use reqwest::header::{HeaderMap, HeaderValue};
 
 use hmac::{Hmac, Mac};
@@ -178,5 +178,13 @@ impl<R: Runtime> BerealApi<R> {
     };
 
     Ok(moment)
+  }
+
+  pub fn request_permission(&self) -> crate::Result<PermissionState> {
+    Ok(PermissionState::Granted)
+}
+
+  pub fn permission_state(&self) -> crate::Result<PermissionState> {
+    Ok(PermissionState::Granted)
   }
 }

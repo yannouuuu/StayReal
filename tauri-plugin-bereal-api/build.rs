@@ -4,7 +4,9 @@ const COMMANDS: &[&str] = &[
   "clear_auth_details",
   "refresh_token",
   "set_region",
-  "fetch_last_moment"
+  "fetch_last_moment",
+  "is_permission_granted",
+  "request_permission"
 ];
 
 fn main() {

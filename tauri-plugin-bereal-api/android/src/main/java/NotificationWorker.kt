@@ -1,68 +1,90 @@
 package com.vexcited.stayreal.api
 
+import android.Manifest
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.work.WorkerParameters
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import java.io.IOException
 import kotlin.random.Random
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
 
 class NotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
-  private val requests = Requests(appContext)
-  private val cache = Cache(appContext)
-  
-  override suspend fun doWork(): Result {
-    return withContext(Dispatchers.IO) {
-      try {
-        // If `deviceId` is null, then we're not authenticated so we
-        // don't need to check for new moments.
-        if (requests.authentication.get().deviceId != null) {
-          val moment = requests.fetchLastMoment()
-          val lastMomentId = cache.getLastMomentId()
+  private val requests = Requests(applicationContext)
+  private val cache = Cache(applicationContext)
 
-          if (moment.id != lastMomentId) {
-            cache.setLastMomentId(moment.id)
-            showNotification("new_bereal_moment", "New BeReal moment available", "You have 2 minutes to post something !", NotificationCompat.PRIORITY_HIGH)
-          }
-          else {
-            showNotification("no_new_bereal_moment", "No new BeReal moment available", "Check back later for new moments.")
-          }
+  override suspend fun doWork(): Result {
+    if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+      return Result.success()
+    }
+
+    return try {
+      if (requests.authentication.get().deviceId != null) {
+        val moment = requests.fetchLastMoment()
+        val lastMomentId = cache.getLastMomentId()
+
+        if (moment.id != lastMomentId && lastMomentId != null) {
+          cache.setLastMomentId(moment.id)
+          createNotification(
+            "moments",
+            "StayReal Moments",
+            "New BeReal moment available",
+            "You have 2 minutes to post something !",
+            NotificationCompat.PRIORITY_HIGH
+          )
         }
-        Result.success()
       }
-      catch (error: IOException) {
-        // Retry in case of network or other exceptions
-        Result.retry()
-      }
+
+      Result.success()
+    }
+    catch (error: IOException) {
+      Result.retry()
     }
   }
 
-  private fun showNotification(channelId: String, title: String, message: String, priority: Int = NotificationCompat.PRIORITY_DEFAULT) {
+  fun createNotificationChannel(channelId: String, channelName: String) {
     val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    // NotificationChannel is required for Android 8.0 and above
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-      val channel = NotificationChannel(
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      val notificationChannel = NotificationChannel(
         channelId,
-        "BeReal Moments",
-        NotificationManager.IMPORTANCE_HIGH
-      )
+        channelName,
+        NotificationManager.IMPORTANCE_HIGH,
+      ).apply {
+        description = "Notifications for $channelName"
+      }
 
-      notificationManager.createNotificationChannel(channel)
+      notificationManager.createNotificationChannel(
+        notificationChannel
+      )
     }
+  }
+
+  fun createNotification(channelId: String, channelName: String, title: String, message: String, priority: Int = NotificationCompat.PRIORITY_DEFAULT) {
+    createNotificationChannel(channelId, channelName)
 
     val notification = NotificationCompat.Builder(applicationContext, channelId)
-      .setSmallIcon(android.R.drawable.ic_dialog_alert)
+      .setSmallIcon(android.R.drawable.ic_dialog_info)
       .setContentTitle(title)
       .setContentText(message)
       .setPriority(priority)
+      .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
       .build()
 
-    val uniqueNotificationId = Random.nextInt()
-    notificationManager.notify(uniqueNotificationId, notification)
+    val notificationId = Random.nextInt(0, 1000)
+    val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    notificationManager.notify(notificationId, notification)
   }
 }

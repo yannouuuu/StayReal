@@ -3,14 +3,20 @@ package com.vexcited.stayreal.api
 import android.app.Activity
 import android.webkit.WebView
 import android.Manifest
+import android.os.Build
+import android.util.Log
+import androidx.core.app.NotificationManagerCompat
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.PeriodicWorkRequest
+import app.tauri.PermissionState
 import app.tauri.annotation.Permission
 import app.tauri.annotation.Command
 import app.tauri.annotation.InvokeArg
+import app.tauri.annotation.PermissionCallback
 import app.tauri.annotation.TauriPlugin
 import app.tauri.plugin.JSObject
 import app.tauri.plugin.Plugin
@@ -36,9 +42,11 @@ internal class SetRegionArgs {
 
 val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
+const val LOCAL_NOTIFICATIONS = "permissionState"
+
 @TauriPlugin(
   permissions = [
-    Permission(strings = [Manifest.permission.POST_NOTIFICATIONS], alias = "postNotification")
+    Permission(strings = [Manifest.permission.POST_NOTIFICATIONS], alias = "permissionState")
   ]
 )
 class ApiPlugin(private val activity: Activity): Plugin(activity) {
@@ -51,16 +59,15 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
       .setRequiredNetworkType(NetworkType.CONNECTED)
       .build()
 
-    val periodicWork = PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.MINUTES)
+    val periodicWork = PeriodicWorkRequestBuilder<NotificationWorker>(15, TimeUnit.MINUTES)
       .setConstraints(constraints)
       .build()
 
     val workManager = WorkManager.getInstance(activity)
 
-    // Ensure no duplicate workers are created.
     workManager.enqueueUniquePeriodicWork(
       "NotificationWorker",
-      ExistingPeriodicWorkPolicy.KEEP,
+      ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
       periodicWork
     )
   }
@@ -145,6 +152,52 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
           invoke.reject(error.message)
         }
       }
+    }
+  }
+
+  @Command
+  override fun checkPermissions(invoke: Invoke) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+      val permissionsResultJSON = JSObject()
+      permissionsResultJSON.put("permissionState", getPermissionState())
+      invoke.resolve(permissionsResultJSON)
+    } else {
+      super.checkPermissions(invoke)
+    }
+  }
+
+  @Command
+  override fun requestPermissions(invoke: Invoke) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+      permissionState(invoke)
+    } else {
+      if (getPermissionState(LOCAL_NOTIFICATIONS) !== PermissionState.GRANTED) {
+        requestPermissionForAlias(LOCAL_NOTIFICATIONS, invoke, "permissionsCallback")
+      }
+    }
+  }
+
+  @Command
+  fun permissionState(invoke: Invoke) {
+    val permissionsResultJSON = JSObject()
+    permissionsResultJSON.put("permissionState", getPermissionState())
+    invoke.resolve(permissionsResultJSON)
+  }
+
+  @PermissionCallback
+  private fun permissionsCallback(invoke: Invoke) {
+    val permissionsResultJSON = JSObject()
+    permissionsResultJSON.put("permissionState", getPermissionState())
+    invoke.resolve(permissionsResultJSON)
+  }
+
+  private fun getPermissionState(): String {
+    val notificationManager = NotificationManagerCompat.from(activity)
+
+    return if (notificationManager.areNotificationsEnabled()) {
+      "granted"
+    } else {
+      "denied"
     }
   }
 }

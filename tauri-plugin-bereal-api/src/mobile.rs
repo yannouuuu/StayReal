@@ -1,6 +1,7 @@
 use serde::de::DeserializeOwned;
+use serde::Deserialize;
 use tauri::{
-  plugin::{PluginApi, PluginHandle},
+  plugin::{PermissionState, PluginApi, PluginHandle},
   AppHandle, Runtime,
 };
 
@@ -8,6 +9,12 @@ use crate::models::*;
 
 #[cfg(target_os = "ios")]
 tauri::ios_plugin_binding!(init_plugin_bereal_api);
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct PermissionResponse {
+  permission_state: PermissionState,
+}
 
 pub fn init<R: Runtime, C: DeserializeOwned>(
   _app: &AppHandle<R>,
@@ -52,6 +59,20 @@ impl<R: Runtime> BerealApi<R> {
 
   pub async fn fetch_last_moment(&self) -> crate::Result<Moment> {
     self.0.run_mobile_plugin("fetchLastMoment", ())
+      .map_err(Into::into)
+  }
+
+  pub fn request_permission(&self) -> crate::Result<PermissionState> {
+    self.0
+      .run_mobile_plugin::<PermissionResponse>("requestPermissions", ())
+      .map(|r| r.permission_state)
+      .map_err(Into::into)
+  }
+
+  pub fn permission_state(&self) -> crate::Result<PermissionState> {
+    self.0
+      .run_mobile_plugin::<PermissionResponse>("checkPermissions", ())
+      .map(|r| r.permission_state)
       .map_err(Into::into)
   }
 }

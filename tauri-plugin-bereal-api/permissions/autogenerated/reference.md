@@ -8,6 +8,8 @@ Default permissions for the plugin
 - `allow-refresh-token`
 - `allow-set-region`
 - `allow-fetch-last-moment`
+- `allow-request-permission`
+- `allow-is-permission-granted`
 
 ## Permission Table
 
@@ -99,6 +101,32 @@ Denies the get_auth_details command without any pre-configured scope.
 <tr>
 <td>
 
+`bereal-api:allow-is-permission-granted`
+
+</td>
+<td>
+
+Enables the is_permission_granted command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:deny-is-permission-granted`
+
+</td>
+<td>
+
+Denies the is_permission_granted command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
 `bereal-api:allow-refresh-token`
 
 </td>
@@ -118,6 +146,32 @@ Enables the refresh_token command without any pre-configured scope.
 <td>
 
 Denies the refresh_token command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:allow-request-permission`
+
+</td>
+<td>
+
+Enables the request_permission command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:deny-request-permission`
+
+</td>
+<td>
+
+Denies the request_permission command without any pre-configured scope.
 
 </td>
 </tr>

@@ -1,5 +1,5 @@
-use tauri::{ AppHandle, command, Runtime };
-use crate::{ BerealApiExt, models::* };
+use tauri::{ command, plugin::PermissionState, AppHandle, Runtime, State };
+use crate::{ BerealApi, models::*, BerealApiExt };
 
 #[command]
 pub(crate) async fn set_auth_details<R: Runtime>(
@@ -43,4 +43,25 @@ pub(crate) async fn fetch_last_moment<R: Runtime>(
   app: AppHandle<R>
 ) -> crate::Result<Moment> {
   app.bereal_api().fetch_last_moment().await
+}
+
+#[command]
+pub(crate) async fn is_permission_granted<R: Runtime>(
+  _app: AppHandle<R>,
+  notification: State<'_, BerealApi<R>>,
+) -> crate::Result<Option<bool>> {
+  let state = notification.permission_state()?;
+  match state {
+    PermissionState::Granted => Ok(Some(true)),
+    PermissionState::Denied => Ok(Some(false)),
+    PermissionState::Prompt | PermissionState::PromptWithRationale => Ok(None),
+  }
+}
+
+#[command]
+pub(crate) async fn request_permission<R: Runtime>(
+  _app: AppHandle<R>,
+  notification: State<'_, BerealApi<R>>,
+) -> crate::Result<PermissionState> {
+  notification.request_permission()
 }

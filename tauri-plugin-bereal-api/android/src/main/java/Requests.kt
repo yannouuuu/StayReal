@@ -91,13 +91,15 @@ class Requests (private val context: Context) {
       client.newCall(request).execute()
     }
 
-    val body = response.body!!.toString()
+    val body = response.body?.string()
+      ?: throw IOException("empty response body")
+
     val jsonBody = JSONObject(body)
 
     return Moment(
       id = jsonBody.getString("id"),
-      startDate = jsonBody.getString("start_date"),
-      endDate = jsonBody.getString("end_date"),
+      startDate = jsonBody.getString("startDate"),
+      endDate = jsonBody.getString("endDate"),
       region = jsonBody.getString("region")
     )
   }

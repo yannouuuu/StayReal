@@ -40,3 +40,11 @@ export async function setRegion(region: string): Promise<void> {
 export async function fetchLastMoment(): Promise<Moment> {
   return invoke('plugin:bereal-api|fetch_last_moment');
 }
+
+export async function requestPermission(): Promise<PermissionState> {
+  return invoke<PermissionState>('plugin:bereal-api|request_permission' )
+}
+
+export async function isPermissionGranted(): Promise<boolean> {
+  return invoke('plugin:bereal-api|is_permission_granted')
+}

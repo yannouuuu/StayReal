@@ -325,6 +325,16 @@
           "const": "deny-get-auth-details"
         },
         {
+          "description": "Enables the is_permission_granted command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-is-permission-granted"
+        },
+        {
+          "description": "Denies the is_permission_granted command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-is-permission-granted"
+        },
+        {
           "description": "Enables the refresh_token command without any pre-configured scope.",
           "type": "string",
           "const": "allow-refresh-token"
@@ -333,6 +343,16 @@
           "description": "Denies the refresh_token command without any pre-configured scope.",
           "type": "string",
           "const": "deny-refresh-token"
+        },
+        {
+          "description": "Enables the request_permission command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-request-permission"
+        },
+        {
+          "description": "Denies the request_permission command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-request-permission"
         },
         {
           "description": "Enables the set_auth_details command without any pre-configured scope.",

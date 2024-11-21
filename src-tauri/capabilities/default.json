@@ -20,8 +20,6 @@
         }
       ]
     },
-    "store:default",
-    "bereal-api:default",
-    "notification:default"
+    "bereal-api:default"
   ]
 }
