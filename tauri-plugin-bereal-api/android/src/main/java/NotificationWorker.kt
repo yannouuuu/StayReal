@@ -58,7 +58,7 @@ class NotificationWorker(appContext: Context, workerParams: WorkerParameters) : 
         )
       }
 
-      enqueueNextWork(4)
+      enqueueNextWork(5) // Just like the official BeReal application.
       Result.success()
     }
     catch (error: IOException) {
@@ -68,8 +68,6 @@ class NotificationWorker(appContext: Context, workerParams: WorkerParameters) : 
   }
 
   private fun enqueueNextWork(delaySeconds: Long) {
-    Log.d("NotificationWorker", "enqueueNextWork in $delaySeconds seconds")
-
     val constraints = Constraints.Builder()
       .setRequiredNetworkType(NetworkType.CONNECTED)
       .build()
