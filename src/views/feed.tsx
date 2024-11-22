@@ -31,10 +31,10 @@ const FeedView: Component = () => {
     }
   };
 
-  onMount(async () => {
-    await askNotificationPermission().catch(console.warn);
-    await handleRefresh()
-  });
+  onMount(() => Promise.all([
+    askNotificationPermission(),
+    handleRefresh()
+  ]));
 
   return (
     <div>
