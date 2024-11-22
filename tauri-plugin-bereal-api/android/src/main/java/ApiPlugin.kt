@@ -4,14 +4,13 @@ import android.app.Activity
 import android.webkit.WebView
 import android.Manifest
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.PeriodicWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import app.tauri.PermissionState
 import app.tauri.annotation.Permission
 import app.tauri.annotation.Command
@@ -26,7 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
 
 @InvokeArg
 internal class SetAuthDetailsArgs {
@@ -55,20 +53,19 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
 
   override fun load(webView: WebView) {
     val constraints = Constraints.Builder()
-      // The work will only run when the device is connected to the Internet.
       .setRequiredNetworkType(NetworkType.CONNECTED)
       .build()
 
-    val periodicWork = PeriodicWorkRequestBuilder<NotificationWorker>(15, TimeUnit.MINUTES)
+    val notificationWork = OneTimeWorkRequestBuilder<NotificationWorker>()
       .setConstraints(constraints)
       .build()
 
     val workManager = WorkManager.getInstance(activity)
 
-    workManager.enqueueUniquePeriodicWork(
+    workManager.enqueueUniqueWork(
       "NotificationWorker",
-      ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
-      periodicWork
+      ExistingWorkPolicy.REPLACE,
+      notificationWork
     )
   }
 

@@ -13,13 +13,19 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.work.Constraints
 import androidx.work.WorkerParameters
 import androidx.work.CoroutineWorker
+import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import java.io.IOException
 import kotlin.random.Random
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
+import java.util.concurrent.TimeUnit
 
 class NotificationWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {
   private val requests = Requests(applicationContext)
@@ -27,31 +33,57 @@ class NotificationWorker(appContext: Context, workerParams: WorkerParameters) : 
 
   override suspend fun doWork(): Result {
     if (ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+      enqueueNextWork(10)
+      return Result.success()
+    }
+
+    val deviceId = requests.authentication.get().deviceId
+    if (deviceId == null) {
+      enqueueNextWork(10)
       return Result.success()
     }
 
     return try {
-      if (requests.authentication.get().deviceId != null) {
-        val moment = requests.fetchLastMoment()
-        val lastMomentId = cache.getLastMomentId()
+      val moment = requests.fetchLastMoment()
+      val lastMomentId = cache.getLastMomentId()
 
-        if (moment.id != lastMomentId && lastMomentId != null) {
-          cache.setLastMomentId(moment.id)
-          createNotification(
-            "moments",
-            "StayReal Moments",
-            "New BeReal moment available",
-            "You have 2 minutes to post something !",
-            NotificationCompat.PRIORITY_HIGH
-          )
-        }
+      if (lastMomentId != moment.id && lastMomentId != null) {
+        cache.setLastMomentId(moment.id)
+        createNotification(
+          "moments",
+          "BeReal Moments",
+          "New moment just dropped",
+          "Make sure to post to not lose your streak !",
+          NotificationCompat.PRIORITY_HIGH
+        )
       }
 
+      enqueueNextWork(4)
       Result.success()
     }
     catch (error: IOException) {
+      enqueueNextWork(8)
       Result.retry()
     }
+  }
+
+  private fun enqueueNextWork(delaySeconds: Long) {
+    Log.d("NotificationWorker", "enqueueNextWork in $delaySeconds seconds")
+
+    val constraints = Constraints.Builder()
+      .setRequiredNetworkType(NetworkType.CONNECTED)
+      .build()
+
+    val nextRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+      .setInitialDelay(delaySeconds, TimeUnit.SECONDS)
+      .setConstraints(constraints)
+      .build()
+
+    WorkManager.getInstance(applicationContext).enqueueUniqueWork(
+      "NotificationWorker",
+      ExistingWorkPolicy.REPLACE,
+      nextRequest
+    )
   }
 
   fun createNotificationChannel(channelId: String, channelName: String) {
