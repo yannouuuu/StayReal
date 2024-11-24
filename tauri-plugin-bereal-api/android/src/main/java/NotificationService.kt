@@ -35,16 +35,6 @@ class NotificationService : Service() {
   }
 
   private fun startForegroundService() {
-    if (
-      ActivityCompat.checkSelfPermission(
-        applicationContext,
-        Manifest.permission.POST_NOTIFICATIONS
-      ) != PackageManager.PERMISSION_GRANTED
-    ) {
-      stopSelf()
-      return
-    }
-
     val channelId = "NotificationServiceChannel"
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       val channel = NotificationChannel(
@@ -91,11 +81,6 @@ class NotificationService : Service() {
   }
 
   private suspend fun performWork() {
-    if (ActivityCompat.checkSelfPermission(
-      applicationContext,
-      Manifest.permission.POST_NOTIFICATIONS
-    ) != PackageManager.PERMISSION_GRANTED) return
-
     val deviceId = requests.authentication.get().deviceId
     if (deviceId == null) return
 

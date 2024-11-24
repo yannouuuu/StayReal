@@ -10,6 +10,7 @@ Default permissions for the plugin
 - `allow-fetch-last-moment`
 - `allow-request-permission`
 - `allow-is-permission-granted`
+- `allow-start-notification-service`
 
 ## Permission Table
 
@@ -224,6 +225,32 @@ Enables the set_region command without any pre-configured scope.
 <td>
 
 Denies the set_region command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:allow-start-notification-service`
+
+</td>
+<td>
+
+Enables the start_notification_service command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`bereal-api:deny-start-notification-service`
+
+</td>
+<td>
+
+Denies the start_notification_service command without any pre-configured scope.
 
 </td>
 </tr>

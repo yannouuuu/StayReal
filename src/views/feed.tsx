@@ -8,7 +8,7 @@ import MdiRefresh from '~icons/mdi/refresh'
 import FeedUserOverview from "../components/feed/user/overview";
 import PullableScreen from "../components/pullable-screen";
 import { fetchLastMoment, type Moment } from "tauri-plugin-bereal-api";
-import { askNotificationPermission } from "../utils/notification-permission";
+import { tryToStartNotificationService } from "../utils/notification-service";
 
 const FeedView: Component = () => {
   const [me, setMe] = createSignal<PersonMe>();
@@ -32,7 +32,7 @@ const FeedView: Component = () => {
   };
 
   onMount(() => Promise.all([
-    askNotificationPermission(),
+    tryToStartNotificationService(),
     handleRefresh()
   ]));
 

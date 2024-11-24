@@ -65,3 +65,10 @@ pub(crate) async fn request_permission<R: Runtime>(
 ) -> crate::Result<PermissionState> {
   notification.request_permission()
 }
+
+#[command]
+pub(crate) async fn start_notification_service<R: Runtime>(
+  app: AppHandle<R>,
+) -> crate::Result<()> {
+  app.bereal_api().start_notification_service()
+}

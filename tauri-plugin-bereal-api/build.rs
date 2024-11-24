@@ -6,7 +6,8 @@ const COMMANDS: &[&str] = &[
   "set_region",
   "fetch_last_moment",
   "is_permission_granted",
-  "request_permission"
+  "request_permission",
+  "start_notification_service"
 ];
 
 fn main() {

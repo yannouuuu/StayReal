@@ -48,3 +48,7 @@ export async function requestPermission(): Promise<PermissionState> {
 export async function isPermissionGranted(): Promise<boolean> {
   return invoke('plugin:bereal-api|is_permission_granted')
 }
+
+export async function startNotificationService(): Promise<void> {
+  return invoke('plugin:bereal-api|start_notification_service')
+}

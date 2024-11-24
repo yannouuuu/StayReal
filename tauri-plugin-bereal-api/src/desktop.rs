@@ -187,4 +187,8 @@ impl<R: Runtime> BerealApi<R> {
   pub fn permission_state(&self) -> crate::Result<PermissionState> {
     Ok(PermissionState::Granted)
   }
+
+  pub fn start_notification_service(&self) -> crate::Result<()> {
+    Ok(())
+  }
 }

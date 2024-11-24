@@ -75,4 +75,9 @@ impl<R: Runtime> BerealApi<R> {
       .map(|r| r.permission_state)
       .map_err(Into::into)
   }
+
+  pub fn start_notification_service(&self) -> crate::Result<()> {
+    self.0.run_mobile_plugin("startNotificationService", ())
+      .map_err(Into::into)
+  }
 }

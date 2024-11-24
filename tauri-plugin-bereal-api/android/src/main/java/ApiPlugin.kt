@@ -2,10 +2,12 @@ package com.vexcited.stayreal.api
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.webkit.WebView
 import android.Manifest
 import android.os.Build
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.ActivityCompat
 import app.tauri.PermissionState
 import app.tauri.annotation.Permission
 import app.tauri.annotation.Command
@@ -45,17 +47,6 @@ const val LOCAL_NOTIFICATIONS = "permissionState"
 class ApiPlugin(private val activity: Activity): Plugin(activity) {
   private val requests = Requests(activity)
   private val cache = Cache(activity)
-
-  override fun load(webView: WebView) {
-    val intent = Intent(activity, NotificationService::class.java)
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      activity.startForegroundService(intent)
-    }
-    else {
-      activity.startService(intent)
-    }
-  }
 
   @Command
   fun setAuthDetails (invoke: Invoke) {
@@ -184,5 +175,29 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
     } else {
       "denied"
     }
+  }
+
+  @Command
+  fun startNotificationService(invoke: Invoke) {
+    if (
+      ActivityCompat.checkSelfPermission(
+        activity,
+        Manifest.permission.POST_NOTIFICATIONS
+      ) != PackageManager.PERMISSION_GRANTED
+    ) {
+      invoke.reject("notifications permission denied")
+      return
+    }
+
+    val intent = Intent(activity, NotificationService::class.java)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      activity.startForegroundService(intent)
+    }
+    else {
+      activity.startService(intent)
+    }
+
+    invoke.resolve()
   }
 }
