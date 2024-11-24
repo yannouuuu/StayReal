@@ -1,16 +1,11 @@
 package com.vexcited.stayreal.api
 
 import android.app.Activity
+import android.content.Intent
 import android.webkit.WebView
 import android.Manifest
 import android.os.Build
 import androidx.core.app.NotificationManagerCompat
-import androidx.work.Constraints
-import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.WorkManager
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
 import app.tauri.PermissionState
 import app.tauri.annotation.Permission
 import app.tauri.annotation.Command
@@ -52,21 +47,14 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
   private val cache = Cache(activity)
 
   override fun load(webView: WebView) {
-    val constraints = Constraints.Builder()
-      .setRequiredNetworkType(NetworkType.CONNECTED)
-      .build()
+    val intent = Intent(activity, NotificationService::class.java)
 
-    val notificationWork = OneTimeWorkRequestBuilder<NotificationWorker>()
-      .setConstraints(constraints)
-      .build()
-
-    val workManager = WorkManager.getInstance(activity)
-
-    workManager.enqueueUniqueWork(
-      "NotificationWorker",
-      ExistingWorkPolicy.REPLACE,
-      notificationWork
-    )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      activity.startForegroundService(intent)
+    }
+    else {
+      activity.startService(intent)
+    }
   }
 
   @Command
