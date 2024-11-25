@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.android
 import java.util.Properties
 import java.io.FileInputStream
 
@@ -5,6 +6,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("rust")
+    // TODO: Implement alternative push notification using Firebase FCM
+    // id("com.google.gms.google-services")
 }
 
 val tauriProperties = Properties().apply {
@@ -77,6 +80,9 @@ dependencies {
     implementation("androidx.webkit:webkit:1.6.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
+    implementation("androidx.core:core-ktx:1.13.1")
+    // TODO: Implement alternative push notification using Firebase FCM
+    // implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.4")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")

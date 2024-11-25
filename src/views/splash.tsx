@@ -6,18 +6,24 @@ const SplashView: Component = () => {
   const navigate = useNavigate();
 
   createEffect(() => {
-    if (auth.store.accessToken && auth.store.refreshToken) {
+    // let's just wait for the auth store to finish loading...
+    if (auth.store.loading) return;
+
+    // redirect to the appropriate page based on the final auth state.
+    if (auth.store.accessToken && auth.store.refreshToken)
       navigate("/feed");
-    }
-    else {
+    else
       navigate("/login");
-    }
   })
 
   return (
-    <div>
-      <h1>StayReal.</h1>
-      <p>Loading your data...</p>
+    <div class="h-100dvh flex items-center justify-center">
+      <h1 class="text-2xl">
+        StayReal.
+      </h1>
+      <p class="pt-2">
+        Let's get real.
+      </p>
     </div>
   )
 };

@@ -1,0 +1,15 @@
+"$schema" = "schemas/schema.json"
+
+[default]
+description = "Default permissions for the plugin"
+permissions = [
+  "allow-get-auth-details",
+  "allow-set-auth-details",
+  "allow-clear-auth-details",
+  "allow-refresh-token",
+  "allow-set-region",
+  "allow-fetch-last-moment",
+  "allow-request-permission",
+  "allow-is-permission-granted",
+  "allow-start-notification-service"
+]

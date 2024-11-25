@@ -84,7 +84,7 @@
     </td>
     <td width="30%">
       <div align="center">
-        Sadly, no build is available for iOS yet.
+        iOS is currently not supported, the internal API needs an implementation in Swift.
       </div>
     </td>
   </tr>
@@ -114,10 +114,10 @@
 - [ ] React to a post with your realmojis
 - [ ] Accept a friend request
 - [ ] Friends recommendations
-- [ ] Listing of friends
-- [ ] Notifications
-  - [ ] Update in background on desktop (possible)
-  - [ ] Update in background on mobile (might not be possible, it's currently unknown)
+- [x] Listing of friends
+- [x] Notifications
+- [ ] Settings
+  - [ ] Update region for moments
 
 ### Advanced
 
@@ -135,6 +135,18 @@ Only the necessary data is stored on the device, and the application does not co
 - [x] No tracking
 - [x] No analytics
 - [x] No ads
+
+## FAQ
+
+### Why is there a permanent notification on Android?
+
+The notification is used to keep the notification service running in the background, so you can receive notifications even when the application is closed.
+
+This is a limitation of the Android operating system, and I don't know any way to make this better. If you have any idea, please open an issue or even better, a pull request.
+
+### Why is the application not available on the Google Play Store?
+
+The application is not available on the Google Play Store because it does not respect the terms of service of the platform. The application is not malicious, but it does not respect the terms of service because it is a third-party client.
 
 ## 🛠️ Development
 

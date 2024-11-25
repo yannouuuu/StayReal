@@ -1,3 +1,4 @@
 package com.vexcited.stayreal
 
-class MainActivity : TauriActivity()
+class MainActivity : TauriActivity() {
+}

@@ -7,8 +7,6 @@ export {
 // so we can authenticate
 export * from "./requests/auth/vonage/request";
 export * from "./requests/auth/vonage/verify";
-export * from "./requests/auth/refresh";
-export * from "./requests/moments/last";
 export * from "./requests/person/me";
 
 // mostly for typings and enums

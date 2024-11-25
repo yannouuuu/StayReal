@@ -2,6 +2,7 @@ import { BEREAL_DEFAULT_HEADERS } from "../../constants";
 import { fetch } from "@tauri-apps/plugin-http";
 import { ApiMedia } from "../../types/media";
 import auth from "../../../stores/auth";
+import { setRegion } from "tauri-plugin-bereal-api";
 
 export interface PersonMe {
   id: string
@@ -51,7 +52,7 @@ export interface PersonMe {
 export const person_me = async (): Promise<PersonMe> => {
   const response = await fetch("https://mobile.bereal.com/api/person/me", {
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`
     }
   });
@@ -62,5 +63,8 @@ export const person_me = async (): Promise<PersonMe> => {
     return person_me();
   }
 
-  return response.json();
+  const json = await response.json() as PersonMe;
+  await setRegion(json.region);
+
+  return json;
 };

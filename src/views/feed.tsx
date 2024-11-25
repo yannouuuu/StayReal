@@ -1,30 +1,40 @@
-import { createResource, createSignal, For, Show, type Component } from "solid-js";
-import { feeds_friends } from "../api/requests/feeds/friends";
-import { moments_last, person_me } from "../api";
+import { createSignal, For, onMount, Show, type Component } from "solid-js";
+import { feeds_friends, type FeedsFriends } from "../api/requests/feeds/friends";
+import { person_me, type PersonMe } from "../api";
 import FeedFriendsOverview from "../components/feed/friends/overview";
 import MdiPeople from '~icons/mdi/people';
 import MdiRefresh from '~icons/mdi/refresh'
 
 import FeedUserOverview from "../components/feed/user/overview";
 import PullableScreen from "../components/pullable-screen";
+import { fetchLastMoment, type Moment } from "tauri-plugin-bereal-api";
+import { tryToStartNotificationService } from "../utils/notification-service";
 
 const FeedView: Component = () => {
-  const [me] = createResource(person_me);
-  const [moment, { refetch: refetchMoment }] = createResource(me, (me) => moments_last(me.region))
-  const [feed, { refetch: refetchFeed }] = createResource(feeds_friends);
+  const [me, setMe] = createSignal<PersonMe>();
+  const [feed, setFeed] = createSignal<FeedsFriends>();
+  const [moment, setMoment] = createSignal<Moment>();
 
   const [isRefreshing, setIsRefreshing] = createSignal(false);
   const handleRefresh = async () => {
     try {
       setIsRefreshing(true);
 
-      await refetchMoment();
-      await refetchFeed();
+      await person_me().then(setMe);
+      await Promise.all([
+        feeds_friends().then(setFeed),
+        fetchLastMoment().then(setMoment)
+      ])
     }
     finally {
       setIsRefreshing(false);
     }
   };
+
+  onMount(() => Promise.all([
+    tryToStartNotificationService(),
+    handleRefresh()
+  ]));
 
   return (
     <div>

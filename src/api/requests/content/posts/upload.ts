@@ -21,7 +21,7 @@ export const content_posts_upload_url = async (): Promise<ContentPostsUploadUrls
   const response = await fetch("https://mobile.bereal.com/api/content/posts/multi-format-upload-url?mimeTypes=image/webp&mimeTypes=image/webp", {
     method: "GET",
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`
     }
   });
@@ -56,7 +56,7 @@ export const content_posts_create = async (inputs: {
   const response = await fetch("https://mobile.bereal.com/api/content/posts", {
     method: "POST",
     headers: {
-      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceID),
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`,
       "Content-Type": "application/json"
     },
