@@ -5,8 +5,9 @@
   "repository": "https://github.com/Vexcited/StayReal",
   "type": "module",
   "scripts": {
-    "dev:web": "vite",
-    "build:web": "vite build",
+    "dev:web": "pnpm build:plugin && vite",
+    "build:web": "pnpm build:plugin && vite build",
+    "build:plugin": "cd tauri-plugin-bereal-api && pnpm build",
     "tauri": "tauri"
   },
   "license": "GPL-3.0-or-later",
