@@ -9,18 +9,18 @@ export default {
   input: 'guest-js/index.ts',
   output: [
     {
-      file: pkg.exports.import,
+      file: "dist-js/index.js",
       format: 'esm'
     },
     {
-      file: pkg.exports.require,
+      file: "dist-js/index.cjs",
       format: 'cjs'
     }
   ],
   plugins: [
     typescript({
       declaration: true,
-      declarationDir: `./${pkg.exports.import.split('/')[0]}`
+      declarationDir: "dist-js"
     })
   ],
   external: [
