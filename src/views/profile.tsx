@@ -2,8 +2,15 @@ import { createResource, For, Show, type Component } from "solid-js";
 import { person_me } from "../api";
 import MdiChevronLeft from '~icons/mdi/chevron-left'
 
+const Chip: Component<{ content: string }> = (props) => (
+  <div class="bg-white/15 rounded-full py-1.5 px-2.5">
+    <p class="text-xs sm:text-sm md:text-base">{props.content}</p>
+  </div>
+);
+
 const ProfileView: Component = () => {
   const [me] = createResource(person_me);
+
 
   return (
     <>
@@ -33,10 +40,18 @@ const ProfileView: Component = () => {
                   <h1 class="text-2xl font-700 line-height-none">
                     {me().fullname}
                   </h1>
-                  <p class="text-white/60">{me().username}</p>
+                  <p class="text-white/60">
+                    {me().username} ({me().isPrivate ? "PRIVATE" : "PUBLIC"})
+                  </p>
                 </div>
                 
                 <p>{me().biography}</p>
+                <div class="flex items-center justify-center flex-wrap gap-2">
+                  <Chip content={`${me().streakLength} days`} />
+                  <Chip content={`${me().location} (${me().countryCode})`} />
+                  <Chip content={new Date(me().birthdate).toLocaleDateString()} />
+                  <Chip content={me().gender} />
+                </div>
               </div>
 
               <div class="flex justify-center gap-2 md:gap-6">
@@ -57,21 +72,8 @@ const ProfileView: Component = () => {
               </div>
 
               <div>
-                <p>
-                  from {me().location} ({me().countryCode})
-                </p>
-                <p>
-                  streak of {me().streakLength} days
-                </p>
-                <p>
-                  birthday {new Date(me().birthdate).toLocaleDateString()}
-                </p>
-                <p>{me().phoneNumber}</p>
-                <p>{me().gender}</p>
-                <p>{me().region}</p>
-                <p>is {me().isPrivate ? "private" : "public"}</p>
-                <p class="text-white/50">
-                  account created @ {new Date(me().createdAt).toLocaleString()}
+                <p class="text-white/50 text-center text-xs md:text-sm">
+                  Joined BeReal the {new Date(me().createdAt).toLocaleString()}
                 </p>
               </div>
             </>
