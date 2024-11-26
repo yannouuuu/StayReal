@@ -75,10 +75,10 @@ const FeedFriendsOverview: Component<{
         <div class="flex">
           <For each={props.overview.posts}>
             {(post, index) => (
-              <div class="min-w-0 max-w-full transition-all"
+              <div class="min-w-0  transition-all"
                 classList={{
-                  "flex-[0_0_92%]": props.overview.posts.length > 1,
-                  "flex-[0_0_100%]": props.overview.posts.length === 1,
+                  "flex-[0_0_auto] max-w-94%": props.overview.posts.length > 1,
+                  "flex-[0_0_100%] max-w-full": props.overview.posts.length === 1,
                   "scale-98 opacity-60": activeIndex() !== index(),
                   "scale-100 opacity-100": activeIndex() === index()
                 }}
