@@ -1,63 +1,92 @@
-import { createEffect, createSignal, For, onCleanup, type Component } from "solid-js";
+import { createEffect, createSignal, For, type Component } from "solid-js";
 import type { PostsOverview } from "../../../api/requests/feeds/friends";
 import PostRealMojis from "../realmojis";
-import { useNavigate } from "@solidjs/router";
+// import { useNavigate } from "@solidjs/router";
 import MdiPlus from '~icons/mdi/plus'
-
-import "swiper/css";
-import Swiper from "swiper";
+import createEmblaCarousel from 'embla-carousel-solid'
+import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
+import type { EmblaCarouselType, EmblaEventType } from "embla-carousel"
+import { numberWithinRange } from "../../../utils/number-within";
 
 const FeedUserOverview: Component<{overview: PostsOverview}> = (props) => {
-  let container: HTMLDivElement | undefined;
-  const navigate = useNavigate();
+  const [emblaRef, emblaApi] = createEmblaCarousel(
+    () => ({
+      skipSnaps: true,
+      containScroll: false,
+      startIndex: props.overview.posts.length - 1,
+      slides: ".slide"
+    }),
+    () => [WheelGesturesPlugin()]
+  );
+
+  // const navigate = useNavigate();
 
   const [activeIndex, setActiveIndex] = createSignal(props.overview.posts.length - 1);
   const activePost = () => props.overview.posts[activeIndex()];
 
+  let tweenNodes: HTMLElement[] = [];
+  const setTweenNodes = (api: EmblaCarouselType): void => {
+    tweenNodes = api.slideNodes();
+  };
+
+  const tweenScale = (api: EmblaCarouselType, eventName?: EmblaEventType) => {
+    const engine = api.internalEngine()
+    const scrollProgress = api.scrollProgress()
+    const slidesInView = api.slidesInView()
+    const isScrollEvent = eventName === 'scroll'
+
+    api.scrollSnapList().forEach((scrollSnap, snapIndex) => {
+      let diffToTarget = scrollSnap - scrollProgress
+      const slidesInSnap = engine.slideRegistry[snapIndex]
+
+      slidesInSnap.forEach((slideIndex) => {
+        if (isScrollEvent && !slidesInView.includes(slideIndex)) return
+
+        const tweenValue = 1 - Math.abs(diffToTarget * .2)
+        const percentage = numberWithinRange(tweenValue, .85, 1).toString()
+        const tweenNode = tweenNodes[slideIndex];
+        tweenNode.style.transform = `scale(${percentage})`
+        tweenNode.style.opacity = percentage
+      })
+    })
+  };
+
+  const setActiveNode = (api: EmblaCarouselType): void => {
+    setActiveIndex(api.selectedScrollSnap());
+  }
+
   createEffect(() => {
-    if (!container) return;
+    const api = emblaApi()
+    if (!api) return;
 
-    const swiper = new Swiper(container, {
-      spaceBetween: 12,
-      slidesPerView: "auto",
-      centeredSlides: true,
-      initialSlide: props.overview.posts.length - 1,
+    setTweenNodes(api);
+    tweenScale(api);
 
-      on: {
-        slideChange: (swiper) => {
-          if (swiper.activeIndex === swiper.slides.length - 1) {
-            // prevent sliding to the "add post" slide
-            swiper.slideTo(swiper.slides.length - 2);
-          }
-          else {
-            setActiveIndex(swiper.activeIndex)
-          }
-        },
-        click: (swiper) => {
-          // when clicking on the "add post" slide, redirect to upload page
-          if (swiper.clickedIndex === swiper.slides.length - 1) {
-            navigate("/upload");
-          }
-          else {
-            swiper.slideTo(swiper.clickedIndex);
-          }
-        }
-      }
-    });
-
-    onCleanup(() => swiper.destroy());
-  });
+    api
+      .on('reInit', setTweenNodes)
+      .on('reInit', tweenScale)
+      .on('scroll', tweenScale)
+      .on('slideFocus', tweenScale)
+      .on('select', setActiveNode)
+  })
 
   return (
     <article role="article">
-      <div class="swiper" ref={container}>
-        <div class="swiper-wrapper py-5">
+      <div class="overflow-hidden" ref={emblaRef}>
+        <div class="flex py-5">
           <For each={props.overview.posts}>
             {(post, index) => (
-              <div class="relative swiper-slide w-fit! transition-all duration-300"
-                style={{
-                  transform: activeIndex() === index() ? "scale(1)" : "scale(.9)",
-                  opacity: activeIndex() === index() ? 1 : .5
+              <div class="slide flex-[0_0_auto] min-w-0 max-w-full relative cursor-pointer mr-1"
+                onClick={() => {
+                  const api = emblaApi();
+                  if (!api) return;
+
+                  if (api.selectedScrollSnap() === index()) {
+                    console.log("TODO: open post modal");
+                  }
+                  else {
+                    api.scrollTo(index());
+                  }
                 }}
               >
                 <img
@@ -79,7 +108,7 @@ const FeedUserOverview: Component<{overview: PostsOverview}> = (props) => {
           </For>
 
           <a href="/upload"
-            class="scale-90! swiper-slide rounded-lg h-140px! border-2 border-white/75 px-4 flex! items-center justify-center w-100px! text-center"
+            class="scale-80 flex-[0_0_auto] min-w-0 max-w-full rounded-lg h-140px border-2 border-white/75 flex items-center justify-center w-100px text-center"
             aria-label="Make a new BeReal."
           >
             <MdiPlus class="text-3xl" />

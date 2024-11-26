@@ -1,47 +1,37 @@
-import { Component, createEffect, createSignal, For, onCleanup, Show } from "solid-js";
+import { Component, createEffect, createSignal, For, Show } from "solid-js";
 import type { PostsOverview } from "../../../api/requests/feeds/friends";
+import createEmblaCarousel from 'embla-carousel-solid'
 import MdiDotsVertical from '~icons/mdi/dots-vertical';
 
-import "swiper/css";
-import "swiper/css/pagination";
-import Swiper from "swiper";
-import { Pagination } from "swiper/modules";
 import FeedFriendsPost from "./post";
-import PostRealMojis from "../realmojis";
+import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
+import type { EmblaCarouselType } from "embla-carousel";
 
 const FeedFriendsOverview: Component<{
   overview: PostsOverview
 }> = (props) => {
-  let container: HTMLDivElement | undefined;
-  let pagination: HTMLDivElement | undefined;
+  const [emblaRef, emblaApi] = createEmblaCarousel(
+    () => ({
+      skipSnaps: false,
+      containScroll: false,
+      startIndex: props.overview.posts.length - 1,
+    }),
+    () => [WheelGesturesPlugin()]
+  );
 
   const [activeIndex, setActiveIndex] = createSignal(props.overview.posts.length - 1);
   const activePost = () => props.overview.posts[activeIndex()];
 
+  const setActiveNode = (api: EmblaCarouselType): void => {
+    setActiveIndex(api.selectedScrollSnap());
+  }
+
   createEffect(() => {
-    if (!container || !pagination) return;
+    const api = emblaApi()
+    if (!api) return;
 
-    const swiper = new Swiper(container, {
-      slidesPerView: "auto",
-      centeredSlides: true,
-      watchOverflow: false,
-
-      // initial to the latest post
-      initialSlide: props.overview.posts.length - 1,
-
-      modules: [Pagination],
-      pagination: {
-        enabled: true,
-        el: pagination
-      },
-
-      on: {
-        slideChange: (swiper) => setActiveIndex(swiper.activeIndex)
-      }
-    });
-
-    onCleanup(() => swiper.destroy());
-  });
+    api.on('select', setActiveNode)
+  })
 
   return (
     <div>
@@ -81,34 +71,25 @@ const FeedFriendsOverview: Component<{
         <MdiDotsVertical class="text-xl" />
       </div>
       
-      <div class="swiper relative" ref={container}>
-        <div class="swiper-wrapper">
+      <div class="overflow-hidden relative" ref={emblaRef}>
+        <div class="flex">
           <For each={props.overview.posts}>
             {(post, index) => (
-              <div class="swiper-slide w-fit! transition-all"
-                style={{
-                  transform: activeIndex() === index() ? "scale(1)" : "scale(.95)",
-                  opacity: activeIndex() === index() ? 1 : .8
+              <div class="min-w-0 max-w-full transition-all"
+                classList={{
+                  "flex-[0_0_92%]": props.overview.posts.length > 1,
+                  "flex-[0_0_100%]": props.overview.posts.length === 1,
+                  "scale-98 opacity-60": activeIndex() !== index(),
+                  "scale-100 opacity-100": activeIndex() === index()
                 }}
               >
                 <div class="relative">
                   <FeedFriendsPost post={post} />
-
-                  {/* overlay */}
-                  <div class="z-25 absolute inset-x-0 h-50px bottom-0 bg-gradient-to-t from-black/50 to-transparent" />
-                
-                  <div>
-                    <div class="absolute z-30 bottom-4 left-4">
-                      <PostRealMojis post={post} />
-                    </div>
-                  </div>
                 </div>
               </div>
             )}
           </For>
         </div>
-
-        <div class="swiper-pagination" ref={pagination} />
       </div>
 
       <div class="px-4 pt-4">

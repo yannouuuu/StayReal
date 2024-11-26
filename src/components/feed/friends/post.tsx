@@ -1,5 +1,6 @@
 import { type Component, createSignal } from "solid-js";
 import { FeedPost } from "../../../api/requests/feeds/friends";
+import PostRealMojis from "../realmojis";
 
 const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
   const [isReversed, setIsReversed] = createSignal(false);
@@ -15,11 +16,22 @@ const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
         alt="Secondary image"
         src={secondaryURL()}
       />
+
       <img
-        class="rounded-2xl w-auto max-h-80vh"
+        class="rounded-2xl max-h-80vh"
         alt="Primary image"
         src={primaryURL()}
       />
+
+      {/* dimmed background overlay */}
+      <div class="z-25 absolute inset-x-0 h-50px bottom-0 bg-gradient-to-t from-black/50 to-transparent" />
+      
+      {/* small realmojis in the bottom left */}
+      <div class="w-fit">
+        <div class="absolute z-30 bottom-4 left-4">
+          <PostRealMojis post={props.post} />
+        </div>
+      </div>
     </div>
   );
 };
