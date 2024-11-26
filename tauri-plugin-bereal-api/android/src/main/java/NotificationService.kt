@@ -136,7 +136,7 @@ class NotificationService : Service() {
       .build()
 
     val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    manager.notify(Random.nextInt(), notification)
+    manager.notify(10, notification)
   }
 
   override fun onBind(intent: Intent?): IBinder? {
