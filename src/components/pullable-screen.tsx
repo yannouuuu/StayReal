@@ -37,7 +37,7 @@ const PullableScreen: FlowComponent<{
   top: 0;
   height: 0;
   transition: height 0.3s, min-height 0.3s;
-  background: linear-gradient(180deg, rgba(15,15,15,1) 0%, rgba(0,0,0,1) 100%);
+  background: transparent;
   text-align: center;
   width: 100%;
   overflow: hidden;
