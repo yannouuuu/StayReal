@@ -116,7 +116,11 @@ jobs:
 
       - uses: swatinem/rust-cache@v2
         with:
-          workspaces: './src-tauri -> target'
+          workspaces: |
+            './src-tauri -> target'
+            './internal-api -> target'
+          prefix-key: rust-${{ hashFiles('**/Cargo.lock') }}
+          shared-key: ${{ matrix.platform }}-${{ matrix.target }}
 
       - name: install frontend dependencies
         run: pnpm install
@@ -278,7 +282,11 @@ jobs:
 
       - uses: swatinem/rust-cache@v2
         with:
-          workspaces: './src-tauri -> target'
+          workspaces: |
+            './src-tauri -> target'
+            './internal-api -> target'
+          prefix-key: rust-${{ hashFiles('**/Cargo.lock') }}
+          shared-key: ${{ matrix.platform }}-${{ matrix.target-full }}
 
       # - name: (iOS) install dependencies
       #   if: matrix.os == 'ios'
