@@ -2,12 +2,18 @@ import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
 import icons from "unplugin-icons/vite";
 import unocss from "unocss/vite";
+import path from "node:path";
 
 const host = process.env.TAURI_DEV_HOST;
 
-// https://vitejs.dev/config/
 export default defineConfig(async () => ({
   plugins: [unocss(), icons({ compiler: "solid" }), solid()],
+
+  resolve: {
+    alias: {
+      "~": path.resolve(__dirname, "src")
+    }
+  },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
@@ -28,6 +34,6 @@ export default defineConfig(async () => ({
     watch: {
       // 3. tell vite to ignore watching `src-tauri`
       ignored: ["**/src-tauri/**"],
-    },
-  },
+    }
+  }
 }));

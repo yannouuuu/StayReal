@@ -24,7 +24,7 @@ Default permissions for the plugin
 <tr>
 <td>
 
-`bereal-api:allow-clear-auth-details`
+`internal-api:allow-clear-auth-details`
 
 </td>
 <td>
@@ -37,7 +37,7 @@ Enables the clear_auth_details command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:deny-clear-auth-details`
+`internal-api:deny-clear-auth-details`
 
 </td>
 <td>
@@ -50,7 +50,7 @@ Denies the clear_auth_details command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:allow-fetch-last-moment`
+`internal-api:allow-fetch-last-moment`
 
 </td>
 <td>
@@ -63,7 +63,7 @@ Enables the fetch_last_moment command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:deny-fetch-last-moment`
+`internal-api:deny-fetch-last-moment`
 
 </td>
 <td>
@@ -76,7 +76,7 @@ Denies the fetch_last_moment command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:allow-get-auth-details`
+`internal-api:allow-get-auth-details`
 
 </td>
 <td>
@@ -89,7 +89,7 @@ Enables the get_auth_details command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:deny-get-auth-details`
+`internal-api:deny-get-auth-details`
 
 </td>
 <td>
@@ -102,7 +102,7 @@ Denies the get_auth_details command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:allow-is-permission-granted`
+`internal-api:allow-is-permission-granted`
 
 </td>
 <td>
@@ -115,7 +115,7 @@ Enables the is_permission_granted command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:deny-is-permission-granted`
+`internal-api:deny-is-permission-granted`
 
 </td>
 <td>
@@ -128,7 +128,7 @@ Denies the is_permission_granted command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:allow-refresh-token`
+`internal-api:allow-refresh-token`
 
 </td>
 <td>
@@ -141,7 +141,7 @@ Enables the refresh_token command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:deny-refresh-token`
+`internal-api:deny-refresh-token`
 
 </td>
 <td>
@@ -154,7 +154,7 @@ Denies the refresh_token command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:allow-request-permission`
+`internal-api:allow-request-permission`
 
 </td>
 <td>
@@ -167,7 +167,7 @@ Enables the request_permission command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:deny-request-permission`
+`internal-api:deny-request-permission`
 
 </td>
 <td>
@@ -180,7 +180,7 @@ Denies the request_permission command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:allow-set-auth-details`
+`internal-api:allow-set-auth-details`
 
 </td>
 <td>
@@ -193,7 +193,7 @@ Enables the set_auth_details command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:deny-set-auth-details`
+`internal-api:deny-set-auth-details`
 
 </td>
 <td>
@@ -206,7 +206,7 @@ Denies the set_auth_details command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:allow-set-region`
+`internal-api:allow-set-region`
 
 </td>
 <td>
@@ -219,7 +219,7 @@ Enables the set_region command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:deny-set-region`
+`internal-api:deny-set-region`
 
 </td>
 <td>
@@ -232,7 +232,7 @@ Denies the set_region command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:allow-start-notification-service`
+`internal-api:allow-start-notification-service`
 
 </td>
 <td>
@@ -245,7 +245,7 @@ Enables the start_notification_service command without any pre-configured scope.
 <tr>
 <td>
 
-`bereal-api:deny-start-notification-service`
+`internal-api:deny-start-notification-service`
 
 </td>
 <td>

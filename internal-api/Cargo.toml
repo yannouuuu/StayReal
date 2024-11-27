@@ -1,29 +1,29 @@
 [package]
-name = "tauri-plugin-bereal-api"
+name = "tauri-plugin-internal-api"
 version = "0.1.0"
 authors = [ "Mikkel ALMONTE--RINGAUD <vexitofficial@gmail.com>" ]
 description = ""
 edition = "2021"
 rust-version = "1.77.2"
 exclude = ["/examples", "/webview-dist", "/webview-src", "/node_modules"]
-links = "tauri-plugin-bereal-api"
+links = "tauri-plugin-internal-api"
 
 [dependencies]
 tauri = { version = "2.1.0" }
 serde = "1.0"
 thiserror = "2"
-serde_json = "1.0.132"
+serde_json = "1.0"
 
-# only on desktop implementation
+# Only needed on desktop implementation
 [target."cfg(not(any(target_os = \"android\", target_os = \"ios\")))".dependencies]
-anyhow = "1.0.93"
-reqwest = "0.12.9"
-iana-time-zone = "0.1.61"
-hex = "0.4.3"
-sha2 = "0.10.8"
-hmac = "0.12.1"
-base64 = "0.22.1"
+anyhow = "1.0"
+reqwest = "0.12"
+iana-time-zone = "0.1"
+hex = "0.4"
+sha2 = "0.10"
+hmac = "0.12"
+base64 = "0.22"
 
 [build-dependencies]
-tauri-plugin = { version = "2.0.2", features = ["build"] }
-tauri-build = "2.0.2"
+tauri-plugin = { version = "2.0", features = ["build"] }
+tauri-build = "2.0"

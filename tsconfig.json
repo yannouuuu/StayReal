@@ -23,7 +23,12 @@
 
     "types": [
       "unplugin-icons/types/solid"
-    ]
+    ],
+
+    "baseUrl": "src",
+    "paths": {
+      "~/*": ["./*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

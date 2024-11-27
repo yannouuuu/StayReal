@@ -7,7 +7,7 @@
   "scripts": {
     "dev:web": "pnpm build:plugin && vite",
     "build:web": "pnpm build:plugin && vite build",
-    "build:plugin": "cd tauri-plugin-bereal-api && pnpm build",
+    "build:plugin": "cd internal-api && pnpm build",
     "tauri": "tauri"
   },
   "license": "GPL-3.0-or-later",
@@ -27,7 +27,7 @@
     "embla-carousel-wheel-gestures": "^8.0.1",
     "pulltorefreshjs": "^0.1.22",
     "solid-js": "^1.9.3",
-    "tauri-plugin-bereal-api": "link:tauri-plugin-bereal-api",
+    "@stayreal/api": "link:internal-api",
     "uuid": "^11.0.3"
   },
   "devDependencies": {

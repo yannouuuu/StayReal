@@ -1,4 +1,4 @@
-import { startNotificationService } from "tauri-plugin-bereal-api";
+import { startNotificationService } from "@stayreal/api";
 import { askNotificationPermission } from "./notification-permission";
 
 export const tryToStartNotificationService = async () => {

@@ -1,12 +1,12 @@
 import { createEffect, createSignal, For, type Component } from "solid-js";
-import type { PostsOverview } from "../../../api/requests/feeds/friends";
-import PostRealMojis from "../realmojis";
+import type { PostsOverview } from "~/api/requests/feeds/friends";
+import PostRealMojis from "~/components/feed/realmojis";
 // import { useNavigate } from "@solidjs/router";
 import MdiPlus from '~icons/mdi/plus'
 import createEmblaCarousel from 'embla-carousel-solid'
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import type { EmblaCarouselType, EmblaEventType } from "embla-carousel"
-import { numberWithinRange } from "../../../utils/number-within";
+import { numberWithinRange } from "~/utils/number-within";
 
 const FeedUserOverview: Component<{overview: PostsOverview}> = (props) => {
   const [emblaRef, emblaApi] = createEmblaCarousel(

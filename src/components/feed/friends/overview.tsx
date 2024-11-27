@@ -1,5 +1,5 @@
 import { Component, createEffect, createSignal, For, Show } from "solid-js";
-import type { PostsOverview } from "../../../api/requests/feeds/friends";
+import type { PostsOverview } from "~/api/requests/feeds/friends";
 import createEmblaCarousel from 'embla-carousel-solid'
 import MdiDotsVertical from '~icons/mdi/dots-vertical';
 

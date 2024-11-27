@@ -26,6 +26,9 @@ importers:
       '@solidjs/router':
         specifier: ^0.15.1
         version: 0.15.1(solid-js@1.9.3)
+      '@stayreal/api':
+        specifier: link:internal-api
+        version: link:internal-api
       '@tauri-apps/api':
         specifier: ^2
         version: 2.0.3
@@ -53,9 +56,6 @@ importers:
       solid-js:
         specifier: ^1.9.3
         version: 1.9.3
-      tauri-plugin-bereal-api:
-        specifier: link:tauri-plugin-bereal-api
-        version: link:tauri-plugin-bereal-api
       uuid:
         specifier: ^11.0.3
         version: 11.0.3

@@ -7,7 +7,7 @@ import MdiRefresh from '~icons/mdi/refresh'
 
 import FeedUserOverview from "../components/feed/user/overview";
 import PullableScreen from "../components/pullable-screen";
-import { fetchLastMoment, type Moment } from "tauri-plugin-bereal-api";
+import { fetchLastMoment, type Moment } from "@stayreal/api";
 import { tryToStartNotificationService } from "../utils/notification-service";
 
 const FeedView: Component = () => {

@@ -1,5 +1,5 @@
 import { For, Show, type Component } from "solid-js";
-import type { PostsOverview } from "../../api/requests/feeds/friends";
+import type { PostsOverview } from "~/api/requests/feeds/friends";
 
 /**
  * RealMojis attributed to a given post.

@@ -2,7 +2,7 @@ import { BEREAL_DEFAULT_HEADERS } from "../../constants";
 import { fetch } from "@tauri-apps/plugin-http";
 import { ApiMedia } from "../../types/media";
 import auth from "../../../stores/auth";
-import { setRegion } from "tauri-plugin-bereal-api";
+import { setRegion } from "@stayreal/api";
 
 export interface PersonMe {
   id: string

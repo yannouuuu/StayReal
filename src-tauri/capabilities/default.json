@@ -20,6 +20,6 @@
         }
       ]
     },
-    "bereal-api:default"
+    "internal-api:default"
   ]
 }

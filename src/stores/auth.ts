@@ -1,6 +1,6 @@
 import { createRoot, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
-import { refreshToken, getAuthDetails, type AuthDetails, setAuthDetails, clearAuthDetails } from "tauri-plugin-bereal-api";
+import { refreshToken, getAuthDetails, type AuthDetails, setAuthDetails, clearAuthDetails } from "@stayreal/api";
 import { wait } from "../utils/wait";
 
 export default createRoot(() => {

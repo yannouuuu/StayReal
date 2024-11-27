@@ -1,8 +1,8 @@
 import { createScriptLoader } from "@solid-primitives/script-loader";
-
 import { onMount, type Component } from "solid-js";
 
 const ARKOSE_DATA_CALLBACK = "__arkose__callback__";
+
 const Arkose: Component<{
   key: string
   onLoad: (arkose: any) => void

@@ -22,7 +22,7 @@ use desktop::BerealApi;
 use mobile::BerealApi;
 
 /// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`]
-/// to access the bereal-api APIs.
+/// to access the internal APIs.
 pub trait BerealApiExt<R: Runtime> {
   fn bereal_api(&self) -> &BerealApi<R>;
 }
@@ -35,7 +35,7 @@ impl<R: Runtime, T: Manager<R>> crate::BerealApiExt<R> for T {
 
 /// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
-  Builder::new("bereal-api")
+  Builder::new("internal-api")
     .invoke_handler(tauri::generate_handler![
       commands::set_auth_details,
       commands::get_auth_details,
@@ -48,14 +48,14 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
       commands::start_notification_service
     ])
     .setup(|app, api| {
-
       #[cfg(mobile)]
-      let bereal_api = mobile::init(app, api)?;
+      let internal_api = mobile::init(app, api)?;
 
       #[cfg(desktop)]
-      let bereal_api = desktop::init(app, api)?;
+      let internal_api = desktop::init(app, api)?;
       
-      app.manage(bereal_api);
+      app.manage(internal_api);
+
       Ok(())
     })
     .build()

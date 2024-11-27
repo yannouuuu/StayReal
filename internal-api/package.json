@@ -1,6 +1,6 @@
 {
-  "name": "tauri-plugin-bereal-api",
-  "version": "0.1.0",
+  "name": "@stayreal/api",
+  "version": "0.0.0",
   "author": "Mikkel ALMONTE--RINGAUD <vexitofficial@gmail.com>",
   "description": "A guest for StayReal's native client for the BeReal API.",
   "type": "module",

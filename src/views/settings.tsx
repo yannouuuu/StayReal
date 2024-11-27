@@ -1,5 +1,5 @@
 import { createSignal, type Component } from "solid-js";
-import { getAuthDetails } from "tauri-plugin-bereal-api";
+import { getAuthDetails } from "@stayreal/api";
 import auth from "../stores/auth";
 import { useNavigate } from "@solidjs/router";
 

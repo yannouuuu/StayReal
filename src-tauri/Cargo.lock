@@ -3326,8 +3326,8 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
- "tauri-plugin-bereal-api",
  "tauri-plugin-http",
+ "tauri-plugin-internal-api",
  "tauri-plugin-os",
  "tauri-plugin-shell",
 ]
@@ -3642,25 +3642,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tauri-plugin-bereal-api"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "base64 0.22.1",
- "hex",
- "hmac",
- "iana-time-zone",
- "reqwest",
- "serde",
- "serde_json",
- "sha2",
- "tauri",
- "tauri-build",
- "tauri-plugin",
- "thiserror 2.0.3",
-]
-
-[[package]]
 name = "tauri-plugin-fs"
 version = "2.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3701,6 +3682,25 @@ dependencies = [
  "tokio",
  "url",
  "urlpattern",
+]
+
+[[package]]
+name = "tauri-plugin-internal-api"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "base64 0.22.1",
+ "hex",
+ "hmac",
+ "iana-time-zone",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin",
+ "thiserror 2.0.3",
 ]
 
 [[package]]

@@ -1,7 +1,7 @@
 import {
   isPermissionGranted,
   requestPermission,
-} from 'tauri-plugin-bereal-api';
+} from '@stayreal/api';
 
 export const askNotificationPermission = async (): Promise<boolean> => {
   let permissionGranted = await isPermissionGranted();

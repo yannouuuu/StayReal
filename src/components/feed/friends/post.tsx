@@ -1,6 +1,6 @@
 import { type Component, createSignal } from "solid-js";
-import { FeedPost } from "../../../api/requests/feeds/friends";
-import PostRealMojis from "../realmojis";
+import { FeedPost } from "~/api/requests/feeds/friends";
+import PostRealMojis from "~/components/feed/realmojis";
 
 const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
   const [isReversed, setIsReversed] = createSignal(false);
