@@ -144,6 +144,8 @@ The notification is used to keep the notification service running in the backgro
 
 This is a limitation of the Android operating system, and I don't know any way to make this better. If you have any idea, please open an issue or even better, a pull request.
 
+Note that you can hide this specific notification called `BeReal Moments (Service)` in the Android settings, but there's a chance that the service will be killed and you will receive no more notification.
+
 ### Why is the application not available on the Google Play Store?
 
 The application is not available on the Google Play Store because it does not respect the terms of service of the platform. The application is not malicious, but it does not respect the terms of service because it is a third-party client.
