@@ -117,8 +117,8 @@ jobs:
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: |
-            './src-tauri -> target'
-            './internal-api -> target'
+            src-tauri -> target
+            internal-api -> target
           prefix-key: rust-${{ hashFiles('**/Cargo.lock') }}
           shared-key: ${{ matrix.platform }}-${{ matrix.target }}
 
@@ -283,8 +283,8 @@ jobs:
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: |
-            './src-tauri -> target'
-            './internal-api -> target'
+            src-tauri -> target
+            internal-api -> target
           prefix-key: rust-${{ hashFiles('**/Cargo.lock') }}
           shared-key: ${{ matrix.platform }}-${{ matrix.target-full }}
 
