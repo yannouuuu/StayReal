@@ -14,6 +14,7 @@ const FeedView: Component = () => {
   const [me, setMe] = createSignal<PersonMe>();
   const [feed, setFeed] = createSignal<FeedsFriends>();
   const [moment, setMoment] = createSignal<Moment>();
+  const [isScrolling, setIsScrolling] = createSignal(false);
 
   const [isRefreshing, setIsRefreshing] = createSignal(false);
   const handleRefresh = async () => {
@@ -84,7 +85,10 @@ const FeedView: Component = () => {
       </header>
       
       <div class="py-16 mt-[env(safe-area-inset-top)]">
-        <PullableScreen onRefresh={handleRefresh}>
+        <PullableScreen
+          onRefresh={handleRefresh}
+          shouldPullToRefresh={!isScrolling()}
+        >
           <main>
             <Show when={feed()} fallback={
               <p class="text-center text-white/50">
@@ -112,12 +116,12 @@ const FeedView: Component = () => {
                       </Show>
                     </div>
                   }>
-                    {overview => <FeedUserOverview overview={overview()} />}
+                    {overview => <FeedUserOverview overview={overview()} setScrolling={setIsScrolling} />}
                   </Show>
 
                   <div class="flex flex-col gap-6 mt-8">
                     <For each={[...feed().friendsPosts].sort((a, b) => new Date(b.posts[b.posts.length - 1].postedAt).getTime() - new Date(a.posts[a.posts.length - 1].postedAt).getTime())}>
-                      {overview => <FeedFriendsOverview overview={overview} />}
+                      {overview => <FeedFriendsOverview overview={overview} setScrolling={setIsScrolling} />}
                     </For>
                   </div>
 

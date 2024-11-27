@@ -4,6 +4,7 @@ import MdiRefresh from '~icons/mdi/refresh'
 
 const PullableScreen: FlowComponent<{
   onRefresh: () => void;
+  shouldPullToRefresh: boolean
 }> = (props) => {
   const iconArrow = <MdiRefresh
     class="text-white/75 text-2xl rounded-full p-1"
@@ -20,12 +21,12 @@ const PullableScreen: FlowComponent<{
       iconArrow: (iconArrow as unknown as SVGElement).outerHTML,
       iconRefreshing: (iconRefreshing as unknown as SVGElement).outerHTML,
       
+      refreshTimeout: 250,
       distThreshold: 75,
       distReload: 75,
       distMax: 85,
 
-      // refreshTimeout: 0,
-      refreshTimeout: 250,
+      shouldPullToRefresh: () => !window.scrollY && props.shouldPullToRefresh,
 
       getStyles() {
         return `

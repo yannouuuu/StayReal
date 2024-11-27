@@ -1,4 +1,4 @@
-import { Component, createEffect, createSignal, For, Show } from "solid-js";
+import { Component, createEffect, createSignal, For, type Setter, Show } from "solid-js";
 import type { PostsOverview } from "~/api/requests/feeds/friends";
 import createEmblaCarousel from 'embla-carousel-solid'
 import MdiDotsVertical from '~icons/mdi/dots-vertical';
@@ -9,6 +9,7 @@ import type { EmblaCarouselType } from "embla-carousel";
 
 const FeedFriendsOverview: Component<{
   overview: PostsOverview
+  setScrolling: Setter<boolean>
 }> = (props) => {
   const [emblaRef, emblaApi] = createEmblaCarousel(
     () => ({
@@ -30,7 +31,12 @@ const FeedFriendsOverview: Component<{
     const api = emblaApi()
     if (!api) return;
 
-    api.on('select', setActiveNode)
+    api
+      .on('select', setActiveNode)
+      // To prevent pull to refresh to trigger while we're scrolling on a post.
+      // Note that those is only useful for the first post...
+      .on("pointerDown", () => props.setScrolling(true))
+      .on("pointerUp", () => props.setScrolling(false))
   })
 
   return (
