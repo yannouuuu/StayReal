@@ -195,6 +195,7 @@ A lot of similar projects and researches have been made, and we would like to th
 - [&nearr;&nbsp;Fowled's researches on the app](https://bereal.fowled.dev)
 - [&nearr;&nbsp;userbradley's researches on the API](https://github.com/userbradley/BeReal)
 
+
 ## 📄 License
 
 StayReal is licensed under the [&nearr;&nbsp;GNU General Public License v3.0 (GPL-3.0)](./LICENSE.md), a copyleft license that ensures users’ freedom to run, study, share, and modify the software. Licensed works, modifications, and larger works must also be distributed under GPL-3.0, and source code must be provided or made available.
