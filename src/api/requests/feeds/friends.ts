@@ -79,6 +79,13 @@ export interface FeedPost {
   createdAt: string
   updatedAt: string
   postType: "default"
+
+  /** only available if it's a post from us */
+  origin?: "own" | "repost"
+
+  parentPostId?: string
+  parentPostUserId?: string
+  parentPostUsername?: string
 }
 
 export interface PostsOverview {
@@ -126,5 +133,6 @@ export const feeds_friends = async (): Promise<FeedsFriends> => {
     return feeds_friends();
   }
 
-  return response.json();
+  const json = await response.json();
+  return json;
 }
