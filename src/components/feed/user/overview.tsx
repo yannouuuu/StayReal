@@ -7,6 +7,7 @@ import createEmblaCarousel from 'embla-carousel-solid'
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import type { EmblaCarouselType, EmblaEventType } from "embla-carousel"
 import { numberWithinRange } from "~/utils/number-within";
+import PostSmallComments from "./post-small-comments";
 
 const FeedUserOverview: Component<{
   overview: PostsOverview,
@@ -106,8 +107,9 @@ const FeedUserOverview: Component<{
                   alt="Primary image"
                 />
 
-                <div class="absolute flex justify-center z-20 -bottom-4 inset-x-0">
+                <div class="absolute flex gap-1 justify-center z-20 -bottom-4 inset-x-0">
                   <PostRealMojis post={post} />
+                  <PostSmallComments post={post} />
                 </div>
               </div>
             )}
