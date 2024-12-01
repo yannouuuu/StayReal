@@ -13,6 +13,7 @@ const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
   let timer: ReturnType<typeof setTimeout> | undefined;
 
   const handleVideoUnfocus = () => {
+    if (timer) clearTimeout(timer);
     setIsFocusing(false);
 
     const video = videoRef();
@@ -34,26 +35,29 @@ const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
 
   const handleFocus = () => {
     if (timer) clearTimeout(timer);
+
+    if (videoRef()) {
+      document.addEventListener("pointerup", handleVideoUnfocus);
+    }
+    else {
+      document.addEventListener("pointerup", handleImageUnfocus);
+    }
+
     timer = setTimeout(() => {
       setIsFocusing(true);
 
       const video = videoRef();
       if (video) {
-        document.addEventListener("pointerup", handleVideoUnfocus);
-
         video.classList.remove("hidden");
         video.play();
       }
-      else {
-        document.addEventListener("pointerup", handleImageUnfocus);
-      }
-    }, 250);
+    }, 300);
   }
 
   return (
     <div class="z-20 relative mx-auto w-fit">
       <img
-        class="z-30 h-40 w-auto absolute top-4 left-4 rounded-xl border-2 border-black shadow-lg transition-opacity"
+        class="z-30 h-40 w-auto absolute top-4 left-4 rounded-xl border-2 border-black shadow-l transition-opacity"
         onClick={() => setIsReversed(prev => !prev)}
         alt="Secondary image"
         src={secondaryURL()}
