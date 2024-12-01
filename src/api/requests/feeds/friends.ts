@@ -76,9 +76,10 @@ export interface FeedPost {
   postedAt: string
   takenAt: string
   creationDate: string
+  /** @deprecated use `creationDate` instead */
   createdAt: string
   updatedAt: string
-  postType: "default"
+  postType: "default" | "bts"
 
   /** only available if it's a post from us */
   origin?: "own" | "repost"
@@ -86,6 +87,11 @@ export interface FeedPost {
   parentPostId?: string
   parentPostUserId?: string
   parentPostUsername?: string
+
+  btsMedia?: ApiMedia & {
+    mediaType: "video"
+    mimeType: "video/mp4"
+  }
 }
 
 export interface PostsOverview {
