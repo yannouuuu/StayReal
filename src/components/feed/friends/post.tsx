@@ -11,7 +11,12 @@ const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
   const secondaryURL = () => isReversed() ? props.post.primary.url : props.post.secondary.url;
 
   let timer: ReturnType<typeof setTimeout> | undefined;
-
+  
+  // On mobile, when having pointer down and scrolling
+  // doesn't trigger pointerup, but pointercancel instead.
+  // That's why we need to handle both.
+  const upEvents = ["pointerup", "pointercancel"];
+  
   const handleVideoUnfocus = () => {
     if (timer) clearTimeout(timer);
     setIsFocusing(false);
@@ -23,24 +28,24 @@ const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
       video.currentTime = 0;
     }
 
-    document.removeEventListener("pointerup", handleVideoUnfocus);
+    upEvents.forEach(name => document.removeEventListener(name, handleVideoUnfocus));
   }
 
   const handleImageUnfocus = () => {
     if (timer) clearTimeout(timer);
     setIsFocusing(false);
 
-    document.removeEventListener("pointerup", handleImageUnfocus);
+    upEvents.forEach(name => document.removeEventListener(name, handleImageUnfocus));
   }
 
   const handleFocus = () => {
     if (timer) clearTimeout(timer);
 
     if (videoRef()) {
-      document.addEventListener("pointerup", handleVideoUnfocus);
+      upEvents.forEach(name => document.addEventListener(name, handleVideoUnfocus));
     }
     else {
-      document.addEventListener("pointerup", handleImageUnfocus);
+      upEvents.forEach(name => document.addEventListener(name, handleImageUnfocus));
     }
 
     timer = setTimeout(() => {
