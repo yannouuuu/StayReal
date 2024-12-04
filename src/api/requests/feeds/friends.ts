@@ -92,6 +92,19 @@ export interface FeedPost {
     mediaType: "video"
     mimeType: "video/mp4"
   }
+
+  screenshots?: Array<{
+    id: string
+    postId: string
+    snappedAt: string
+    user: {
+      id: string
+      username: string
+      profilePicture: ApiMedia
+    }
+  }>
+
+  unblurCount: number
 }
 
 export interface PostsOverview {
@@ -140,5 +153,6 @@ export const feeds_friends = async (): Promise<FeedsFriends> => {
   }
 
   const json = await response.json();
+  console.log(json)
   return json;
 }
