@@ -2,6 +2,7 @@ import { Component, createEffect, createSignal, For, type Setter, Show } from "s
 import type { PostsOverview } from "~/api/requests/feeds/friends";
 import createEmblaCarousel from 'embla-carousel-solid'
 import MdiDotsVertical from '~icons/mdi/dots-vertical';
+import MdiRepost from '~icons/mdi/repost';
 
 import FeedFriendsPost from "./post";
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
@@ -57,9 +58,17 @@ const FeedFriendsOverview: Component<{
             )}
           </Show>
           <div class="flex flex-col">
-            <p class="font-600 w-fit">
-              {props.overview.user.username}
-            </p>
+            <div class="flex items-center gap-3">
+              <p class="font-600 w-fit">
+                {props.overview.user.username}
+              </p>
+              <Show when={activePost().origin === "repost"}>
+                <p class="text-white/80 flex items-center gap-1 bg-white/20 pl-2 pr-2.5 rounded-full text-sm">
+                  <MdiRepost /> {activePost().parentPostUsername}
+                </p>
+              </Show>
+            </div>
+              
             <div class="text-sm text-white/60 flex flex-wrap gap-1.5">
               <time>
                 <span class="tts-only">Posted at</span> {new Date(activePost().postedAt).toLocaleTimeString()}
