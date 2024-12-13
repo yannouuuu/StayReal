@@ -27,22 +27,42 @@ export interface FeedPost {
     user: {
       id: string
       username: string
-      profilePicture: ApiMedia
+      profilePicture: ApiMedia | null
       type: "USER"
     }
     media: ApiMedia
     emoji: string
-    type: "happy" | "up" | "heartEyes"
+    type: "happy" | "up" | "heartEyes" | "surprised" | "laughing"
     isInstant: boolean
     postedAt: string
   }>
+
+  music?: {
+    isrc: string,
+    track: string,
+    artist: string,
+    /** URL */
+    artwork: string,
+    /**
+     * .m4a audio preview URL for Apple Music
+     */
+    preview: string,
+    /**
+     * URL to open the music on their respective store (Apple Music, Spotify)
+     */
+    openUrl: string,
+    visibility: "public",
+    provider: "apple",
+    providerId: string,
+    audioType: "track"
+  },
 
   comments: Array<{
     id: string
     user: {
       id: string
       username: string
-      profilePicture: ApiMedia
+      profilePicture: ApiMedia | null
       type: "USER"
     }
     content: string
@@ -53,7 +73,7 @@ export interface FeedPost {
     user: {
       id: string
       username: string
-      profilePicture: ApiMedia
+      profilePicture: ApiMedia | null
       fullname: string
       type: "USER"
     }
@@ -100,7 +120,7 @@ export interface FeedPost {
     user: {
       id: string
       username: string
-      profilePicture: ApiMedia
+      profilePicture: ApiMedia | null
     }
   }>
 
@@ -153,6 +173,5 @@ export const feeds_friends = async (): Promise<FeedsFriends> => {
   }
 
   const json = await response.json();
-  console.log(json)
   return json;
 }
