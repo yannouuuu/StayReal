@@ -99,7 +99,10 @@ const FeedFriendsOverview: Component<{
                 }}
               >
                 <div class="relative">
-                  <FeedFriendsPost post={post} />
+                  <FeedFriendsPost
+                    post={post}
+                    postUserId={props.overview.user.id}
+                  />
                 </div>
               </div>
             )}

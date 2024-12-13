@@ -1,8 +1,18 @@
 import { type Component, createSignal, Show } from "solid-js";
+import { content_posts_repost } from "~/api/requests/content/posts/repost";
 import { FeedPost } from "~/api/requests/feeds/friends";
 import PostRealMojis from "~/components/feed/realmojis";
+import feed from "~/stores/feed";
+import me from "~/stores/me";
 
-const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
+const FeedFriendsPost: Component<{
+  post: FeedPost
+  
+  /**
+   * User ID of the post owner.
+   */
+  postUserId: string
+}> = (props) => {
   const [isReversed, setIsReversed] = createSignal(false);
   const [videoRef, setVideoRef] = createSignal<HTMLVideoElement>();
   const [isFocusing, setIsFocusing] = createSignal(false);
@@ -29,14 +39,14 @@ const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
     }
 
     upEvents.forEach(name => document.removeEventListener(name, handleVideoUnfocus));
-  }
+  };
 
   const handleImageUnfocus = () => {
     if (timer) clearTimeout(timer);
     setIsFocusing(false);
 
     upEvents.forEach(name => document.removeEventListener(name, handleImageUnfocus));
-  }
+  };
 
   const handleFocus = () => {
     if (timer) clearTimeout(timer);
@@ -57,8 +67,31 @@ const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
         video.play();
       }
     }, 300);
-  }
+  };
 
+  const [isReposting, setIsReposting] = createSignal(false);
+  const handleRepost = async () => {
+    setIsReposting(true);
+
+    try {
+      // TODO: add "friends of friends" support and modal to ask which one to use
+      await content_posts_repost(props.post.id, props.postUserId, "friends");
+      await feed.refetch();
+    }
+    catch (error) {
+      // TODO: show toast with error message
+      console.error((error as Error).message);
+    }
+    finally {
+      setIsReposting(false);
+    }
+  };
+
+  const isUserTagged = () => props.post.tags.some(tag => tag.userId === me.get()?.id);
+  const isCurrentlyReposted = () => (feed.get()?.userPosts?.posts ?? []).some(post =>
+    post.origin === "repost" && post.parentPostId === props.post.id
+  );
+  
   return (
     <div class="z-20 relative mx-auto w-fit">
       <img
@@ -111,6 +144,24 @@ const FeedFriendsPost: Component<{ post: FeedPost }> = (props) => {
           <PostRealMojis post={props.post} />
         </div>
       </div>
+
+      {/*
+        * Repost feature : 
+        * We should show it only when the current user is tagged in the post
+        * and the post is not already reposted by the current user.
+        */}
+      <Show when={isUserTagged() && !isCurrentlyReposted()}>
+        <div class="absolute z-30 bottom-4.5 inset-x-0 w-fit mx-auto">
+          <button
+            type="button"
+            class="bg-white text-black uppercase font-bold px-4 py-.5 rounded-full shadow-lg disabled:opacity-50"
+            disabled={isReposting()}
+            onClick={handleRepost}
+          >
+            Repost
+          </button>
+        </div>
+      </Show>
     </div>
   );
 };
