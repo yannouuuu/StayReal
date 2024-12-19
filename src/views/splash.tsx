@@ -14,14 +14,14 @@ const SplashView: Component = () => {
       navigate("/feed");
     else
       navigate("/login");
-  })
+  });
 
   return (
-    <div class="h-100dvh flex items-center justify-center">
-      <h1 class="text-2xl">
+    <div class="h-100dvh flex flex-col items-center justify-center">
+      <h1 class="text-3xl font-bold">
         StayReal.
       </h1>
-      <p class="pt-2">
+      <p class="pt-2 font-200 opacity-50">
         Let's get real.
       </p>
     </div>
