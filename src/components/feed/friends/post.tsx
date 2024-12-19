@@ -25,7 +25,7 @@ const FeedFriendsPost: Component<{
   // On mobile, when having pointer down and scrolling
   // doesn't trigger pointerup, but pointercancel instead.
   // That's why we need to handle both.
-  const upEvents = ["pointerup", "pointercancel"];
+  const upEvents = ["pointerup", "pointercancel", "pointermove"];
   
   const handleVideoUnfocus = () => {
     if (timer) clearTimeout(timer);
@@ -48,7 +48,9 @@ const FeedFriendsPost: Component<{
     upEvents.forEach(name => document.removeEventListener(name, handleImageUnfocus));
   };
 
-  const handleFocus = () => {
+  const handleFocus = (event: PointerEvent) => {
+    // We ignore right-clicking.
+    if (event.pointerType === "mouse" && event.button !== 0) return;
     if (timer) clearTimeout(timer);
 
     if (videoRef()) {
@@ -66,7 +68,7 @@ const FeedFriendsPost: Component<{
         video.classList.remove("hidden");
         video.play();
       }
-    }, 300);
+    }, 350);
   };
 
   const [isReposting, setIsReposting] = createSignal(false);
