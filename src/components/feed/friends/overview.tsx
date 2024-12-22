@@ -38,7 +38,10 @@ const FeedFriendsOverview: Component<{
       // Note that those is only useful for the first post...
       .on("pointerDown", () => props.setScrolling(true))
       .on("pointerUp", () => props.setScrolling(false))
-  })
+  });
+
+  // show up to 2 comments as a sample
+  const commentsSample = () => activePost().comments.slice(0, 2);
 
   return (
     <div>
@@ -110,10 +113,35 @@ const FeedFriendsOverview: Component<{
         </div>
       </div>
 
-      <div class="px-4 pt-4">
-        <p class="text-center">
+      <div class="px-6 pt-4">
+        <p class="text-left">
           {activePost().caption}
         </p>
+        
+        <div class="text-sm font-300">
+          <Show when={commentsSample().length > 0}>
+            <div class="flex items-center gap-1 opacity-50">
+              <MdiCommentOutline class="text-xs" />
+              <p>See the comments</p>
+            </div>
+          </Show>
+
+          <For each={commentsSample()}>
+            {comment => (
+              <div class="flex items-center gap-1">
+                <p class="font-600">{comment.user.username}</p>
+                <p>{comment.content}</p>
+              </div>
+            )}
+          </For>
+
+          <div class="opacity-50 flex items-center gap-2 mt-2">
+            <div class="rounded-full w-6 h-6 bg-warmGray shrink-0" />
+            <button type="button" class="w-full text-left">
+              Add a comment...
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )
