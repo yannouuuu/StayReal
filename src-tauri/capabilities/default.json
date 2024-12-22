@@ -17,6 +17,9 @@
         },
         {
           "url": "https://storage.googleapis.com"
+        },
+        {
+          "url": "https://nominatim.openstreetmap.org/reverse"
         }
       ]
     },
