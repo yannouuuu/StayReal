@@ -3,10 +3,12 @@ import type { PostsOverview } from "~/api/requests/feeds/friends";
 import createEmblaCarousel from 'embla-carousel-solid'
 import MdiDotsVertical from '~icons/mdi/dots-vertical';
 import MdiRepost from '~icons/mdi/repost';
+import MdiCommentOutline from '~icons/mdi/comment-outline'
 
 import FeedFriendsPost from "./post";
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import type { EmblaCarouselType } from "embla-carousel";
+import Location from "~/components/location";
 
 const FeedFriendsOverview: Component<{
   overview: PostsOverview
@@ -81,6 +83,18 @@ const FeedFriendsOverview: Component<{
                 <p>
                   Late of {props.overview.posts[0].lateInSeconds} seconds
                 </p>
+              </Show>
+              <Show when={activePost().location}>
+                {location => (
+                  <>
+                    <span aria-hidden="true">-</span>
+                    <Location
+                      latitude={location().latitude}
+                      longitude={location().longitude}
+                      class="text-white/60"
+                    />
+                  </>
+                )}
               </Show>
             </div>
           </div>
