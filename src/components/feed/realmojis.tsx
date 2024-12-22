@@ -10,7 +10,11 @@ import me from "~/stores/me";
  * 
  * It's negatively spaced to show the realmojis in a row.
  */
-const PostRealMojis: Component<{ post: PostsOverview["posts"][number] }> = (props) => {
+const PostRealMojis: Component<{
+  post: PostsOverview["posts"][number]
+  shouldReverseZIndex?: boolean
+  size: number
+}> = (props) => {
   const sample = createMemo(() => {
     const copy = [...props.post.realMojis];
     
@@ -39,15 +43,25 @@ const PostRealMojis: Component<{ post: PostsOverview["posts"][number] }> = (prop
         <For each={sample()}>
           {(realMojis, index) => (
             <img
-              class="w-8 h-8 rounded-full border-2 border-black"
+              class="shrink-0 rounded-full border-2 border-black"
               src={realMojis.media.url}
               aria-hidden="true"
-              style={`z-index: ${2 - index()}`}
+              style={{
+                "z-index": `${props.shouldReverseZIndex ? 2 - index() : index()}`,
+                height: `${props.size}rem`,
+                width: `${props.size}rem`
+              }}
             />
           )}
         </For>
         <Show when={total() > 0}>
-          <div class="w-8 h-8 rounded-full border-2 border-black bg-#1a1a1c text-white flex justify-center items-center" aria-hidden="true">
+          <div class="shrink-0  rounded-full border-2 border-black bg-#1a1a1c text-white flex justify-center items-center" aria-hidden="true"
+            style={{
+              "z-index": `${props.shouldReverseZIndex ? 0 : 2}`,
+              height: `${props.size}rem`,
+              width: `${props.size}rem`
+            }}
+          >
             <p class="text-xs font-300">
               {total()}+
             </p>

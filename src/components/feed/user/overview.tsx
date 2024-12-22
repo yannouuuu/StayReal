@@ -117,8 +117,8 @@ const FeedUserOverview: Component<{
                   </button>
                 </Show>
 
-                <div class="absolute flex gap-1 justify-center z-20 -bottom-4 inset-x-0">
-                  <PostRealMojis post={post} />
+                <div class="absolute flex items-center justify-center z-20 -bottom-4 inset-x-0">
+                  <PostRealMojis size={1.8} post={post} />
                   <PostSmallComments post={post} />
                 </div>
               </div>

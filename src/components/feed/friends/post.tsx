@@ -143,7 +143,7 @@ const FeedFriendsPost: Component<{
             "opacity-0 pointer-events-none": isFocusing()
           }}
         >
-          <PostRealMojis post={props.post} />
+          <PostRealMojis post={props.post} size={2} shouldReverseZIndex />
         </div>
       </div>
 

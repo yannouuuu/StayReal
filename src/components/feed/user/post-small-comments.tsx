@@ -10,7 +10,7 @@ const PostSmallComments: Component<{ post: FeedPost }> = (props) => {
 
   return (
     <Show when={amount() > 0}>
-      <div class="relative">
+      <div class="relative scale-80">
         <div class="absolute inset-x-0 top-.5">
           <p class="text-center text-black font-600 text-sm">{amount()}</p>
         </div>
