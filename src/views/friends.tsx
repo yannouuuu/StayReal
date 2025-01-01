@@ -1,6 +1,6 @@
 import { createResource, For, Show, type Component } from "solid-js";
+import MdiChevronRight from "~icons/mdi/chevron-right";
 import { relationships_friends } from "../api/requests/relationships/friends/list";
-import MdiChevronRight from '~icons/mdi/chevron-right'
 
 const FriendsView: Component = () => {
   const [friends] = createResource(relationships_friends);
@@ -15,14 +15,13 @@ const FriendsView: Component = () => {
         </nav>
       </header>
 
-      <Show when={friends()}
+      <Show
+        when={friends()}
         fallback={
-          <p class="text-center text-white/50">
-            gathering your friends...
-          </p>
+          <p class="text-center text-white/50">gathering your friends...</p>
         }
       >
-        {friends => (
+        {(friends) => (
           <main class="px-4">
             <p class="text-sm text-white/60 uppercase font-600 mb-4">
               My Friends ({friends()?.total})
@@ -32,21 +31,31 @@ const FriendsView: Component = () => {
               <For each={friends().data}>
                 {(friend) => (
                   <div class="flex items-center gap-4">
-                    <Show when={friend.profilePicture} fallback={
-                      <div class="rounded-full h-10 w-10 bg-white/20 flex items-center justify-center">
-                        <p class="text-center font-500">{friend.username[0]}</p>
-                      </div>
-                    }>
-                      {profilePicture => (
-                        <img
-                          class="rounded-full h-10 w-10"
-                          src={profilePicture().url}
-                          alt={friend.username}
-                        />
-                      )}
-                    </Show>
-                    
-                    <p>{friend.username}</p>
+                    <div class="relative">
+                      <Show
+                        when={friend.profilePicture}
+                        fallback={
+                          <div class="rounded-full h-15 w-15 bg-white/20 flex items-center justify-center">
+                            <span class="text-[24px] font-500 uppercase leading-[0] translate-y-[2px]">
+                              {friend.username[0]}
+                            </span>
+                          </div>
+                        }
+                      >
+                        {(profilePicture) => (
+                          <img
+                            class="rounded-full h-15 w-15"
+                            src={profilePicture().url}
+                            alt={friend.username}
+                          />
+                        )}
+                      </Show>
+                    </div>
+
+                    <div class="flex flex-col">
+                      <p class="font-500">{friend.fullname}</p>
+                      <p class="text-sm text-white/60">@{friend.username}</p>
+                    </div>
                   </div>
                 )}
               </For>
