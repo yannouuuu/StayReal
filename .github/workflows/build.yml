@@ -108,7 +108,11 @@ jobs:
           cache: 'pnpm'
 
       - name: install frontend dependencies
-        run: pnpm install
+        run: |
+          pnpm install
+          cd internal-api
+          pnpm install
+          pnpm build
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -121,9 +125,6 @@ jobs:
             internal-api -> target
           prefix-key: rust-${{ hashFiles('**/Cargo.lock') }}
           shared-key: ${{ matrix.platform }}-${{ matrix.target }}
-
-      - name: install frontend dependencies
-        run: pnpm install
         
       - name: build
         if: matrix.platform != 'ubuntu-22.04'
@@ -248,7 +249,11 @@ jobs:
           cache: 'pnpm'
 
       - name: install frontend dependencies
-        run: pnpm install
+        run: |
+          pnpm install
+          cd internal-api
+          pnpm install
+          pnpm build
 
       - name: (Android) install Java
         if: matrix.os == 'android'

@@ -1,6 +1,6 @@
-import { createResource, For, Show, type Component } from "solid-js";
-import { person_me } from "../api";
+import { For, onMount, Show, type Component } from "solid-js";
 import MdiChevronLeft from '~icons/mdi/chevron-left'
+import me from "~/stores/me";
 
 const Chip: Component<{ content: string }> = (props) => (
   <div class="bg-white/15 rounded-full py-1.5 px-2.5">
@@ -9,8 +9,7 @@ const Chip: Component<{ content: string }> = (props) => (
 );
 
 const ProfileView: Component = () => {
-  const [me] = createResource(person_me);
-
+  onMount(() => me.refetch());
 
   return (
     <>
@@ -27,7 +26,7 @@ const ProfileView: Component = () => {
       </header>
 
       <main class="pt-16 space-y-8 mt-[env(safe-area-inset-top)]">
-        <Show when={me()} fallback={<p>loading...</p>}>
+        <Show when={me.get()} fallback={<p>Loading your profile...</p>}>
           {me => (
             <>
               <div class="flex flex-col items-center text-center gap-4">

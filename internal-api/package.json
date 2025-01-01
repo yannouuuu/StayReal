@@ -16,7 +16,7 @@
     "dist-js"
   ],
   "scripts": {
-    "build": "pnpm install && rollup -c"
+    "build": "rollup -c"
   },
   "dependencies": {
     "@tauri-apps/api": "^2"

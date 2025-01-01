@@ -2,10 +2,13 @@ import { Component, createEffect, createSignal, For, type Setter, Show } from "s
 import type { PostsOverview } from "~/api/requests/feeds/friends";
 import createEmblaCarousel from 'embla-carousel-solid'
 import MdiDotsVertical from '~icons/mdi/dots-vertical';
+import MdiRepost from '~icons/mdi/repost';
+import MdiCommentOutline from '~icons/mdi/comment-outline'
 
 import FeedFriendsPost from "./post";
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import type { EmblaCarouselType } from "embla-carousel";
+import Location from "~/components/location";
 
 const FeedFriendsOverview: Component<{
   overview: PostsOverview
@@ -37,7 +40,10 @@ const FeedFriendsOverview: Component<{
       // Note that those is only useful for the first post...
       .on("pointerDown", () => props.setScrolling(true))
       .on("pointerUp", () => props.setScrolling(false))
-  })
+  });
+
+  // show up to 2 comments as a sample
+  const commentsSample = () => activePost().comments.slice(0, 2);
 
   return (
     <div>
@@ -57,9 +63,17 @@ const FeedFriendsOverview: Component<{
             )}
           </Show>
           <div class="flex flex-col">
-            <p class="font-600 w-fit">
-              {props.overview.user.username}
-            </p>
+            <div class="flex items-center gap-3">
+              <p class="font-600 w-fit">
+                {props.overview.user.username}
+              </p>
+              <Show when={activePost().origin === "repost"}>
+                <p class="text-white/80 flex items-center gap-1 bg-white/20 pl-2 pr-2.5 rounded-full text-sm">
+                  <MdiRepost /> {activePost().parentPostUsername}
+                </p>
+              </Show>
+            </div>
+              
             <div class="text-sm text-white/60 flex flex-wrap gap-1.5">
               <time>
                 <span class="tts-only">Posted at</span> {new Date(activePost().postedAt).toLocaleTimeString()}
@@ -69,6 +83,18 @@ const FeedFriendsOverview: Component<{
                 <p>
                   Late of {props.overview.posts[0].lateInSeconds} seconds
                 </p>
+              </Show>
+              <Show when={activePost().location}>
+                {location => (
+                  <>
+                    <span aria-hidden="true">-</span>
+                    <Location
+                      latitude={location().latitude}
+                      longitude={location().longitude}
+                      class="text-white/60"
+                    />
+                  </>
+                )}
               </Show>
             </div>
           </div>
@@ -90,7 +116,10 @@ const FeedFriendsOverview: Component<{
                 }}
               >
                 <div class="relative">
-                  <FeedFriendsPost post={post} />
+                  <FeedFriendsPost
+                    post={post}
+                    postUserId={props.overview.user.id}
+                  />
                 </div>
               </div>
             )}
@@ -98,10 +127,35 @@ const FeedFriendsOverview: Component<{
         </div>
       </div>
 
-      <div class="px-4 pt-4">
-        <p class="text-center">
+      <div class="px-6 pt-4">
+        <p class="text-left">
           {activePost().caption}
         </p>
+        
+        <div class="text-sm font-300">
+          <Show when={commentsSample().length > 0}>
+            <div class="flex items-center gap-1 opacity-50">
+              <MdiCommentOutline class="text-xs" />
+              <p>See the comments</p>
+            </div>
+          </Show>
+
+          <For each={commentsSample()}>
+            {comment => (
+              <div class="flex items-center gap-1">
+                <p class="font-600">{comment.user.username}</p>
+                <p>{comment.content}</p>
+              </div>
+            )}
+          </For>
+
+          <div class="opacity-50 flex items-center gap-2 mt-2">
+            <div class="rounded-full w-6 h-6 bg-warmGray shrink-0" />
+            <button type="button" class="w-full text-left">
+              Add a comment...
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )

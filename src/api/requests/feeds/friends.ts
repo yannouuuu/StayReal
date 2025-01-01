@@ -27,22 +27,42 @@ export interface FeedPost {
     user: {
       id: string
       username: string
-      profilePicture: ApiMedia
+      profilePicture: ApiMedia | null
       type: "USER"
     }
     media: ApiMedia
     emoji: string
-    type: "happy" | "up" | "heartEyes"
+    type: "happy" | "up" | "heartEyes" | "surprised" | "laughing"
     isInstant: boolean
     postedAt: string
   }>
+
+  music?: {
+    isrc: string,
+    track: string,
+    artist: string,
+    /** URL */
+    artwork: string,
+    /**
+     * .m4a audio preview URL for Apple Music
+     */
+    preview: string,
+    /**
+     * URL to open the music on their respective store (Apple Music, Spotify)
+     */
+    openUrl: string,
+    visibility: "public",
+    provider: "apple",
+    providerId: string,
+    audioType: "track"
+  },
 
   comments: Array<{
     id: string
     user: {
       id: string
       username: string
-      profilePicture: ApiMedia
+      profilePicture: ApiMedia | null
       type: "USER"
     }
     content: string
@@ -53,7 +73,7 @@ export interface FeedPost {
     user: {
       id: string
       username: string
-      profilePicture: ApiMedia
+      profilePicture: ApiMedia | null
       fullname: string
       type: "USER"
     }
@@ -76,9 +96,35 @@ export interface FeedPost {
   postedAt: string
   takenAt: string
   creationDate: string
+  /** @deprecated use `creationDate` instead */
   createdAt: string
   updatedAt: string
-  postType: "default"
+  postType: "default" | "bts"
+
+  /** only available if it's a post from us */
+  origin?: "own" | "repost"
+
+  parentPostId?: string
+  parentPostUserId?: string
+  parentPostUsername?: string
+
+  btsMedia?: ApiMedia & {
+    mediaType: "video"
+    mimeType: "video/mp4"
+  }
+
+  screenshots?: Array<{
+    id: string
+    postId: string
+    snappedAt: string
+    user: {
+      id: string
+      username: string
+      profilePicture: ApiMedia | null
+    }
+  }>
+
+  unblurCount: number
 }
 
 export interface PostsOverview {
@@ -126,5 +172,6 @@ export const feeds_friends = async (): Promise<FeedsFriends> => {
     return feeds_friends();
   }
 
-  return response.json();
+  const json = await response.json();
+  return json;
 }

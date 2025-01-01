@@ -1,4 +1,4 @@
-import { createEffect, createSignal, For, type Setter, type Component } from "solid-js";
+import { createEffect, createSignal, For, type Setter, type Component, Show } from "solid-js";
 import type { PostsOverview } from "~/api/requests/feeds/friends";
 import PostRealMojis from "~/components/feed/realmojis";
 // import { useNavigate } from "@solidjs/router";
@@ -7,7 +7,8 @@ import createEmblaCarousel from 'embla-carousel-solid'
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import type { EmblaCarouselType, EmblaEventType } from "embla-carousel"
 import { numberWithinRange } from "~/utils/number-within";
-
+import PostSmallComments from "./post-small-comments";
+import MdiFullscreen from '~icons/mdi/fullscreen'
 const FeedUserOverview: Component<{
   overview: PostsOverview,
   setScrolling: Setter<boolean>
@@ -106,8 +107,19 @@ const FeedUserOverview: Component<{
                   alt="Primary image"
                 />
 
-                <div class="absolute flex justify-center z-20 -bottom-4 inset-x-0">
-                  <PostRealMojis post={post} />
+                <Show when={post.screenshots}>
+                  <button class="bg-white absolute -top-2 -right-2 rounded-md flex pl-.5 pr-1.5 gap-.5 items-center justify-center">
+                    <MdiFullscreen class="text-black" />
+
+                    <p class="font-600 text-xs text-black">
+                      {post.screenshots?.length}
+                    </p>
+                  </button>
+                </Show>
+
+                <div class="absolute flex items-center justify-center z-20 -bottom-4 inset-x-0">
+                  <PostRealMojis size={1.8} post={post} />
+                  <PostSmallComments post={post} />
                 </div>
               </div>
             )}

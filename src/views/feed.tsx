@@ -1,18 +1,16 @@
 import { createSignal, For, onMount, Show, type Component } from "solid-js";
-import { feeds_friends, type FeedsFriends } from "../api/requests/feeds/friends";
-import { person_me, type PersonMe } from "../api";
 import FeedFriendsOverview from "../components/feed/friends/overview";
 import MdiPeople from '~icons/mdi/people';
 import MdiRefresh from '~icons/mdi/refresh'
+import me from "~/stores/me";
 
 import FeedUserOverview from "../components/feed/user/overview";
 import PullableScreen from "../components/pullable-screen";
 import { fetchLastMoment, type Moment } from "@stayreal/api";
 import { tryToStartNotificationService } from "../utils/notification-service";
+import feed from "~/stores/feed";
 
 const FeedView: Component = () => {
-  const [me, setMe] = createSignal<PersonMe>();
-  const [feed, setFeed] = createSignal<FeedsFriends>();
   const [moment, setMoment] = createSignal<Moment>();
   const [isScrolling, setIsScrolling] = createSignal(false);
 
@@ -21,9 +19,9 @@ const FeedView: Component = () => {
     try {
       setIsRefreshing(true);
 
-      await person_me().then(setMe);
+      await me.refetch();
       await Promise.all([
-        feeds_friends().then(setFeed),
+        feed.refetch(),
         fetchLastMoment().then(setMoment)
       ])
     }
@@ -64,10 +62,10 @@ const FeedView: Component = () => {
             </button>
 
             <a href="/profile" aria-label="My profile">
-              <Show when={me()?.profilePicture}
+              <Show when={me.get()?.profilePicture}
                 fallback={
                   <div>
-                    <p>{me()?.username[0] || "?"}</p>
+                    <p>{me.get()?.username[0] || "?"}</p>
                   </div>
                 }
               >
@@ -75,7 +73,7 @@ const FeedView: Component = () => {
                   <img
                     class="w-8 h-8 rounded-full"
                     src={profilePicture().url}
-                    alt={me()?.username}
+                    alt={me.get()?.username}
                   />
                 )}
               </Show>
@@ -90,7 +88,7 @@ const FeedView: Component = () => {
           shouldPullToRefresh={!isScrolling()}
         >
           <main>
-            <Show when={feed()} fallback={
+            <Show when={feed.get()} fallback={
               <p class="text-center text-white/50">
                 finding your feed...
               </p>
@@ -121,7 +119,12 @@ const FeedView: Component = () => {
 
                   <div class="flex flex-col gap-6 mt-8">
                     <For each={[...feed().friendsPosts].sort((a, b) => new Date(b.posts[b.posts.length - 1].postedAt).getTime() - new Date(a.posts[a.posts.length - 1].postedAt).getTime())}>
-                      {overview => <FeedFriendsOverview overview={overview} setScrolling={setIsScrolling} />}
+                      {overview => (
+                        <FeedFriendsOverview
+                          overview={overview}
+                          setScrolling={setIsScrolling}
+                        />
+                      )}
                     </For>
                   </div>
 
