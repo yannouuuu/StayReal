@@ -52,7 +52,7 @@ const FriendsView: Component = () => {
         </nav>
       </header>
 
-      <div class="py-16 mt-[env(safe-area-inset-top)]">
+      <div class="py-16">
         <div class="px-4 mb-6">
           <div class="relative flex items-center">
             <MdiMagnify class="absolute w-6 h-6 left-4 text-white/40 text-2xl" />
