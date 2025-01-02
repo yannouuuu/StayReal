@@ -6,6 +6,7 @@ import {
   type Component,
 } from "solid-js";
 import me from "~/stores/me.ts";
+import { isAndroid } from "~/utils/platform";
 
 import MdiChevronRight from "~icons/mdi/chevron-right";
 import MdiMagnify from "~icons/mdi/magnify";
@@ -68,7 +69,8 @@ const FriendsView: Component = () => {
             <Show when={me.get()?.profilePicture}>
               {(profilePicture) => (
                 <div
-                  class="absolute inset-0 opacity-30 blur-xl"
+                  class="absolute inset-0 opacity-30"
+                  classList={{ "blur-xl": !isAndroid }}
                   style={{
                     "background-image": `url(${profilePicture().url})`,
                     "background-size": "cover",
@@ -103,7 +105,9 @@ const FriendsView: Component = () => {
                   <p class="text-white font-500 text-[15px]">
                     Invite friends on BeReal.
                   </p>
-                  <p class="text-sm text-white/50">bere.al/{me.get()?.username}</p>
+                  <p class="text-sm text-white/50">
+                    bere.al/{me.get()?.username}
+                  </p>
                 </div>
               </div>
               <MdiShareVariant class="text-[22px] text-white" />
