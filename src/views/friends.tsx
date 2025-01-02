@@ -71,13 +71,10 @@ const FriendsView: Component = () => {
             <Show when={me.get()?.profilePicture}>
               {(profilePicture) => (
                 <div
-                  class="absolute inset-0 opacity-30"
+                  class="absolute inset-0 opacity-30 bg-cover bg-center scale-120"
                   classList={{ "blur-xl": !isAndroid }}
                   style={{
                     "background-image": `url(${profilePicture().url})`,
-                    "background-size": "cover",
-                    "background-position": "center",
-                    transform: "scale(1.2)",
                   }}
                 />
               )}
