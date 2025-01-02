@@ -66,6 +66,37 @@ const FriendsView: Component = () => {
           </div>
         </div>
 
+        <div class="fixed bottom-8 left-4 right-4 z-50">
+          <div
+            class="bg-[#1a1a1a]/80 rounded-full p-0.75 flex items-center justify-between shadow-lg shadow-black/20"
+            classList={{
+              "backdrop-blur-sm backdrop-brightness-50": !isAndroid,
+            }}
+          >
+            <For
+              each={[
+                { label: "Suggestions", path: "/friends/suggestions" },
+                { label: "Connections", path: "/friends/connections" },
+                { label: "Requests", path: "/friends/requests" },
+              ]}
+            >
+              {(tab) => (
+                <a
+                  href={tab.path}
+                  class="flex-1 px-4 py-2 rounded-full text-center text-[14px] font-semibold transition-colors"
+                  classList={{
+                    "bg-[#2a2a2a] !py-1.5 text-white":
+                      tab.label === "Connections",
+                    "text-white/80": tab.label !== "Connections",
+                  }}
+                >
+                  {tab.label}
+                </a>
+              )}
+            </For>
+          </div>
+        </div>
+
         <div class="px-4 mb-6 cursor-pointer focus:scale-[0.98] active:scale-95 transition-transform">
           <div class="relative bg-[#121212] rounded-2xl p-3.5 overflow-hidden">
             <Show when={me.get()?.profilePicture}>
