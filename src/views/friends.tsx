@@ -143,10 +143,10 @@ const FriendsView: Component = () => {
               My Friends ({filteredFriends().length})
             </p>
 
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-2">
               <For each={filteredFriends()}>
                 {(friend) => (
-                  <div class="flex items-center gap-4 p-2 rounded-lg cursor-pointer focus:scale-[0.98] active:scale-95 transition-transform">
+                  <div class="flex items-center gap-4 p-1.5 rounded-lg cursor-pointer focus:scale-[0.98] active:scale-95 transition-transform">
                     <div class="relative">
                       <Show
                         when={friend.profilePicture}
