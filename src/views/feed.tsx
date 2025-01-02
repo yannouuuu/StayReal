@@ -60,12 +60,12 @@ const FeedView: Component = () => {
               />
             </button>
 
-            <a href="/profile" aria-label="My profile">
+            <a href="/profile" aria-label="My profile" class="flex-shrink">
               <Show
                 when={me.get()?.profilePicture}
                 fallback={
-                  <div>
-                    <p>{me.get()?.username[0] || "?"}</p>
+                  <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink">
+                    <p class="text-white/90">{me.get()?.username[0] || "?"}</p>
                   </div>
                 }
               >
