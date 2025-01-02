@@ -5,8 +5,12 @@ import {
   Show,
   type Component,
 } from "solid-js";
+import me from "~/stores/me.ts";
+
 import MdiChevronRight from "~icons/mdi/chevron-right";
 import MdiMagnify from "~icons/mdi/magnify";
+import MdiShareVariant from "~icons/mdi/share-variant";
+
 import { relationships_friends } from "../api/requests/relationships/friends/list";
 
 const FriendsView: Component = () => {
@@ -56,6 +60,54 @@ const FriendsView: Component = () => {
               placeholder="Add or search friends"
               class="w-full bg-[#121212] rounded-xl py-2.5 pl-14 pr-4 text-[16px] placeholder:text-white/55 focus:outline-none"
             />
+          </div>
+        </div>
+
+        <div class="px-4 mb-6">
+          <div class="relative bg-[#121212] rounded-2xl p-3.5 overflow-hidden">
+            <Show when={me.get()?.profilePicture}>
+              {(profilePicture) => (
+                <div
+                  class="absolute inset-0 opacity-30 blur-xl"
+                  style={{
+                    "background-image": `url(${profilePicture().url})`,
+                    "background-size": "cover",
+                    "background-position": "center",
+                    transform: "scale(1.2)",
+                  }}
+                />
+              )}
+            </Show>
+
+            <div class="relative flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <Show
+                  when={me.get()?.profilePicture}
+                  fallback={
+                    <div class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center flex-shrink">
+                      <p class="text-white/90">
+                        {me.get()?.username[0] || "?"}
+                      </p>
+                    </div>
+                  }
+                >
+                  {(profilePicture) => (
+                    <img
+                      class="w-11 h-11 rounded-full"
+                      src={profilePicture().url}
+                      alt={me.get()?.username}
+                    />
+                  )}
+                </Show>
+                <div class="flex flex-col gap-0.5">
+                  <p class="text-white font-500 text-[15px]">
+                    Invite friends on BeReal.
+                  </p>
+                  <p class="text-sm text-white/50">bere.al/{me.get()?.username}</p>
+                </div>
+              </div>
+              <MdiShareVariant class="text-[22px] text-white" />
+            </div>
           </div>
         </div>
 
