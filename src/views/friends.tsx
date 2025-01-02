@@ -76,7 +76,7 @@ const FriendsView: Component = () => {
             <For
               each={[
                 { label: "Suggestions", path: "/friends/suggestions" },
-                { label: "Connections", path: "/friends/connections" },
+                { label: "Connections", path: "/friends" },
                 { label: "Requests", path: "/friends/requests" },
               ]}
             >
