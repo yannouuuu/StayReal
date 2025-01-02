@@ -167,7 +167,10 @@ git clone https://github.com/Vexcited/StayReal && cd StayReal
 pnpm install
 
 # Build internal-api
-cd internal-api && pnpm install && pnpm build
+cd internal-api 
+pnpm install
+pnpm build
+cd ..
 
 # Start development on desktop
 pnpm tauri dev

@@ -1,3 +1,4 @@
+import { type } from "@tauri-apps/plugin-os";
 import {
   createResource,
   createSignal,
@@ -5,14 +6,15 @@ import {
   Show,
   type Component,
 } from "solid-js";
-import me from "~/stores/me.ts";
-import { isAndroid } from "~/utils/platform";
+import me from "~/stores/me";
 
 import MdiChevronRight from "~icons/mdi/chevron-right";
 import MdiMagnify from "~icons/mdi/magnify";
 import MdiShareVariant from "~icons/mdi/share-variant";
 
 import { relationships_friends } from "../api/requests/relationships/friends/list";
+
+const isAndroid = type() === "android";
 
 const FriendsView: Component = () => {
   const [friends] = createResource(relationships_friends);
