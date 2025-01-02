@@ -66,7 +66,7 @@ const FriendsView: Component = () => {
           </div>
         </div>
 
-        <div class="px-4 mb-6">
+        <div class="px-4 mb-6 cursor-pointer focus:scale-[0.98] active:scale-95 transition-transform">
           <div class="relative bg-[#121212] rounded-2xl p-3.5 overflow-hidden">
             <Show when={me.get()?.profilePicture}>
               {(profilePicture) => (
@@ -80,7 +80,25 @@ const FriendsView: Component = () => {
               )}
             </Show>
 
-            <div class="relative flex items-center justify-between">
+            <div
+              class="relative flex items-center justify-between cursor-pointer"
+              onClick={async () => {
+                const shareUrl = `bere.al/${me.get()?.username}`;
+                await navigator.clipboard.writeText(shareUrl);
+
+                if (navigator.share) {
+                  try {
+                    await navigator.share({
+                      title: "Join me on BeReal.",
+                      text: "Add me on BeReal.!",
+                      url: shareUrl,
+                    });
+                  } catch (err) {
+                    console.log("Share failed");
+                  }
+                }
+              }}
+            >
               <div class="flex items-center gap-4">
                 <Show
                   when={me.get()?.profilePicture}
@@ -128,7 +146,7 @@ const FriendsView: Component = () => {
             <div class="flex flex-col gap-4">
               <For each={filteredFriends()}>
                 {(friend) => (
-                  <div class="flex items-center gap-4">
+                  <div class="flex items-center gap-4 p-2 rounded-lg cursor-pointer focus:scale-[0.98] active:scale-95 transition-transform">
                     <div class="relative">
                       <Show
                         when={friend.profilePicture}
