@@ -1,5 +1,5 @@
 import { type Component, createSignal, Show } from "solid-js";
-import { content_posts_create, content_posts_upload_url, upload_content,  } from "../api/requests/content/posts/upload";
+import { content_posts_create, content_posts_upload_url, upload_content } from "../api/requests/content/posts/upload";
 import { createMediaPermissionRequest, createStream } from "@solid-primitives/stream";
 import { useNavigate } from "@solidjs/router";
 
@@ -24,7 +24,7 @@ const UploadView: Component = () => {
 
     const outputWidth = 1500;
     const outputHeight = 2000;
-    
+
     // Set canvas dimensions to fixed size (1500x2000)
     canvas.width = outputWidth;
     canvas.height = outputHeight;
@@ -32,7 +32,7 @@ const UploadView: Component = () => {
     // Calculate video scaling to maintain aspect ratio while covering the canvas area
     const videoAspectRatio = width / height;
     const canvasAspectRatio = outputWidth / outputHeight;
-    
+
     let drawHeight: number;
     let drawWidth: number;
     let offsetX: number;
@@ -76,7 +76,7 @@ const UploadView: Component = () => {
     } = coverImageForCanvas(video.videoWidth, video.videoHeight, canvas);
 
     context.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
-    
+
     renderToBlob(canvas)
       .then(resolve)
       .catch(reject);
@@ -103,7 +103,7 @@ const UploadView: Component = () => {
       if (backImage() === undefined) {
         inputs.push(captureFromVideo(backVideo!, backVideoPreview!));
       } else inputs.push(no_op());
-  
+
       const [frontBlob, backBlob] = await Promise.all(inputs);
 
       if (frontBlob) setFrontImage(frontBlob);
@@ -120,18 +120,18 @@ const UploadView: Component = () => {
 
       // get the signed URLs for uploading the images
       const { data: [back, front] } = await content_posts_upload_url();
-      
+
       // upload the images
       await Promise.all([
         upload_content(back.url, back.headers, backImage()!),
         upload_content(front.url, front.headers, frontImage()!)
       ]);
-  
+
       // create the post with the uploaded images
       await content_posts_create({
         // NOTE: always `false` when it's not the primary post...
         isLate: false,
-        
+
         backCameraWidth: 1500,
         backCameraHeight: 2000,
         backCameraPath: back.path,
@@ -139,10 +139,10 @@ const UploadView: Component = () => {
         frontCameraWidth: 1500,
         frontCameraHeight: 2000,
         frontCameraPath: front.path,
-        
+
         bucketName: front.bucket, // or back.bucket, they are the same
         takenAt: new Date(),
-        
+
         // TODO: probably increment each time you hit the "cancel" button
         retakeCounter: 0,
 
@@ -152,7 +152,7 @@ const UploadView: Component = () => {
         //   longitude: 1
         // }
       });
-  
+
       // TODO: show an alert or something
 
       // navigate to the feed to see the new post
@@ -170,7 +170,7 @@ const UploadView: Component = () => {
     input.onchange = async () => {
       if (!input.files || input.files.length === 0) return;
       const file = input.files[0];
-      
+
       // we should draw to canvas !
       const image = new Image();
       image.src = URL.createObjectURL(file);

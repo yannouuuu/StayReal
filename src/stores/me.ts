@@ -1,5 +1,5 @@
 import { createRoot, createSignal } from "solid-js";
-import { person_me, type PersonMe } from "~/api";
+import { person_me, type PersonMe } from "~/api/requests/person/me";
 
 /**
  * A small signal store to keep track
@@ -8,7 +8,7 @@ import { person_me, type PersonMe } from "~/api";
 export default createRoot(() => {
   const STORAGE_KEY = "person_me";
   const INITIAL_DATA = localStorage.getItem(STORAGE_KEY);
-  
+
   const [get, _set] = createSignal<PersonMe>(INITIAL_DATA && JSON.parse(INITIAL_DATA));
   const refetch = () => person_me().then(set);
 
