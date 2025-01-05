@@ -1,4 +1,4 @@
-import { BEREAL_FIREBASE_KEY } from "~/api/constants";
+import { BEREAL_FIREBASE_KEY, BEREAL_IOS_BUNDLE_ID } from "~/api/constants";
 import { fetch } from "@tauri-apps/plugin-http";
 
 /**
@@ -9,7 +9,7 @@ export const firebase_verify_custom_token = async (token: string): Promise<strin
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-ios-bundle-identifier": "AlexisBarreyat.BeReal"
+      "x-ios-bundle-identifier": BEREAL_IOS_BUNDLE_ID
     },
     body: JSON.stringify({
       returnSecureToken: true,
