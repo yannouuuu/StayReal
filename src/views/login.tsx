@@ -1,10 +1,16 @@
 import { Show, type Component } from "solid-js";
-import { createStore } from "solid-js/store";
-import Arkose from "../components/arkose";
-import { BEREAL_ARKOSE_PUBLIC_KEY, vonage_request_code, vonage_verify_otp, VonageRequestCodeTokenIdentifier } from "../api";
-import { v4 as uuidv4 } from "uuid";
-import auth from "../stores/auth";
 import { useNavigate } from "@solidjs/router";
+import { createStore } from "solid-js/store";
+import { v4 as uuidv4 } from "uuid";
+
+import { vonage_request_code, VonageRequestCodeTokenIdentifier } from "~/api/requests/auth/vonage/request";
+import { firebase_verify_custom_token } from "~/api/requests/auth/firebase/verify-custom-token";
+import { vonage_verify_otp } from "~/api/requests/auth/vonage/verify";
+import { grant_firebase } from "~/api/requests/auth/token";
+import { BEREAL_ARKOSE_PUBLIC_KEY } from "~/api/constants";
+
+import Arkose from "~/components/arkose";
+import auth from "~/stores/auth";
 
 const LoginView: Component = () => {
   let arkose: any;
@@ -17,12 +23,13 @@ const LoginView: Component = () => {
 
     phoneNumber: "",
     arkoseToken: "",
+    requestID: "",
     otp: "",
   })
 
   const runAuthentication = async (): Promise<void> => {
     if (!state.phoneNumber) return;
-    
+
     if (!state.arkoseToken) {
       arkose.run();
       return;
@@ -35,25 +42,32 @@ const LoginView: Component = () => {
       const phoneNumber = state.phoneNumber.split(" ").join("").trim();
 
       if (state.step === "phone") {
-        await vonage_request_code({
+        const requestID = await vonage_request_code({
           deviceID: state.deviceID,
           phoneNumber,
           tokens: [{
             identifier: VonageRequestCodeTokenIdentifier.ARKOSE,
-            token: state.arkoseToken
+            token: state.arkoseToken,
           }]
         });
 
-        setState("step", "otp");
+        setState({ step: "otp", requestID });
       }
       else if (state.step === "otp") {
-        const tokens = await vonage_verify_otp({
+        // fun fact: this should match `grant_firebase`'s `access_token` value
+        const token = await vonage_verify_otp({
+          requestID: state.requestID,
           deviceID: state.deviceID,
-          phoneNumberUsed: phoneNumber,
           otp: state.otp.trim()
         });
 
-        auth.save({
+        const idToken = await firebase_verify_custom_token(token);
+        const tokens = await grant_firebase({
+          deviceID: state.deviceID,
+          idToken
+        });
+
+        await auth.save({
           deviceId: state.deviceID,
           accessToken: tokens.access_token,
           refreshToken: tokens.refresh_token
@@ -70,7 +84,7 @@ const LoginView: Component = () => {
       setState("loading", false);
     }
   }
-  
+
   return (
     <main class="h-100dvh flex flex-col px-4 py-6">
       <header class="flex items-center relative w-full h-8 mt-[env(safe-area-inset-top)]">
@@ -116,7 +130,7 @@ const LoginView: Component = () => {
             }}
           />
 
-          <input 
+          <input
             class="w-full max-w-280px mx-auto rounded-2xl py-3 px-4 text-white bg-white/5 text-2xl font-600 tracking-wide outline-none placeholder:text-white/40 focus:(outline outline-white outline-offset-2)"
             type="text"
             inputMode="tel"
@@ -136,7 +150,7 @@ const LoginView: Component = () => {
           </button>
         </Show>
         <Show when={state.step === "otp"}>
-          <input 
+          <input
             class="w-full max-w-160px mx-auto rounded-2xl py-3 px-4 text-white text-center bg-transparent text-2xl font-600 outline-none placeholder:text-white/40 tracking-widest focus:(outline outline-white outline-offset-2)"
             type="text"
             maxLength={6}

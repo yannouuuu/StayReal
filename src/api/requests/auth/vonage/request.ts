@@ -1,5 +1,5 @@
-import { BEREAL_CLIENT_SECRET_KEY, BEREAL_DEFAULT_HEADERS } from "../../../constants";
-import { BeRealError } from "../../../models";
+import { BEREAL_DEFAULT_HEADERS } from "~/api/constants";
+import { BeRealError } from "~/api/models/errors";
 import { fetch } from "@tauri-apps/plugin-http";
 
 export const VonageRequestCodeTokenIdentifier = {
@@ -10,34 +10,38 @@ export const VonageRequestCodeTokenIdentifier = {
 export type VonageRequestCodeTokenIdentifier = typeof VonageRequestCodeTokenIdentifier[keyof typeof VonageRequestCodeTokenIdentifier];
 
 export interface VonageRequestCodeToken {
-  identifier: VonageRequestCodeTokenIdentifier
   token: string
+  identifier: VonageRequestCodeTokenIdentifier
 }
 
 /**
- * will send an otp code to the phone number.
- * you can use only the ARKOSE token here.
+ * Will send an otp code to the phone number.
  */
 export const vonage_request_code = async (inputs: {
   deviceID: string
   phoneNumber: string
   tokens: VonageRequestCodeToken[]
-}): Promise<void> => {
-  const response = await fetch("https://auth.bereal.com/token/phone", {
+}): Promise<string> => {
+  const response = await fetch("https://auth.bereal.com/api/vonage/request-code", {
     method: "POST",
     headers: {
       ...BEREAL_DEFAULT_HEADERS(inputs.deviceID),
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       tokens: inputs.tokens,
-      client_id: "android",
-      client_secret: BEREAL_CLIENT_SECRET_KEY,
-      phone_number: inputs.phoneNumber,
-      device_id: inputs.deviceID
+      phoneNumber: inputs.phoneNumber,
+      deviceId: inputs.deviceID,
     }),
   });
 
-  if (response.status !== 204)
+  if (response.status !== 200)
     throw new BeRealError("failed to request code from vonage");
+
+  const json = await response.json() as {
+    vonageRequestId: string
+    status: "0"
+  };
+
+  return json.vonageRequestId;
 };
