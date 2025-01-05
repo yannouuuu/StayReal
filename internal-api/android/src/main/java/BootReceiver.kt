@@ -11,8 +11,7 @@ class BootReceiver : BroadcastReceiver() {
       val serviceIntent = Intent(context, NotificationService::class.java)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         context.startForegroundService(serviceIntent)
-      }
-      else {
+      } else {
         context.startService(serviceIntent)
       }
     }

@@ -1,22 +1,21 @@
 package com.vexcited.stayreal.api
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.webkit.WebView
-import android.Manifest
 import android.os.Build
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import app.tauri.PermissionState
-import app.tauri.annotation.Permission
 import app.tauri.annotation.Command
 import app.tauri.annotation.InvokeArg
+import app.tauri.annotation.Permission
 import app.tauri.annotation.PermissionCallback
 import app.tauri.annotation.TauriPlugin
+import app.tauri.plugin.Invoke
 import app.tauri.plugin.JSObject
 import app.tauri.plugin.Plugin
-import app.tauri.plugin.Invoke
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,31 +39,34 @@ val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 const val LOCAL_NOTIFICATIONS = "permissionState"
 
 @TauriPlugin(
-  permissions = [
-    Permission(strings = [Manifest.permission.POST_NOTIFICATIONS], alias = "permissionState")
-  ]
+        permissions =
+                [
+                        Permission(
+                                strings = [Manifest.permission.POST_NOTIFICATIONS],
+                                alias = "permissionState"
+                        )]
 )
-class ApiPlugin(private val activity: Activity): Plugin(activity) {
+class ApiPlugin(private val activity: Activity) : Plugin(activity) {
   private val requests = Requests(activity)
   private val cache = Cache(activity)
 
   @Command
-  fun setAuthDetails (invoke: Invoke) {
+  fun setAuthDetails(invoke: Invoke) {
     val args = invoke.parseArgs(SetAuthDetailsArgs::class.java)
 
     requests.authentication.set(
-      AuthenticationDetails(
-        deviceId = args.deviceId,
-        accessToken = args.accessToken,
-        refreshToken = args.refreshToken
-      )
+            AuthenticationDetails(
+                    deviceId = args.deviceId,
+                    accessToken = args.accessToken,
+                    refreshToken = args.refreshToken
+            )
     )
 
     invoke.resolve()
   }
 
   @Command
-  fun getAuthDetails (invoke: Invoke) {
+  fun getAuthDetails(invoke: Invoke) {
     val ret = JSObject()
 
     val details = requests.authentication.get()
@@ -76,38 +78,33 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
   }
 
   @Command
-  fun clearAuthDetails (invoke: Invoke) {
+  fun clearAuthDetails(invoke: Invoke) {
     requests.authentication.clear()
     invoke.resolve()
   }
 
   @Command
-  fun refreshToken (invoke: Invoke) {
+  fun refreshToken(invoke: Invoke) {
     scope.launch {
       try {
         requests.refreshToken()
 
-        withContext(Dispatchers.Main) {
-          invoke.resolve()
-        }
-      }
-      catch (e: Exception) {
-        withContext(Dispatchers.Main) {
-          invoke.reject(e.message)
-        }
+        withContext(Dispatchers.Main) { invoke.resolve() }
+      } catch (e: Exception) {
+        withContext(Dispatchers.Main) { invoke.reject(e.message) }
       }
     }
   }
 
   @Command
-  fun setRegion (invoke: Invoke) {
+  fun setRegion(invoke: Invoke) {
     val region = invoke.parseArgs(SetRegionArgs::class.java).region
     requests.preferences.setRegion(region)
     invoke.resolve()
   }
 
   @Command
-  fun fetchLastMoment (invoke: Invoke) {
+  fun fetchLastMoment(invoke: Invoke) {
     scope.launch {
       try {
         val moment = requests.fetchLastMoment()
@@ -119,14 +116,9 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
         ret.put("startDate", moment.startDate)
         ret.put("endDate", moment.endDate)
 
-        with(Dispatchers.Main) {
-          invoke.resolve(ret)
-        }
-      }
-      catch (error: Exception) {
-        with(Dispatchers.Main) {
-          invoke.reject(error.message)
-        }
+        with(Dispatchers.Main) { invoke.resolve(ret) }
+      } catch (error: Exception) {
+        with(Dispatchers.Main) { invoke.reject(error.message) }
       }
     }
   }
@@ -179,11 +171,8 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
 
   @Command
   fun startNotificationService(invoke: Invoke) {
-    if (
-      ActivityCompat.checkSelfPermission(
-        activity,
-        Manifest.permission.POST_NOTIFICATIONS
-      ) != PackageManager.PERMISSION_GRANTED
+    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED
     ) {
       invoke.reject("notifications permission denied")
       return
@@ -193,8 +182,7 @@ class ApiPlugin(private val activity: Activity): Plugin(activity) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       activity.startForegroundService(intent)
-    }
-    else {
+    } else {
       activity.startService(intent)
     }
 

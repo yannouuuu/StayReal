@@ -1,5 +1,5 @@
-use tauri::{ command, plugin::PermissionState, AppHandle, Runtime, State };
-use crate::{ BerealApi, models::*, BerealApiExt };
+use crate::{models::*, BerealApi, BerealApiExt};
+use tauri::{command, plugin::PermissionState, AppHandle, Runtime, State};
 
 #[command]
 pub(crate) async fn set_auth_details<R: Runtime>(
@@ -10,38 +10,30 @@ pub(crate) async fn set_auth_details<R: Runtime>(
 }
 
 #[command]
-pub(crate) async fn get_auth_details<R: Runtime>(
-  app: AppHandle<R>
-) -> crate::Result<AuthDetails> {
+pub(crate) async fn get_auth_details<R: Runtime>(app: AppHandle<R>) -> crate::Result<AuthDetails> {
   app.bereal_api().get_auth_details()
 }
 
 #[command]
-pub(crate) async fn clear_auth_details<R: Runtime>(
-  app: AppHandle<R>
-) -> crate::Result<()> {
+pub(crate) async fn clear_auth_details<R: Runtime>(app: AppHandle<R>) -> crate::Result<()> {
   app.bereal_api().clear_auth_details()
 }
 
 #[command]
-pub(crate) async fn refresh_token<R: Runtime>(
-  app: AppHandle<R>
-) -> crate::Result<()> {
+pub(crate) async fn refresh_token<R: Runtime>(app: AppHandle<R>) -> crate::Result<()> {
   app.bereal_api().refresh_token().await
 }
 
 #[command]
 pub(crate) async fn set_region<R: Runtime>(
   app: AppHandle<R>,
-  payload: SetRegionArgs
+  payload: SetRegionArgs,
 ) -> crate::Result<()> {
   app.bereal_api().set_region(payload)
 }
 
 #[command]
-pub(crate) async fn fetch_last_moment<R: Runtime>(
-  app: AppHandle<R>
-) -> crate::Result<Moment> {
+pub(crate) async fn fetch_last_moment<R: Runtime>(app: AppHandle<R>) -> crate::Result<Moment> {
   app.bereal_api().fetch_last_moment().await
 }
 
@@ -67,8 +59,6 @@ pub(crate) async fn request_permission<R: Runtime>(
 }
 
 #[command]
-pub(crate) async fn start_notification_service<R: Runtime>(
-  app: AppHandle<R>,
-) -> crate::Result<()> {
+pub(crate) async fn start_notification_service<R: Runtime>(app: AppHandle<R>) -> crate::Result<()> {
   app.bereal_api().start_notification_service()
 }

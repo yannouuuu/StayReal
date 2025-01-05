@@ -10,9 +10,9 @@ mod desktop;
 #[cfg(mobile)]
 mod mobile;
 
+mod commands;
 mod error;
 mod models;
-mod commands;
 
 pub use error::{Error, Result};
 
@@ -53,7 +53,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
 
       #[cfg(desktop)]
       let internal_api = desktop::init(app, api)?;
-      
+
       app.manage(internal_api);
 
       Ok(())

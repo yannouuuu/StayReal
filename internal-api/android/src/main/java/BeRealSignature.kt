@@ -1,27 +1,28 @@
 package com.vexcited.stayreal.api
 
+import android.util.Base64
 import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-import android.util.Base64
 import kotlin.text.digitToInt
 
 object BeRealSignature {
-  private const val BEREAL_HMAC_KEY_HEX = "3536303337663461663232666236393630663363643031346532656337316233"
+  private const val BEREAL_HMAC_KEY_HEX =
+          "3536303337663461663232666236393630663363643031346532656337316233"
 
   private val berealHmacKey: ByteArray by lazy {
     val result = ByteArray(BEREAL_HMAC_KEY_HEX.length / 2)
     for (i in BEREAL_HMAC_KEY_HEX.indices step 2) {
-      result[i / 2] = (
-        (BEREAL_HMAC_KEY_HEX[i].digitToInt(16) shl 4)
-        + BEREAL_HMAC_KEY_HEX[i + 1].digitToInt(16)
-      ).toByte()
+      result[i / 2] =
+              ((BEREAL_HMAC_KEY_HEX[i].digitToInt(16) shl 4) +
+                              BEREAL_HMAC_KEY_HEX[i + 1].digitToInt(16))
+                      .toByte()
     }
 
     result
   }
 
-  fun create (deviceId: String): String {
+  fun create(deviceId: String): String {
     val berealTimezone = TimeZone.getDefault().id // e.g. "Europe/Paris"
 
     val timestamp = (System.currentTimeMillis() / 1000).toString()
