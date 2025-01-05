@@ -9,7 +9,7 @@ const Arkose: Component<{
   onVerify: (token?: string) => void
 }> = (props) => {
   createScriptLoader({
-    src: `https://client-api.arkoselabs.com/v2/${props.key}/api.js`,
+    src: "https://client-api.arkoselabs.com/v2/api.js",
     async: true,
     defer: true,
     "data-callback": ARKOSE_DATA_CALLBACK,
@@ -19,6 +19,12 @@ const Arkose: Component<{
     // @ts-expect-error
     window[ARKOSE_DATA_CALLBACK] = (enforcement: any) => {
       enforcement.setConfig({
+        publicKey: props.key,
+        data: { blob: "" },
+        isSDK: true,
+        accessibilitySettings: {
+          lockFocusToModal: true
+        },
         onReady: () => {
           props.onLoad(enforcement);
         },
@@ -26,12 +32,13 @@ const Arkose: Component<{
           props.onVerify(response.token);
         },
         onError: () => {
+          // TODO: handle error !!!
           alert("you did a mistake...");
         }
       })
     };
   })
-  
+
   return <></>
 };
 
