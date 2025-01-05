@@ -166,6 +166,12 @@ git clone https://github.com/Vexcited/StayReal && cd StayReal
 # Install dependencies
 pnpm install
 
+# Build internal-api
+cd internal-api 
+pnpm install
+pnpm build
+cd ..
+
 # Start development on desktop
 pnpm tauri dev
 
@@ -194,6 +200,7 @@ A lot of similar projects and researches have been made, and we would like to th
 - [&nearr;&nbsp;BeUnblurred, an alternative web client](https://github.com/macedonga/beunblurred)
 - [&nearr;&nbsp;Fowled's researches on the app](https://bereal.fowled.dev)
 - [&nearr;&nbsp;userbradley's researches on the API](https://github.com/userbradley/BeReal)
+
 
 ## 📄 License
 
