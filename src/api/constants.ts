@@ -19,6 +19,6 @@ export const BEREAL_DEFAULT_HEADERS = (deviceID: string) => ({
   "bereal-app-language": "en-US",
   "bereal-timezone": BEREAL_TIMEZONE,
   "bereal-device-id": deviceID,
-  "Bereal-Signature": createBeRealSignature(deviceID),
-  "User-Agent": `BeReal/${BEREAL_IOS_VERSION} (${BEREAL_IOS_BUNDLE_ID}; build:${BEREAL_IOS_BUILD}; iOS 18.2.0)`
+  "bereal-signature": createBeRealSignature(deviceID),
+  "user-agent": `BeReal/${BEREAL_IOS_VERSION} (${BEREAL_IOS_BUNDLE_ID}; build:${BEREAL_IOS_BUILD}; iOS 18.2.0)`
 });
