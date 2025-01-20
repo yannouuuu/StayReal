@@ -85,7 +85,7 @@ class Requests(private val context: Context) {
 
     val request =
             Request.Builder()
-                    .url("https://mobile.bereal.com/api/bereal/moments/last/$region")
+                    .url("https://mobile-l7.bereal.com/api/bereal/moments/last/$region")
                     .build()
 
     val response = withContext(Dispatchers.IO) { client.newCall(request).execute() }

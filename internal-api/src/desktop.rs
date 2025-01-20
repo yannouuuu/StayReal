@@ -186,7 +186,7 @@ impl<R: Runtime> InternalApi<R> {
     let client = reqwest::Client::new();
     let response = client
       .get(format!(
-        "https://mobile.bereal.com/api/bereal/moments/last/{}",
+        "https://mobile-l7.bereal.com/api/bereal/moments/last/{}",
         &preferences.region
       ))
       .send()
