@@ -17,23 +17,20 @@ mod models;
 pub use error::{Error, Result};
 
 #[cfg(desktop)]
-use desktop::BerealApi;
+use desktop::InternalApi;
 #[cfg(mobile)]
-use mobile::BerealApi;
+use mobile::InternalApi;
 
-/// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`]
-/// to access the internal APIs.
-pub trait BerealApiExt<R: Runtime> {
-  fn bereal_api(&self) -> &BerealApi<R>;
+pub trait InternalApiExtension<R: Runtime> {
+  fn api(&self) -> &InternalApi<R>;
 }
 
-impl<R: Runtime, T: Manager<R>> crate::BerealApiExt<R> for T {
-  fn bereal_api(&self) -> &BerealApi<R> {
-    self.state::<BerealApi<R>>().inner()
+impl<R: Runtime, T: Manager<R>> InternalApiExtension<R> for T {
+  fn api(&self) -> &InternalApi<R> {
+    self.state::<InternalApi<R>>().inner()
   }
 }
 
-/// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
   Builder::new("internal-api")
     .invoke_handler(tauri::generate_handler![

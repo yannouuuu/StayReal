@@ -1,4 +1,4 @@
-use crate::{models::*, BerealApi, BerealApiExt};
+use crate::{models::*, InternalApi, InternalApiExtension};
 use tauri::{command, plugin::PermissionState, AppHandle, Runtime, State};
 
 #[command]
@@ -6,22 +6,22 @@ pub(crate) async fn set_auth_details<R: Runtime>(
   app: AppHandle<R>,
   payload: AuthDetails,
 ) -> crate::Result<()> {
-  app.bereal_api().set_auth_details(payload)
+  app.api().set_auth_details(payload)
 }
 
 #[command]
 pub(crate) async fn get_auth_details<R: Runtime>(app: AppHandle<R>) -> crate::Result<AuthDetails> {
-  app.bereal_api().get_auth_details()
+  app.api().get_auth_details()
 }
 
 #[command]
 pub(crate) async fn clear_auth_details<R: Runtime>(app: AppHandle<R>) -> crate::Result<()> {
-  app.bereal_api().clear_auth_details()
+  app.api().clear_auth_details()
 }
 
 #[command]
 pub(crate) async fn refresh_token<R: Runtime>(app: AppHandle<R>) -> crate::Result<()> {
-  app.bereal_api().refresh_token().await
+  app.api().refresh_token().await
 }
 
 #[command]
@@ -29,18 +29,18 @@ pub(crate) async fn set_region<R: Runtime>(
   app: AppHandle<R>,
   payload: SetRegionArgs,
 ) -> crate::Result<()> {
-  app.bereal_api().set_region(payload)
+  app.api().set_region(payload)
 }
 
 #[command]
 pub(crate) async fn fetch_last_moment<R: Runtime>(app: AppHandle<R>) -> crate::Result<Moment> {
-  app.bereal_api().fetch_last_moment().await
+  app.api().fetch_last_moment().await
 }
 
 #[command]
 pub(crate) async fn is_permission_granted<R: Runtime>(
   _app: AppHandle<R>,
-  notification: State<'_, BerealApi<R>>,
+  notification: State<'_, InternalApi<R>>,
 ) -> crate::Result<Option<bool>> {
   let state = notification.permission_state()?;
   match state {
@@ -53,12 +53,12 @@ pub(crate) async fn is_permission_granted<R: Runtime>(
 #[command]
 pub(crate) async fn request_permission<R: Runtime>(
   _app: AppHandle<R>,
-  notification: State<'_, BerealApi<R>>,
+  notification: State<'_, InternalApi<R>>,
 ) -> crate::Result<PermissionState> {
   notification.request_permission()
 }
 
 #[command]
 pub(crate) async fn start_notification_service<R: Runtime>(app: AppHandle<R>) -> crate::Result<()> {
-  app.bereal_api().start_notification_service()
+  app.api().start_notification_service()
 }

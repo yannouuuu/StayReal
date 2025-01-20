@@ -8,7 +8,7 @@ use tauri::{
 use crate::models::*;
 
 #[cfg(target_os = "ios")]
-tauri::ios_plugin_binding!(init_plugin_bereal_api);
+tauri::ios_plugin_binding!(init_plugin_internal_api);
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -19,19 +19,19 @@ struct PermissionResponse {
 pub fn init<R: Runtime, C: DeserializeOwned>(
   _app: &AppHandle<R>,
   api: PluginApi<R, C>,
-) -> crate::Result<BerealApi<R>> {
+) -> crate::Result<InternalApi<R>> {
   #[cfg(target_os = "android")]
   let handle = api.register_android_plugin("com.vexcited.stayreal.api", "ApiPlugin")?;
 
   #[cfg(target_os = "ios")]
-  let handle = api.register_ios_plugin(init_plugin_bereal_api)?;
+  let handle = api.register_ios_plugin(init_plugin_internal_api)?;
 
-  Ok(BerealApi(handle))
+  Ok(InternalApi(handle))
 }
 
-pub struct BerealApi<R: Runtime>(PluginHandle<R>);
+pub struct InternalApi<R: Runtime>(PluginHandle<R>);
 
-impl<R: Runtime> BerealApi<R> {
+impl<R: Runtime> InternalApi<R> {
   pub fn set_auth_details(&self, payload: AuthDetails) -> crate::Result<()> {
     self
       .0
