@@ -13,12 +13,12 @@ import Arkose from "~/components/arkose";
 import auth from "~/stores/auth";
 
 const LoginView: Component = () => {
-  let arkose: any;
   const navigate = useNavigate();
 
   const [state, setState] = createStore({
     step: "phone" as ("phone" | "otp"),
     deviceID: uuidv4(),
+    waitingOnArkose: false,
     loading: false,
 
     phoneNumber: "",
@@ -31,7 +31,11 @@ const LoginView: Component = () => {
     if (!state.phoneNumber) return;
 
     if (!state.arkoseToken) {
-      arkose.run();
+      setState({
+        loading: true,
+        waitingOnArkose: true
+      });
+
       return;
     }
 
@@ -83,7 +87,7 @@ const LoginView: Component = () => {
     finally {
       setState("loading", false);
     }
-  }
+  };
 
   return (
     <main class="h-100dvh flex flex-col px-4 py-6">
@@ -119,16 +123,22 @@ const LoginView: Component = () => {
         }}
       >
         <Show when={state.step === "phone"}>
-          <Arkose
-            key={BEREAL_ARKOSE_PUBLIC_KEY}
-            onLoad={(enforcement) => (arkose = enforcement)}
-            onVerify={(token) => {
-              if (token) {
-                setState("arkoseToken", token);
-                runAuthentication();
-              }
-            }}
-          />
+          <Show when={state.waitingOnArkose}>
+            <Arkose
+              key={BEREAL_ARKOSE_PUBLIC_KEY}
+              onVerify={(token) => {
+                if (token) {
+                  setState({
+                    loading: false,
+                    arkoseToken: token,
+                    waitingOnArkose: false,
+                  });
+
+                  runAuthentication();
+                }
+              }}
+            />
+          </Show>
 
           <input
             class="w-full max-w-280px mx-auto rounded-2xl py-3 px-4 text-white bg-white/5 text-2xl font-600 tracking-wide outline-none placeholder:text-white/40 focus:(outline outline-white outline-offset-2)"
