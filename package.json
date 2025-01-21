@@ -40,7 +40,7 @@
     "typescript": "^5.6.3",
     "unocss": "^0.64.1",
     "unplugin-icons": "^0.20.1",
-    "vite": "^5.4.11",
+    "vite": "^5.4.12",
     "vite-plugin-solid": "^2.10.2"
   }
 }
