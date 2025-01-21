@@ -26,6 +26,7 @@
         }
       ]
     },
-    "internal-api:default"
+    "internal-api:default",
+    "shell:default"
   ]
 }

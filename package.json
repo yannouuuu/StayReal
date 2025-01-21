@@ -21,10 +21,12 @@
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-http": "~2",
     "@tauri-apps/plugin-os": "~2",
-    "@tauri-apps/plugin-shell": "^2",
+    "@tauri-apps/plugin-shell": "^2.0.1",
+    "@types/luxon": "^3.4.2",
     "@unocss/reset": "^0.64.1",
     "embla-carousel-solid": "^8.5.1",
     "embla-carousel-wheel-gestures": "^8.0.1",
+    "luxon": "^3.5.0",
     "pulltorefreshjs": "^0.1.22",
     "solid-js": "^1.9.3",
     "uuid": "^11.0.3"
