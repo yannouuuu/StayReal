@@ -13,7 +13,7 @@ const Settings: Component = () => {
   }, null, 2);
 
   return (
-    <div>
+    <div class="mt-[env(safe-area-inset-top)] p-4">
       <div class="flex flex-col gap-2">
         <button onClick={async () => {
           const output = await getAuthDetails();
