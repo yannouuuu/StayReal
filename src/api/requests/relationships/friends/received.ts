@@ -15,7 +15,7 @@ export interface RelationshipsFriendsReceived {
 }
 
 export const relationships_friends_received = async (): Promise<RelationshipsFriendsReceived> => {
-  const response = await fetch("https://mobile.bereal.com/api/relationships/friend-requests/received?page", {
+  const response = await fetch("https://mobile-l7.bereal.com/api/relationships/friend-requests/received?page", {
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`

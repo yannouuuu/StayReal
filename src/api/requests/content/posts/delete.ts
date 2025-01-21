@@ -3,7 +3,7 @@ import { BEREAL_DEFAULT_HEADERS } from "../../../constants";
 import { fetch } from "@tauri-apps/plugin-http";
 
 export const content_posts_delete = async (postId: string): Promise<void> => {
-  const response = await fetch(`https://mobile.bereal.com/api/content/posts/${postId}`, {
+  const response = await fetch(`https://mobile-l7.bereal.com/api/content/posts/${postId}`, {
     method: "DELETE",
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),

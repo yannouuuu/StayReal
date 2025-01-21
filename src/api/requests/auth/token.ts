@@ -9,7 +9,7 @@ export const grant_firebase = async (inputs: {
   deviceID: string
   idToken: string
 }): Promise<Tokens> => {
-  const response = await fetch("https://auth.bereal.com/token?grant_type=firebase", {
+  const response = await fetch("https://auth-l7.bereal.com/token?grant_type=firebase", {
     method: "POST",
     headers: {
       ...BEREAL_DEFAULT_HEADERS(inputs.deviceID),

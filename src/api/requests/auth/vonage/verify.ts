@@ -11,7 +11,7 @@ export const vonage_verify_otp = async (inputs: {
   deviceID: string,
   requestID: string,
 }): Promise<string> => {
-  const response = await fetch("https://auth.bereal.com/api/vonage/check-code", {
+  const response = await fetch("https://auth-l7.bereal.com/api/vonage/check-code", {
     method: "POST",
     headers: {
       ...BEREAL_DEFAULT_HEADERS(inputs.deviceID),

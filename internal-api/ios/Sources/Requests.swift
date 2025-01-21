@@ -32,7 +32,7 @@ class Requests {
       "refresh_token": authentication.details.refreshToken ?? "",
     ]
 
-    guard let url = URL(string: "https://auth.bereal.com/token") else {
+    guard let url = URL(string: "https://auth-l7.bereal.com/token") else {
       completion(.failure(URLError(.badURL)))
       return
     }

@@ -18,7 +18,7 @@ export interface ContentPostsUploadUrls {
 }
 
 export const content_posts_upload_url = async (): Promise<ContentPostsUploadUrls> => {
-  const response = await fetch("https://mobile.bereal.com/api/content/posts/multi-format-upload-url?mimeTypes=image/webp&mimeTypes=image/webp", {
+  const response = await fetch("https://mobile-l7.bereal.com/api/content/posts/multi-format-upload-url?mimeTypes=image/webp&mimeTypes=image/webp", {
     method: "GET",
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
@@ -53,7 +53,7 @@ export const content_posts_create = async (inputs: {
   location?: { longitude: number, latitude: number }
   takenAt: Date
 }): Promise<void> => {
-  const response = await fetch("https://mobile.bereal.com/api/content/posts", {
+  const response = await fetch("https://mobile-l7.bereal.com/api/content/posts", {
     method: "POST",
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),

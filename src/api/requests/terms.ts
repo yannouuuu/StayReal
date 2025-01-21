@@ -13,7 +13,7 @@ export interface Terms {
 }
 
 export const terms = async (): Promise<Terms> => {
-  const response = await fetch("https://mobile.bereal.com/api/terms", {
+  const response = await fetch("https://mobile-l7.bereal.com/api/terms", {
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`

@@ -129,7 +129,7 @@ impl<R: Runtime> InternalApi<R> {
 
     let client = reqwest::Client::new();
     let response = client
-      .post("https://auth.bereal.com/token")
+      .post("https://auth-l7.bereal.com/token")
       .headers(self.bereal_default_headers(&auth.device_id))
       .json(&json)
       .send()

@@ -5,7 +5,7 @@ import { fetch } from "@tauri-apps/plugin-http";
 // TODO: typing on return value
 
 export const content_posts_caption = async (postId: string, caption: string, tags: unknown[] = []): Promise<any> => {
-  const response = await fetch(`https://mobile.bereal.com/api/content/posts/caption/${postId}`, {
+  const response = await fetch(`https://mobile-l7.bereal.com/api/content/posts/caption/${postId}`, {
     method: "PATCH",
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
@@ -17,7 +17,7 @@ export const content_posts_caption = async (postId: string, caption: string, tag
       caption
     })
   });
-  
+
   // if token expired, refresh it and retry
   if (response.status === 401) {
     await auth.refresh();

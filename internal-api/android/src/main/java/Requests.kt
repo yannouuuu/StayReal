@@ -55,7 +55,7 @@ class Requests(private val context: Context) {
 
     val request =
             Request.Builder()
-                    .url("https://auth.bereal.com/token")
+                    .url("https://auth-l7.bereal.com/token")
                     .headers(defaultHeaders(auth.deviceId!!))
                     .post(json.toString().toRequestBody("application/json".toMediaType()))
                     .build()

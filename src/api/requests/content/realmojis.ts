@@ -8,7 +8,7 @@ export const content_realmojis_put = async (postId: string, postUserId: string, 
   /// example of the body sent :
   /// { "emoji": "😍" }
 
-  const response = await fetch(`https://mobile.bereal.com/api/content/realmojis?postId=${postId}&postUserId=${postUserId}`, {
+  const response = await fetch(`https://mobile-l7.bereal.com/api/content/realmojis?postId=${postId}&postUserId=${postUserId}`, {
     method: "PUT",
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),

@@ -152,14 +152,14 @@ export interface FeedsFriends {
   // null if user has no posts for the on going moment
   userPosts: PostsOverview | null
   friendsPosts: Array<PostsOverview>
-    
+
   remainingPosts: number
   maxPostsPerMoment: number
   eventProtoBytes: unknown[]
 }
 
 export const feeds_friends = async (): Promise<FeedsFriends> => {
-  const response = await fetch("https://mobile.bereal.com/api/feeds/friends-v1", {
+  const response = await fetch("https://mobile-l7.bereal.com/api/feeds/friends-v1", {
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`
@@ -172,6 +172,5 @@ export const feeds_friends = async (): Promise<FeedsFriends> => {
     return feeds_friends();
   }
 
-  const json = await response.json();
-  return json;
+  return response.json();
 }

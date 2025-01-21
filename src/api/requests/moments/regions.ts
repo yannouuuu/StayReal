@@ -8,7 +8,7 @@ export type MomentsRegions = Array<{
 }>
 
 export const moments_regions = async (): Promise<MomentsRegions> => {
-  const response = await fetch("https://mobile.bereal.com/api/bereal/regions?language=en", {
+  const response = await fetch("https://mobile-l7.bereal.com/api/bereal/regions?language=en", {
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`

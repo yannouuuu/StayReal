@@ -16,7 +16,7 @@ export interface RecommendationsContacts {
 }
 
 export const recommendations_contacts = async (phoneNumbers: Array<string>): Promise<RecommendationsContacts> => {
-  const url = "https://mobile.bereal.com/api/recommendations/contacts";
+  const url = "https://mobile-l7.bereal.com/api/recommendations/contacts";
   let response: Response;
 
   response = await fetch(url, {

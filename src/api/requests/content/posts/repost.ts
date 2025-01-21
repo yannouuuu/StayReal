@@ -3,7 +3,7 @@ import { BEREAL_DEFAULT_HEADERS } from "~/api/constants";
 import { fetch } from "@tauri-apps/plugin-http";
 
 export const content_posts_repost = async (postId: string, userId: string, visibility: "friends" | "friends-of-friends"): Promise<void> => {
-  const response = await fetch(`https://mobile.bereal.com/api/content/posts/repost/${postId}`, {
+  const response = await fetch(`https://mobile-l7.bereal.com/api/content/posts/repost/${postId}`, {
     method: "POST",
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),

@@ -50,7 +50,7 @@ export interface PersonMe {
 }
 
 export const person_me = async (): Promise<PersonMe> => {
-  const response = await fetch("https://mobile.bereal.com/api/person/me", {
+  const response = await fetch("https://mobile-l7.bereal.com/api/person/me", {
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
       authorization: `Bearer ${auth.store.accessToken}`

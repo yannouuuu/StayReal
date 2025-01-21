@@ -22,7 +22,7 @@ export const vonage_request_code = async (inputs: {
   phoneNumber: string
   tokens: VonageRequestCodeToken[]
 }): Promise<string> => {
-  const response = await fetch("https://auth.bereal.com/api/vonage/request-code", {
+  const response = await fetch("https://auth-l7.bereal.com/api/vonage/request-code", {
     method: "POST",
     headers: {
       ...BEREAL_DEFAULT_HEADERS(inputs.deviceID),
