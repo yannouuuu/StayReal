@@ -18,7 +18,7 @@ pub enum Error {
   #[cfg(not(any(target_os = "android", target_os = "ios")))]
   #[error(transparent)]
   Reqwest(#[from] reqwest::Error),
-  #[cfg(target_os = "android")]
+  #[cfg(any(target_os = "android", target_os = "ios"))]
   #[error(transparent)]
   PluginInvoke(#[from] tauri::plugin::mobile::PluginInvokeError),
   #[error("URL is not a valid path")]
