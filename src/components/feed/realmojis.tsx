@@ -4,10 +4,10 @@ import me from "~/stores/me";
 
 /**
  * RealMojis attributed to a given post.
- * 
+ *
  * Shows as three realmojis, first two are actual realmojis
  * and the third one is a count of remaining realmojis.
- * 
+ *
  * It's negatively spaced to show the realmojis in a row.
  */
 const PostRealMojis: Component<{
@@ -15,27 +15,27 @@ const PostRealMojis: Component<{
   shouldReverseZIndex?: boolean
   size: number
 }> = (props) => {
-  const sample = createMemo(() => {
+  const sample = () => {
     const copy = [...props.post.realMojis];
-    
+
     copy.sort((a, b) => new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime());
     const mine = copy.findIndex(r => r.user.id === me.get().id);
-    
+
     if (mine > -1) {
       const [myRealMoji] = copy.splice(mine, 1);
       copy.unshift(myRealMoji);
     }
 
     return copy.slice(0, 2);
-  });
+  };
 
-  const total = () => {
+  const total = createMemo(() => {
     let amount = props.post.realMojis.length - 2;
     // just display +9 if total is more than 9
     if (amount > 9) return 9;
 
     return amount
-  }
+  });
 
   return (
     <Show when={props.post.realMojis.length > 0}>
