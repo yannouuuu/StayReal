@@ -11,6 +11,7 @@ import type { EmblaCarouselType } from "embla-carousel";
 import Location from "~/components/location";
 import { Duration } from "luxon";
 import { open } from "@tauri-apps/plugin-shell"
+import { DropdownMenu } from "@kobalte/core/dropdown-menu";
 
 const FeedFriendsOverview: Component<{
   overview: PostsOverview
@@ -85,7 +86,28 @@ const FeedFriendsOverview: Component<{
           </Show>
         </div>
 
-        <MdiDotsVertical class="ml-auto text-xl" />
+        <DropdownMenu>
+          <DropdownMenu.Trigger class="ml-auto hover:bg-white/8 rounded-full p-1.5 -mr-1.5 transition-colors">
+            <DropdownMenu.Icon>
+              <MdiDotsVertical class="text-xl" />
+            </DropdownMenu.Icon>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content class="min-w-[220px] p-2 bg-[#080808] rounded-xl outline-none border border-white/8 transform-origin-[var(--kb-menu-content-transform-origin)]">
+              <DropdownMenu.Item class="cursor-pointer rounded-lg py-1.5 px-4 hover:bg-white/8 text-white/80 hover:text-white"
+                onSelect={() => open(activePost().primary.url)}
+              >
+                Open main image URL
+              </DropdownMenu.Item>
+              <DropdownMenu.Item class="cursor-pointer rounded-lg py-1.5 px-4 hover:bg-white/8 text-white/80 hover:text-white"
+                onSelect={() => open(activePost().secondary.url)}
+              >
+                Open secondary image URL
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu>
+
       </div>
 
       <div class="bg-white/4 pb-4 rounded-b-2xl">
