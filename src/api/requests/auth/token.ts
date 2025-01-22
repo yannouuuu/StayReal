@@ -1,4 +1,4 @@
-import { BEREAL_DEFAULT_HEADERS, BEREAL_CLIENT_SECRET } from "~/api/constants";
+import { BEREAL_DEFAULT_HEADERS, BEREAL_CLIENT_SECRET, BEREAL_PLATFORM } from "~/api/constants";
 import type { Tokens } from "~/api/models/tokens";
 import { fetch } from "@tauri-apps/plugin-http";
 
@@ -17,7 +17,7 @@ export const grant_firebase = async (inputs: {
     },
     body: JSON.stringify({
       token: inputs.idToken,
-      client_id: "ios",
+      client_id: BEREAL_PLATFORM.toLowerCase(),
       grant_type: "firebase",
       client_secret: BEREAL_CLIENT_SECRET
     })
