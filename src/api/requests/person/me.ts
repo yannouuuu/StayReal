@@ -1,8 +1,15 @@
-import { BEREAL_DEFAULT_HEADERS } from "../../constants";
+import { BEREAL_DEFAULT_HEADERS, BEREAL_IOS_VERSION, BEREAL_PLATFORM, BEREAL_PLATFORM_VERSION, BEREAL_TIMEZONE } from "../../constants";
 import { fetch } from "@tauri-apps/plugin-http";
 import { ApiMedia } from "../../types/media";
 import auth from "../../../stores/auth";
 import { setRegion } from "@stayreal/api";
+
+export class ProfileInexistentError extends Error {
+  constructor() {
+    super("profile does not exist, you should create one first");
+    this.name = "ProfileInexistentError";
+  }
+}
 
 export interface PersonMe {
   id: string
@@ -49,6 +56,12 @@ export interface PersonMe {
   isPrivate: boolean
 }
 
+/**
+ * Returns the profile of the current user.
+ *
+ * @throws `ProfileInexistentError` if the profile does not exist, in this
+ * case you should do the onboarding process.
+ */
 export const person_me = async (): Promise<PersonMe> => {
   const response = await fetch("https://mobile-l7.bereal.com/api/person/me", {
     headers: {
@@ -63,8 +76,85 @@ export const person_me = async (): Promise<PersonMe> => {
     return person_me();
   }
 
-  const json = await response.json() as PersonMe;
-  await setRegion(json.region);
+  const json = await response.json();
 
+  if (response.status === 404 && json.errorKey === "user-profile-not-found") {
+    throw new ProfileInexistentError();
+  }
+
+  await setRegion(json.region);
   return json;
 };
+
+export interface PostPersonMe {
+  id: string
+  username: string
+  /** @example "2005-10-06T00:00:00.000Z" */
+  birthdate: string
+  fullname: string
+  profilePicture: ApiMedia | null
+  realmojis: never[] // should always be empty...
+  devices: Array<{
+    clientVersion: string
+    device: string
+    deviceId: string
+    platform: string
+    language: string
+    timezone: string
+  }>
+  canDeletePost: boolean
+  canPost: boolean
+  canUpdateRegion: boolean
+  phoneNumber: string
+  countryCode: string
+  region: string
+  createdAt: string
+  isRealPeople: boolean
+  userFreshness: "new"
+  type: "USER"
+  links: never[] // should always be empty...
+  customRealmoji: string
+  isPrivate: boolean
+}
+
+/**
+ * Creates a new profile for the current user.
+ * @param username The username to use for the new profile.
+ * @param birthdate The birthdate of the user, in the format `YYYY-MM-DD`.
+ * @param fullname The full name of the user.
+ */
+export const postPersonMe = async (username: string, birthdate: string, fullname: string): Promise<PostPersonMe> => {
+  const response = await fetch("https://mobile-l7.bereal.com/api/person/me", {
+    method: "POST",
+    headers: {
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
+      authorization: `Bearer ${auth.store.accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      platform: BEREAL_PLATFORM.toLowerCase(),
+      deviceId: auth.store.deviceId,
+      timezone: BEREAL_TIMEZONE,
+      username,
+      clientVersion: BEREAL_IOS_VERSION,
+      // NOTE: constants to prevent any issues,
+      //       this should not impact the account creation anyway.
+      device: `iPhone15,3 ${BEREAL_PLATFORM_VERSION}`, // iPhone 15 Pro Max, should be updated time to time...
+      language: "en",
+      birthdate,
+      fullname
+    })
+  });
+
+  // if token expired, refresh it and retry
+  if (response.status === 401) {
+    await auth.refresh();
+    return postPersonMe(username, birthdate, fullname);
+  }
+
+  if (response.status !== 201) {
+    throw new Error("failed to create profile");
+  }
+
+  return response.json();
+}
