@@ -27,5 +27,15 @@ export const content_posts_comment = async (postId: string, postUserId: string, 
     body: JSON.stringify({ content }),
   });
 
+  // if token expired, refresh it and retry
+  if (response.status === 401) {
+    await auth.refresh();
+    return content_posts_comment(postId, postUserId, content);
+  }
+
+  if (response.status !== 201) {
+    throw new Error(`failed to comment on post ${postId}`);
+  }
+
   return response.json();
 }
