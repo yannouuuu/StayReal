@@ -112,11 +112,11 @@
   - [x] Reactions
 - [x] Post a BeReal
 - [ ] Comment under a post
-- [ ] React to a post with your realmojis
+- [x] React to a post with your realmojis
 - [ ] Accept a friend request
 - [ ] Friends recommendations
 - [x] Listing of friends
-- [x] Notifications
+- [x] Notifications (only for Android)
 - [ ] Settings
   - [ ] Update region for moments
 
@@ -127,6 +127,7 @@ Some advanced features that are not in the original application.
 - [ ] Light mode
 - [x] Upload from gallery (not only camera)
 - [ ] Manual camera (there is no delay between primary image and secondary image)
+- [x] Cache today's feed data to device `localStorage` (for faster reloading), this is a temporary solution until we implement the task below
 - [ ] Cache data to device local database (for faster reloading and offline access)
 
 ### Privacy
