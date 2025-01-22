@@ -8,7 +8,7 @@ export type RealmojisPut = {
   user: {
     id: string
     username: string
-    profilePicture: ApiMedia
+    profilePicture?: ApiMedia
     type: "USER"
   }
   emoji: string
