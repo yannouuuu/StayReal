@@ -84,7 +84,8 @@
     </td>
     <td width="30%">
       <div align="center">
-        iOS is currently not supported, the internal API needs an implementation in Swift.
+        iOS integration is ready but we don't know yet how to build the .ipa file.
+        If you know how to do it, please open an issue or even better, a pull request.
       </div>
     </td>
   </tr>
@@ -167,7 +168,7 @@ git clone https://github.com/Vexcited/StayReal && cd StayReal
 pnpm install
 
 # Build internal-api
-cd internal-api 
+cd internal-api
 pnpm install
 pnpm build
 cd ..
