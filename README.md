@@ -63,14 +63,12 @@
     <th><br>
       <img src=".github/assets/android.svg" width="20%" align="center" />
       <br><br><p align="center">Android (.apk)</p>
-      <br>
-      <i align="center">These builds are signed.</i>
+      <i align="center">These builds ARE signed.</i>
     </th>
     <th><br>
       <img src=".github/assets/apple.svg" width="20%" align="center" />
       <br><br><p align="center">iOS (.ipa)</p>
-      <br>
-      <i align="center">These builds are NOT signed, you need to <a href="https://github.com/DanTheMan827/ios-app-signer" target="_blank">sign them yourself</a>.</i>
+      <i align="center">These builds ARE NOT signed, you need to <a href="https://github.com/DanTheMan827/ios-app-signer" target="_blank">sign them yourself</a>.</i>
     </th>
   </tr>
 
