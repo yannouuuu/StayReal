@@ -290,10 +290,6 @@ jobs:
         run: |
           cargo install cargo-ndk
 
-      - name: (iOS) install dependencies
-        if: matrix.os == 'ios'
-        run: xcode-select --install || true
-
       - name: (Android) build
         if: matrix.os == 'android'
         env:
