@@ -222,10 +222,10 @@ jobs:
             os: android
             target-full: 'x86_64-linux-android'
             target-short: 'x86_64'
-          # - platform: macos-latest
-          #   os: 'ios'
-          #   target-full: 'aarch64-apple-ios'
-          #   target-short: 'aarch64'
+          - platform: macos-latest
+            os: 'ios'
+            target-full: 'aarch64-apple-ios'
+            target-short: 'aarch64'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -305,7 +305,14 @@ jobs:
           IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
           IOS_MOBILE_PROVISION: ${{ secrets.IOS_MOBILE_PROVISION }}
         run: |
-          pnpm tauri ios build --target ${{ matrix.target-short }} --ci
+          # current workaround for the tauri ios build until we have a real certificate...
+          wget https://github.com/Vexcited/tauri/releases/download/0.0.0/vtauri -O $(pwd)/vtauri
+          chmod +x vtauri
+
+          sed -i '' "s|pnpm tauri ios|$(pwd)/vtauri ios|g" $(pwd)/src-tauri/gen/apple/project.yml
+          sed -i '' "s|pnpm tauri ios|$(pwd)/vtauri ios|g" $(pwd)/src-tauri/gen/apple/stayreal.xcodeproj/project.pbxproj
+
+          $(pwd)/vtauri ios build --target ${{ matrix.target-short }} --ci
 
       - name: (Android) distribute (signed) .apk
         if: matrix.os == 'android'
@@ -321,4 +328,4 @@ jobs:
         with:
           name: stayreal-ios-${{ matrix.target-short }}-ipa
           path: |
-            src-tauri/gen/apple/build/arm64/*.ipa
+            src-tauri/gen/apple/build/arm64/StayReal.ipa
