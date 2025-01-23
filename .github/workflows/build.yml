@@ -299,6 +299,10 @@ jobs:
 
       - name: (iOS) build
         if: matrix.os == 'ios'
+        env:
+          APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_DEVELOPMENT_TEAM }}
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
         run: |
           pnpm tauri ios build --target ${{ matrix.target-short }} --ci
 
