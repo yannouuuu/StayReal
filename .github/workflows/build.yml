@@ -20,7 +20,7 @@ jobs:
             target: 'aarch64-apple-darwin'
           - platform: 'macos-latest'
             target: 'x86_64-apple-darwin'
-            
+
           - platform: ubuntu-22.04
             target: 'x86_64-unknown-linux-gnu'
           - platform: ubuntu-22.04
@@ -36,13 +36,13 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: (Linux) ARM sources.list
         if: matrix.target == 'aarch64-unknown-linux-gnu' || matrix.target == 'armv7-unknown-linux-gnueabihf'
         run: |
           # Add [arch=amd64] to the initial entries of the sources.list
           sudo sed -i 's/^deb /deb [arch=amd64] /' /etc/apt/sources.list
-  
+
           echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs) main restricted" | sudo tee -a /etc/apt/sources.list
           echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs)-updates main restricted" | sudo tee -a /etc/apt/sources.list
           echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs) universe" | sudo tee -a /etc/apt/sources.list
@@ -53,7 +53,7 @@ jobs:
           echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs)-security main restricted" | sudo tee -a /etc/apt/sources.list
           echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs)-security universe" | sudo tee -a /etc/apt/sources.list
           echo "deb [arch=armhf,arm64] http://ports.ubuntu.com/ubuntu-ports/ $(lsb_release -cs)-security multiverse" | sudo tee -a /etc/apt/sources.list
-  
+
       - name: (Linux) ARM setup
         if: matrix.target == 'aarch64-unknown-linux-gnu' || matrix.target == 'armv7-unknown-linux-gnueabihf'
         run: |
@@ -85,7 +85,7 @@ jobs:
             libssl-dev:armhf \
             gcc-arm-linux-gnueabihf \
             g++-arm-linux-gnueabihf
-    
+
       - name: (Linux) (ARM64) install dependencies
         if: matrix.target == 'aarch64-unknown-linux-gnu'
         run: |
@@ -125,7 +125,7 @@ jobs:
             internal-api -> target
           prefix-key: rust-${{ hashFiles('**/Cargo.lock') }}
           shared-key: ${{ matrix.platform }}-${{ matrix.target }}
-        
+
       - name: build
         if: matrix.platform != 'ubuntu-22.04'
         # if we are compiling for Windows ARM, we can only support NSIS
@@ -147,7 +147,7 @@ jobs:
           CC: arm-linux-gnueabihf-gcc
           PKG_CONFIG_SYSROOT_DIR: /usr/lib/arm-linux-gnueabihf
           PKG_CONFIG_PATH: /usr/lib/arm-linux-gnueabihf/pkgconfig
-  
+
       - name: (Linux) (ARM64) build
         if: matrix.target == 'aarch64-unknown-linux-gnu'
         run: pnpm tauri build --target ${{ matrix.target }} --bundles deb,rpm -- --config target.aarch64-unknown-linux-gnu.linker=\'aarch64-linux-gnu-gcc\'
@@ -156,7 +156,7 @@ jobs:
           CC: aarch64-linux-gnu-gcc
           PKG_CONFIG_SYSROOT_DIR: /usr/lib/aarch64-linux-gnu
           PKG_CONFIG_PATH: /usr/lib/aarch64-linux-gnu/pkgconfig
-      
+
       - name: (Windows) (only x86) distribute .msi
         if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v4
@@ -191,7 +191,7 @@ jobs:
         with:
           name: stayreal-${{ matrix.target }}-appimage
           path: src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage
-        
+
       - name: (macOS) distribute .dmg
         if: matrix.platform == 'macos-latest'
         uses: actions/upload-artifact@v4
@@ -222,23 +222,15 @@ jobs:
             os: android
             target-full: 'x86_64-linux-android'
             target-short: 'x86_64'
-          # - platform: 'macos-latest'
-          #   os: 'ios'
-          #   target-full: 'aarch64-apple-ios'
-          #   target-short: 'aarch64'
-          # - platform: 'macos-latest'
-          #   os: 'ios'
-          #   target-full: 'aarch64-apple-ios-sim'
-          #   target-short: 'aarch64-sim'
-          # - platform: 'macos-latest'
-          #   os: 'ios'
-          #   target-full: 'x86_64-apple-ios'
-          #   target-short: 'x86_64'
-        
+          - platform: macos-latest
+            os: 'ios'
+            target-full: 'aarch64-apple-ios'
+            target-short: 'aarch64'
+
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
-        
+
       - uses: pnpm/action-setup@v4
         with:
           version: latest
@@ -293,46 +285,14 @@ jobs:
           prefix-key: rust-${{ hashFiles('**/Cargo.lock') }}
           shared-key: ${{ matrix.platform }}-${{ matrix.target-full }}
 
-      # - name: (iOS) install dependencies
-      #   if: matrix.os == 'ios'
-      #   run: |
-      #     rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
-      #     xcode-select --install || true
-
-      # - name: Install the Apple certificate and provisioning profile
-      #   if: matrix.os == 'ios'
-      #   env:
-      #     BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE }}
-      #     P12_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
-      #     BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_PROVISION_PROFILE }}
-      #     KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-      #   run: |
-      #     # create variables
-      #     CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-      #     PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
-      #     KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-
-      #     # import certificate and provisioning profile from secrets
-      #     echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-      #     echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
-
-      #     # create temporary keychain
-      #     security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-      #     security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-      #     security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-      #     # import certificate to keychain
-      #     security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-      #     security list-keychain -d user -s $KEYCHAIN_PATH
-
-      #     # apply provisioning profile
-      #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-      #     cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
-          
       - name: (Android) install dependencies
         if: matrix.os == 'android'
         run: |
           cargo install cargo-ndk
+
+      - name: (iOS) install dependencies
+        if: matrix.os == 'ios'
+        run: xcode-select --install || true
 
       - name: (Android) build
         if: matrix.os == 'android'
@@ -340,16 +300,12 @@ jobs:
           NDK_HOME: ${{ env.NDK_HOME }}
         run: |
           pnpm tauri android build --target ${{ matrix.target-short }} --apk
-          
-      # - name: (iOS) build
-      #   if: matrix.os == 'ios'
-      #   env:
-      #     TEAM_ID: ${{ secrets.TEAM_ID }}
-      #   run: |
-      #     # Update the Xcode project with the team ID
-      #     /usr/libexec/PlistBuddy -c "Set :TEAM_ID $TEAM_ID" src-tauri/gen/apple/stayreal.xcodeproj/project.pbxproj
-      #     pnpm tauri ios build
-        
+
+      - name: (iOS) build
+        if: matrix.os == 'ios'
+        run: |
+          pnpm tauri ios build --target ${{ matrix.target-short }} --ci
+
       - name: (Android) distribute (signed) .apk
         if: matrix.os == 'android'
         uses: actions/upload-artifact@v4
@@ -357,11 +313,11 @@ jobs:
           name: stayreal-android-${{ matrix.target-short }}-apk
           path: |
             src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
-          
-      # - name: (iOS) distribute .ipa
-      #   if: matrix.target == 'ios'
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: stayreal-ios-${{ matrix.target-short }}-ipa
-      #     path: |
-      #       src-tauri/gen/ios/build/*.ipa
+
+      - name: (iOS) distribute .ipa
+        if: matrix.os == 'ios'
+        uses: actions/upload-artifact@v4
+        with:
+          name: stayreal-ios-${{ matrix.target-short }}-ipa
+          path: |
+            src-tauri/gen/apple/build/arm64/*.ipa
