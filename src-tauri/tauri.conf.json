@@ -15,7 +15,10 @@
         "title": "StayReal",
         "width": 400,
         "height": 800,
-        "fullscreen": false
+        "fullscreen": false,
+        "backgroundColor": "#000000",
+        "minWidth": 400,
+        "theme": "Dark"
       }
     ],
     "security": {
