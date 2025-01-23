@@ -222,10 +222,10 @@ jobs:
             os: android
             target-full: 'x86_64-linux-android'
             target-short: 'x86_64'
-          - platform: macos-latest
-            os: 'ios'
-            target-full: 'aarch64-apple-ios'
-            target-short: 'aarch64'
+          # - platform: macos-latest
+          #   os: 'ios'
+          #   target-full: 'aarch64-apple-ios'
+          #   target-short: 'aarch64'
 
     runs-on: ${{ matrix.platform }}
     steps:
