@@ -1,11 +1,9 @@
 [package]
 name = "stayreal"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "An open-source, lightweight and privacy-focused BeReal alternative client."
+authors = ["Mikkel ALMONTE--RINGAUD <mikkel.almonteringaud@literate.ink>"]
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
 # The `_lib` suffix may seem redundant but it is necessary
