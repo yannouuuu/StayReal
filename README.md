@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="100%" src=".github/assets/banner.svg" alt="Banner">
+  <img width="100%" src=".github/assets/banner.svg" alt="Banner for StayReal.">
 </p>
 <p align="center">
   <b>An open-source, lightweight and privacy-focused BeReal alternative client.</b>
@@ -8,7 +8,7 @@
   <a href="https://github.com/Vexcited/StayReal/actions/workflows/build.yml">
     <img src="https://github.com/Vexcited/StayReal/actions/workflows/build.yml/badge.svg?branch=main" alt="Build Badge">
   </a>
-  <a href="./LICENSE.md">
+  <a href="https://github.com/Vexcited/StayReal/tree/main/LICENSE.md">
     <img src="https://img.shields.io/github/license/Vexcited/StayReal.svg?color=green" alt="License Badge">
   </a>
 </p>
@@ -63,15 +63,19 @@
     <th><br>
       <img src=".github/assets/android.svg" width="20%" align="center" />
       <br><br><p align="center">Android (.apk)</p>
+      <br>
+      <i align="center">These builds are signed.</i>
     </th>
     <th><br>
       <img src=".github/assets/apple.svg" width="20%" align="center" />
       <br><br><p align="center">iOS (.ipa)</p>
+      <br>
+      <i align="center">These builds are NOT signed, you need to <a href="https://github.com/DanTheMan827/ios-app-signer" target="_blank">sign them yourself</a>.</i>
     </th>
   </tr>
 
   <tr>
-    <td width="30%">
+    <td width="50%">
       <div align="center">
         <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-aarch64-apk.zip">&nearr;&nbsp;aarch64</a>
         <br>
@@ -82,10 +86,9 @@
         <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-i686-apk.zip">&nearr;&nbsp;i686</a>
       </div>
     </td>
-    <td width="30%">
+    <td width="50%">
       <div align="center">
-        iOS integration is ready but we don't know yet how to build the .ipa file.
-        If you know how to do it, please open an issue or even better, a pull request.
+        <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-ios-aarch64-ipa.zip">&nearr;&nbsp;aarch64</a>
       </div>
     </td>
   </tr>
@@ -95,6 +98,7 @@
 
 - [x] Authentication
   - Accounts with parental control are not supported, if you have one, please open an issue so we can work on it.
+- [ ] Account creation (currently WIP)
 - [ ] My Profile
   - [x] Informations
   - [x] Realmojis
@@ -148,9 +152,9 @@ This is a limitation of the Android operating system, and I don't know any way t
 
 Note that you can hide this specific notification called `BeReal Moments (Service)` in the Android settings, but there's a chance that the service will be killed and you will receive no more notification.
 
-### Why is the application not available on the Google Play Store?
+### Why is the application not available on the stores?
 
-The application is not available on the Google Play Store because it does not respect the terms of service of the platform. The application is not malicious, but it does not respect the terms of service because it is a third-party client.
+I'm currently waiting until StayReal is in a good enough state to publish it.
 
 ## 🛠️ Development
 
@@ -179,6 +183,9 @@ pnpm tauri dev
 
 # Start development on Android
 pnpm tauri android dev
+
+# Start development on iOS, only available on macOS
+pnpm tauri ios dev
 ```
 
 ### Build for release
@@ -189,6 +196,9 @@ pnpm tauri build
 
 # Build for Android
 pnpm tauri android build
+
+# Build for iOS, only available on macOS
+pnpm tauri ios build
 ```
 
 If you want to know more about the pipeline used to build the application, you can check the [&nearr;&nbsp;GitHub Actions workflow](./.github/workflows/build.yml).
