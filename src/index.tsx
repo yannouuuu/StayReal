@@ -7,7 +7,7 @@ import { lazy } from "solid-js";
 import { render } from "solid-js/web";
 import { Router } from "@solidjs/router";
 
-import SplashView from "./views/splash";
+import SplashView from "~/views/splash";
 
 const routes = [
   {
@@ -16,32 +16,32 @@ const routes = [
   },
   {
     path: "/feed",
-    component: lazy(() => import("./views/feed"))
+    component: lazy(() => import("~/views/feed"))
   },
   {
     path: "/login",
-    component: lazy(() => import("./views/login"))
+    component: lazy(() => import("~/views/login"))
   },
   {
     path: "/profile",
-    component: lazy(() => import("./views/profile"))
+    component: lazy(() => import("~/views/profile"))
   },
   {
     path: "/upload",
-    component: lazy(() => import("./views/upload"))
+    component: lazy(() => import("~/views/upload"))
   },
   {
     path: "/friends",
-    component: lazy(() => import("./views/friends"))
+    component: lazy(() => import("~/views/friends"))
   },
   {
     path: "/settings",
-    component: lazy(() => import("./views/settings"))
+    component: lazy(() => import("~/views/settings"))
   }
 ]
 
 render(() => (
   <Router>
     {routes}
-  </Router> 
+  </Router>
 ), document.getElementById("root") as HTMLDivElement);
