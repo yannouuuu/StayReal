@@ -1,0 +1,70 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+---
+
+<Layout>
+  <Header />
+
+  <div class="max-w-[800px] w-full mx-auto mt-6">
+    <h1 class="text-3xl font-bold mb-2">Download</h1>
+    <p class="text-white/80 mb-10">
+      Currently, StayReal is not available on the stores so you have to download
+      and update it manually.
+    </p>
+
+    <div class="flex flex-col md:flex-row items-center gap-4">
+      <div class="p-6 border border-white rounded-[28px] w-full">
+        <h2 class="text-lg font-bold">Android</h2>
+        <p class="mb-6 text-white/80">
+          All the APKs are signed and can be directly installed.
+        </p>
+
+        <div class="flex items-center gap-2">
+          <select
+            id="android-arch-selector"
+            class="bg-black text-white outline-none rounded-full px-4 py-2 border border-white appearance-none"
+          >
+            <option selected>aarch64</option>
+            <option>x86_64</option>
+            <option>armv7</option>
+            <option>i686</option>
+          </select>
+          <a
+            href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-aarch64-apk.zip"
+            id="android-download-button"
+            class="bg-white text-dark outline-none rounded-full px-4 py-2 border border-white"
+            >Download</a
+          >
+        </div>
+      </div>
+      <div class="p-6 border border-white rounded-[28px] w-full">
+        <h2 class="text-lg font-bold">iOS</h2>
+        <p class="mb-6 text-white/80">
+          The IPA is unsigned and requires manual signing.
+        </p>
+        <a
+          href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-ios-aarch64-ipa.zip"
+          class="bg-white text-dark outline-none rounded-full px-4 py-2 border border-white block w-fit"
+        >
+          Download (arm64)
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const androidArchSelector = document.getElementById(
+    "android-arch-selector",
+  ) as HTMLSelectElement;
+
+  androidArchSelector.addEventListener("change", () => {
+    const arch = androidArchSelector.value;
+    const url = `https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-${arch}-apk.zip`;
+
+    document
+      .getElementById("android-download-button")
+      ?.setAttribute("href", url);
+  });
+</script>
