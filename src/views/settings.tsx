@@ -22,12 +22,11 @@ const Settings: Component = () => {
     </button>
   );
 
-
   return (
     <>
       <header class="pt-[env(safe-area-inset-top)]">
         <nav class="flex items-center justify-between px-4 pb-2 pt-4">
-          <a href="/feed">
+          <a href="/profile">
             <MdiChevronLeft class="text-xl" />
           </a>
         </nav>
