@@ -1,44 +1,30 @@
-import { DEMO_FEEDS_FRIENDS } from "../../feeds/friends";
+import { fileToBase64URL } from "~/utils/file-to-b64";
+import { DEMO_FEEDS_FRIENDS as feed } from "../../feeds/friends";
 import { DEMO_PERSON_ME } from "../../person/me";
 import { v4 as uuidv4 } from "uuid";
 
-const fileToBase64URL = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
 export const DEMO_CONTENT_POSTS_UPLOAD = async (frontImage: File, backImage: File, when: Date): Promise<void> => {
-  let feed = DEMO_FEEDS_FRIENDS();
   let isFirst = false;
 
   if (feed.userPosts === null) {
     isFirst = true;
-    feed = DEMO_FEEDS_FRIENDS({
-      userPosts: {
-        contentMappingEnabled: true,
-        momentId: "demo-moment-id",
-        region: DEMO_PERSON_ME.region,
-        posts: [],
-        user: {
-          profilePicture: DEMO_PERSON_ME.profilePicture,
-          countryCode: DEMO_PERSON_ME.countryCode,
-          username: DEMO_PERSON_ME.username,
-          type: DEMO_PERSON_ME.type,
-          id: DEMO_PERSON_ME.id,
-        }
+    feed.userPosts = {
+      contentMappingEnabled: true,
+      momentId: "demo-moment-id",
+      region: DEMO_PERSON_ME.region,
+      posts: [],
+      user: {
+        profilePicture: DEMO_PERSON_ME.profilePicture,
+        countryCode: DEMO_PERSON_ME.countryCode,
+        username: DEMO_PERSON_ME.username,
+        type: DEMO_PERSON_ME.type,
+        id: DEMO_PERSON_ME.id,
       }
-    });
+    }
   }
 
-  const posts = [...feed.userPosts!.posts];
-  const id = uuidv4();
-
-  posts.push({
-    id,
+  feed.userPosts.posts = [...feed.userPosts.posts, {
+    id: uuidv4(),
     isFirst,
     comments: [],
     creationDate: when.toISOString(),
@@ -71,8 +57,5 @@ export const DEMO_CONTENT_POSTS_UPLOAD = async (frontImage: File, backImage: Fil
     tags: [],
     unblurCount: 0,
     visibility: ["friends"],
-  });
-
-  // @ts-expect-error : it's recursive...
-  DEMO_FEEDS_FRIENDS({ userPosts: { posts } });
+  }];
 };
