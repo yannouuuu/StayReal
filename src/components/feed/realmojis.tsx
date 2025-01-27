@@ -19,9 +19,9 @@ const PostRealMojis: Component<{
     const copy = [...props.post.realMojis];
 
     copy.sort((a, b) => new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime());
-    const mine = copy.findIndex(r => r.user.id === me.get().id);
+    const mine = copy.findIndex(r => r.user.id === me.get()?.id);
 
-    if (mine > -1) {
+    if (mine !== -1) {
       const [myRealMoji] = copy.splice(mine, 1);
       copy.unshift(myRealMoji);
     }

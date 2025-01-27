@@ -210,16 +210,16 @@ const FeedFriendsOverview: Component<{
           </For>
 
           <form onSubmit={handlePostComment} class="flex items-center gap-2 mt-2">
-            <Show when={me.get().profilePicture} fallback={
+            <Show when={me.get()?.profilePicture} fallback={
               <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                <p class="text-center font-500">{me.get().username[0]}</p>
+                <p class="text-center font-500">{me.get()?.username[0] ?? "?"}</p>
               </div>
             }>
               {profilePicture => (
                 <img
                   class="w-6 h-6 rounded-full shrink-0"
                   src={profilePicture().url}
-                  alt={`Profile picture of ${me.get().username}`}
+                  alt={`Profile picture of ${me.get()!.username}`}
                 />
               )}
             </Show>
