@@ -66,7 +66,7 @@ const FriendsView: Component = () => {
           </div>
         </div>
 
-        <div class="fixed bottom-8 left-4 right-4 z-50">
+        {/* <div class="fixed bottom-8 left-4 right-4 z-50">
           <div
             class="bg-[#1a1a1a]/80 rounded-full p-0.75 flex items-center justify-between shadow-lg shadow-black/20"
             classList={{
@@ -95,7 +95,7 @@ const FriendsView: Component = () => {
               )}
             </For>
           </div>
-        </div>
+        </div> */}
 
         <div class="px-4 mb-6 cursor-pointer focus:scale-[0.98] active:scale-95 transition-transform">
           <div class="relative bg-[#121212] rounded-2xl p-3.5 overflow-hidden">
