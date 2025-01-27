@@ -1,6 +1,6 @@
-import { BEREAL_DEFAULT_HEADERS } from "../../constants";
+import { BEREAL_DEFAULT_HEADERS } from "~/api/constants";
 import { fetch } from "@tauri-apps/plugin-http";
-import auth from "../../../stores/auth";
+import auth from "~/stores/auth";
 
 export interface PersonProfilesUsernameCheck {
   /**
