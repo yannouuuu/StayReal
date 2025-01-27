@@ -27,6 +27,7 @@
       ]
     },
     "internal-api:default",
-    "shell:default"
+    "shell:default",
+    "dialog:default"
   ]
 }

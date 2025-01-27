@@ -164,3 +164,48 @@ export const postPersonMe = async (username: string, birthdate: string, fullname
 
   return response.json();
 }
+
+export interface DeletePersonMe {
+  id: string
+  username: string
+  birthdate: string
+  fullname: string
+  realmojis: never[]
+  devices: never[]
+  canDeletePost: boolean
+  canPost: boolean
+  canUpdateRegion: boolean
+  phoneNumber: string
+  accountDeleteScheduledAt: string
+  countryCode: string
+  region: string
+  createdAt: string
+  isRealPeople: boolean
+  userFreshness: "new"
+  type: "USER"
+  links: never[]
+  customRealmoji: string
+  isPrivate: boolean
+}
+
+export const deletePersonMe = async (): Promise<DeletePersonMe> => {
+  const response = await fetch("https://mobile-l7.bereal.com/api/person/me", {
+    method: "DELETE",
+    headers: {
+      ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
+      authorization: `Bearer ${auth.store.accessToken}`
+    }
+  });
+
+  // if token expired, refresh it and retry
+  if (response.status === 401) {
+    await auth.refresh();
+    return deletePersonMe();
+  }
+
+  if (response.status !== 200) {
+    throw new Error("failed to delete profile");
+  }
+
+  return response.json();
+};
