@@ -11,6 +11,8 @@ import { BEREAL_ARKOSE_PUBLIC_KEY } from "~/api/constants";
 
 import Arkose from "~/components/arkose";
 import auth from "~/stores/auth";
+import { DEMO_ACCESS_TOKEN, DEMO_PHONE_NUMBER, DEMO_REFRESH_TOKEN } from "~/utils/demo";
+import MdiChevronLeft from '~icons/mdi/chevron-left'
 
 const LoginView: Component = () => {
   const navigate = useNavigate();
@@ -30,7 +32,12 @@ const LoginView: Component = () => {
   const runAuthentication = async (): Promise<void> => {
     if (!state.phoneNumber) return;
 
-    if (!state.arkoseToken) {
+    // Make sure there's no whitespace in the phone number.
+    const phoneNumber = state.phoneNumber.split(" ").join("");
+
+    // Captcha is always needed, except if we're trying
+    // to authenticate on the demonstration account.
+    if (!state.arkoseToken && phoneNumber !== DEMO_PHONE_NUMBER) {
       setState({
         loading: true,
         waitingOnArkose: true
@@ -42,40 +49,53 @@ const LoginView: Component = () => {
     try {
       setState("loading", true);
 
-      // make sure there's no whitespace in the phone number
-      const phoneNumber = state.phoneNumber.split(" ").join("").trim();
-
       if (state.step === "phone") {
-        const requestID = await vonage_request_code({
-          deviceID: state.deviceID,
-          phoneNumber,
-          tokens: [{
-            identifier: VonageRequestCodeTokenIdentifier.ARKOSE,
-            token: state.arkoseToken,
-          }]
-        });
+        let requestID: string;
+
+        if (phoneNumber === DEMO_PHONE_NUMBER) {
+          requestID = "demo";
+        }
+        else {
+          requestID = await vonage_request_code({
+            deviceID: state.deviceID,
+            phoneNumber,
+            tokens: [{
+              identifier: VonageRequestCodeTokenIdentifier.ARKOSE,
+              token: state.arkoseToken,
+            }]
+          });
+        }
 
         setState({ step: "otp", requestID });
       }
       else if (state.step === "otp") {
-        // fun fact: this should match `grant_firebase`'s `access_token` value
-        const token = await vonage_verify_otp({
-          requestID: state.requestID,
-          deviceID: state.deviceID,
-          otp: state.otp.trim()
-        });
+        if (phoneNumber === DEMO_PHONE_NUMBER) {
+          await auth.save({
+            deviceId: state.deviceID,
+            accessToken: DEMO_ACCESS_TOKEN,
+            refreshToken: DEMO_REFRESH_TOKEN(0)
+          });
+        }
+        else {
+          // fun fact: this should match `grant_firebase`'s `access_token` value
+          const token = await vonage_verify_otp({
+            requestID: state.requestID,
+            deviceID: state.deviceID,
+            otp: state.otp.trim()
+          });
 
-        const idToken = await firebase_verify_custom_token(token);
-        const tokens = await grant_firebase({
-          deviceID: state.deviceID,
-          idToken
-        });
+          const idToken = await firebase_verify_custom_token(token);
+          const tokens = await grant_firebase({
+            deviceID: state.deviceID,
+            idToken
+          });
 
-        await auth.save({
-          deviceId: state.deviceID,
-          accessToken: tokens.access_token,
-          refreshToken: tokens.refresh_token
-        });
+          await auth.save({
+            deviceId: state.deviceID,
+            accessToken: tokens.access_token,
+            refreshToken: tokens.refresh_token
+          });
+        }
 
         navigate("/feed");
       }
@@ -102,7 +122,7 @@ const LoginView: Component = () => {
               });
             }}
           >
-            {"<"}
+            <MdiChevronLeft class="text-xl" />
           </button>
         </Show>
 
@@ -170,9 +190,15 @@ const LoginView: Component = () => {
             placeholder="••••••"
           />
 
-          <p class="mt-8 text-sm text-center px-4 text-white/75">
-            Verification code sent to {state.phoneNumber}
-          </p>
+          <Show when={state.phoneNumber !== DEMO_PHONE_NUMBER} fallback={
+            <p class="mt-8 text-sm text-center px-4 text-white/75">
+              You're authenticating on the demonstration account, your OTP code is 123456
+            </p>
+          }>
+            <p class="mt-8 text-sm text-center px-4 text-white/75">
+              Verification code sent to {state.phoneNumber}
+            </p>
+          </Show>
 
           <button type="submit" disabled={state.loading || state.otp.length !== 6}
             class="text-black bg-white rounded-2xl w-full py-3 mt-auto focus:(outline outline-white outline-offset-2) disabled:opacity-30"
