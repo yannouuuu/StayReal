@@ -1,5 +1,5 @@
 import { Component, createEffect, createMemo, createSignal, For, type Setter, Show } from "solid-js";
-import type { PostsOverview } from "~/api/requests/feeds/friends";
+import type { FeedPost, PostsOverview } from "~/api/requests/feeds/friends";
 import createEmblaCarousel from 'embla-carousel-solid'
 import MdiDotsVertical from '~icons/mdi/dots-vertical';
 import MdiRepost from '~icons/mdi/repost';
@@ -31,7 +31,7 @@ const FeedFriendsOverview: Component<{
   );
 
   const [activeIndex, setActiveIndex] = createSignal(props.overview.posts.length - 1);
-  const activePost = () => props.overview.posts[activeIndex()];
+  const activePost = (): FeedPost | undefined => props.overview.posts[activeIndex()];
 
   const setActiveNode = (api: EmblaCarouselType): void => {
     setActiveIndex(api.selectedScrollSnap());
@@ -50,18 +50,21 @@ const FeedFriendsOverview: Component<{
   });
 
   // show up to 2 comments as a sample
-  const commentsSample = () => activePost().comments.slice(0, 2);
+  const commentsSample = () => activePost()?.comments.slice(0, 2) ?? [];
 
   const lateDuration = createMemo(() => {
-    if (activePost().lateInSeconds > 0) {
-      const duration = Duration.fromObject({ seconds: activePost().lateInSeconds });
+    const post = activePost();
+    if (!post) return "";
+
+    if (post.lateInSeconds > 0) {
+      const duration = Duration.fromObject({ seconds: post.lateInSeconds });
       return duration.rescale().toHuman({ unitDisplay: "short" });
     }
 
     return "";
   });
 
-  const activePostDate = () => new Date(activePost().postedAt);
+  const activePostDate = (): Date => activePost() ? new Date(activePost()!.postedAt) : new Date();
 
   const [comment, setComment] = createSignal("");
   const handlePostComment = async (event: SubmitEvent) => {
@@ -70,7 +73,7 @@ const FeedFriendsOverview: Component<{
     const content = comment().trim();
     if (!content) return;
 
-    await content_posts_comment(activePost().id, props.overview.user.id, content);
+    await content_posts_comment(activePost()!.id, props.overview.user.id, content);
     await feed.refetch();
   };
 
@@ -94,9 +97,9 @@ const FeedFriendsOverview: Component<{
           <p class="font-600 w-fit">
             {props.overview.user.username}
           </p>
-          <Show when={activePost().origin === "repost"}>
+          <Show when={activePost()?.origin === "repost"}>
             <p class="w-fit text-white/80 flex items-center gap-1 bg-white/20 pl-2 pr-2.5 rounded-full text-xs">
-              <MdiRepost /> {activePost().parentPostUsername}
+              <MdiRepost /> {activePost()!.parentPostUsername}
             </p>
           </Show>
         </div>
@@ -110,12 +113,12 @@ const FeedFriendsOverview: Component<{
           <DropdownMenu.Portal>
             <DropdownMenu.Content class="min-w-[220px] p-2 bg-[#080808] rounded-xl outline-none border border-white/8 transform-origin-[var(--kb-menu-content-transform-origin)]">
               <DropdownMenu.Item class="cursor-pointer rounded-lg py-1.5 px-4 hover:bg-white/8 text-white/80 hover:text-white"
-                onSelect={() => open(activePost().primary.url)}
+                onSelect={() => open(activePost()!.primary.url)}
               >
                 Open main image URL
               </DropdownMenu.Item>
               <DropdownMenu.Item class="cursor-pointer rounded-lg py-1.5 px-4 hover:bg-white/8 text-white/80 hover:text-white"
-                onSelect={() => open(activePost().secondary.url)}
+                onSelect={() => open(activePost()!.secondary.url)}
               >
                 Open secondary image URL
               </DropdownMenu.Item>
@@ -140,7 +143,7 @@ const FeedFriendsOverview: Component<{
                 {lateDuration() ? `Late of ${lateDuration()}` : "Just in time !"}
               </p>
             </div>
-            <Show when={activePost().location}>
+            <Show when={activePost()?.location}>
               {location => (
                 <div class="flex items-center gap-1 text-white/60">
                   <p class="text-sm flex items-center gap-1">
@@ -189,7 +192,7 @@ const FeedFriendsOverview: Component<{
 
       <div class="px-6 pt-4 mb-2">
         <p class="text-left">
-          {activePost().caption}
+          {activePost()?.caption}
         </p>
 
         <div class="text-sm font-300">
