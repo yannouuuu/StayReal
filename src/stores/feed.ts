@@ -1,5 +1,6 @@
 import { createRoot, createSignal } from "solid-js";
 import { feeds_friends, type FeedsFriends } from "~/api/requests/feeds/friends";
+import auth from "./auth";
 
 export default createRoot(() => {
   const STORAGE_KEY = "feeds_friends";
@@ -9,7 +10,8 @@ export default createRoot(() => {
   const refetch = () => feeds_friends().then(set);
 
   const set = (value: FeedsFriends): void => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+    // We don't want to preserve the data in demo mode.
+    if (!auth.isDemo()) localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
     _set(value);
   };
 

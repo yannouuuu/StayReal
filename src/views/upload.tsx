@@ -2,6 +2,7 @@ import { type Component, createSignal, Show } from "solid-js";
 import { content_posts_create, content_posts_upload_url, upload_content } from "../api/requests/content/posts/upload";
 import { createMediaPermissionRequest, createStream } from "@solid-primitives/stream";
 import { useNavigate } from "@solidjs/router";
+import auth from "~/stores/auth";
 
 const UploadView: Component = () => {
   createMediaPermissionRequest();
@@ -118,42 +119,48 @@ const UploadView: Component = () => {
     try {
       setLoading(true);
 
-      // get the signed URLs for uploading the images
-      const { data: [back, front] } = await content_posts_upload_url();
+      if (auth.isDemo()) {
+        const { DEMO_CONTENT_POSTS_UPLOAD } = await import("~/api/demo/content/posts/upload");
+        await DEMO_CONTENT_POSTS_UPLOAD(frontImage()!, backImage()!, new Date());
+      }
+      else {
+        // get the signed URLs for uploading the images
+        const { data: [back, front] } = await content_posts_upload_url();
 
-      // upload the images
-      await Promise.all([
-        upload_content(back.url, back.headers, backImage()!),
-        upload_content(front.url, front.headers, frontImage()!)
-      ]);
+        // upload the images
+        await Promise.all([
+          upload_content(back.url, back.headers, backImage()!),
+          upload_content(front.url, front.headers, frontImage()!)
+        ]);
 
-      // create the post with the uploaded images
-      await content_posts_create({
-        // NOTE: always `false` when it's not the primary post...
-        isLate: false,
+        // create the post with the uploaded images
+        await content_posts_create({
+          // NOTE: always `false` when it's not the primary post...
+          isLate: false,
 
-        backCameraWidth: 1500,
-        backCameraHeight: 2000,
-        backCameraPath: back.path,
+          backCameraWidth: 1500,
+          backCameraHeight: 2000,
+          backCameraPath: back.path,
 
-        frontCameraWidth: 1500,
-        frontCameraHeight: 2000,
-        frontCameraPath: front.path,
+          frontCameraWidth: 1500,
+          frontCameraHeight: 2000,
+          frontCameraPath: front.path,
 
-        bucketName: front.bucket, // or back.bucket, they are the same
-        takenAt: new Date(),
+          bucketName: front.bucket, // or back.bucket, they are the same
+          takenAt: new Date(),
 
-        // TODO: probably increment each time you hit the "cancel" button
-        retakeCounter: 0,
+          // TODO: probably increment each time you hit the "cancel" button
+          retakeCounter: 0,
 
-        // TODO: geolocation, if available
-        // location: {
-        //   latitude: 45,
-        //   longitude: 1
-        // }
-      });
+          // TODO: geolocation, if available
+          // location: {
+          //   latitude: 45,
+          //   longitude: 1
+          // }
+        });
 
-      // TODO: show an alert or something
+        // TODO: show an alert or something
+      }
 
       // navigate to the feed to see the new post
       navigate("/feed");
