@@ -12,6 +12,10 @@ import Location from "~/components/location";
 import { Duration } from "luxon";
 import { open } from "@tauri-apps/plugin-shell"
 import { DropdownMenu } from "@kobalte/core/dropdown-menu";
+import MdiSend from '~icons/mdi/send'
+import me from "~/stores/me";
+import { content_posts_comment } from "~/api/requests/content/posts/comment";
+import feed from "~/stores/feed";
 
 const FeedFriendsOverview: Component<{
   overview: PostsOverview
@@ -58,6 +62,17 @@ const FeedFriendsOverview: Component<{
   });
 
   const activePostDate = () => new Date(activePost().postedAt);
+
+  const [comment, setComment] = createSignal("");
+  const handlePostComment = async (event: SubmitEvent) => {
+    event.preventDefault();
+
+    const content = comment().trim();
+    if (!content) return;
+
+    await content_posts_comment(activePost().id, props.overview.user.id, content);
+    await feed.refetch();
+  };
 
   return (
     <div>
@@ -194,13 +209,33 @@ const FeedFriendsOverview: Component<{
             )}
           </For>
 
-          {/* TODO */}
-          {/* <div class="opacity-50 flex items-center gap-2 mt-2">
-            <div class="rounded-full w-6 h-6 bg-warmGray shrink-0" />
-            <button type="button" class="w-full text-left">
-              Add a comment...
+          <form onSubmit={handlePostComment} class="flex items-center gap-2 mt-2">
+            <Show when={me.get().profilePicture} fallback={
+              <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                <p class="text-center font-500">{me.get().username[0]}</p>
+              </div>
+            }>
+              {profilePicture => (
+                <img
+                  class="w-6 h-6 rounded-full shrink-0"
+                  src={profilePicture().url}
+                  alt={`Profile picture of ${me.get().username}`}
+                />
+              )}
+            </Show>
+            <input
+              type="text"
+              placeholder="Add a comment..."
+              class="bg-transparent text-white outline-none w-full focus:bg-white/10 py-1 px-2 rounded-lg transition-colors"
+              value={comment()}
+              onInput={event => setComment(event.currentTarget.value)}
+            />
+            <button type="submit" class="bg-white/20 text-white py-1.5 px-2 rounded-lg disabled:bg-white/10 disabled:text-white/50 hover:bg-white/25 focus:bg-white/25 transition-colors"
+              disabled={!comment().trim()}
+            >
+              <MdiSend class="text-xs" />
             </button>
-          </div> */}
+          </form>
         </div>
       </div>
     </div>
