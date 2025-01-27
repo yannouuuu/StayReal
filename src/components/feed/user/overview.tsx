@@ -1,5 +1,5 @@
 import { createEffect, createSignal, For, type Setter, type Component, Show } from "solid-js";
-import type { PostsOverview } from "~/api/requests/feeds/friends";
+import type { FeedPost, PostsOverview } from "~/api/requests/feeds/friends";
 import PostRealMojis from "~/components/feed/realmojis";
 // import { useNavigate } from "@solidjs/router";
 import MdiPlus from '~icons/mdi/plus'
@@ -26,7 +26,7 @@ const FeedUserOverview: Component<{
   // const navigate = useNavigate();
 
   const [activeIndex, setActiveIndex] = createSignal(props.overview.posts.length - 1);
-  const activePost = () => props.overview.posts[activeIndex()];
+  const activePost = (): FeedPost | undefined  => props.overview.posts[activeIndex()];
 
   let tweenNodes: HTMLElement[] = [];
   const setTweenNodes = (api: EmblaCarouselType): void => {
@@ -134,14 +134,20 @@ const FeedUserOverview: Component<{
         </div>
       </div>
 
-      <p class="text-sm text-center w-fit mx-auto">
-        {activePost().caption}
-      </p>
-      <p class="text-sm text-center text-white/50">
-        <time>
-          {new Date(activePost().postedAt).toLocaleString()}
-        </time>
-      </p>
+      <Show when={activePost()}>
+        {post => (
+          <>
+            <p class="text-sm text-center w-fit mx-auto">
+              {post().caption}
+            </p>
+            <p class="text-sm text-center text-white/50">
+              <time>
+                {new Date(post().postedAt).toLocaleString()}
+              </time>
+            </p>
+          </>
+        )}
+      </Show>
     </article>
   );
 };
