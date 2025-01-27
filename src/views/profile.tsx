@@ -1,5 +1,6 @@
 import { For, onMount, Show, type Component } from "solid-js";
 import MdiChevronLeft from '~icons/mdi/chevron-left'
+import MdiCog from '~icons/mdi/cog'
 import me from "~/stores/me";
 
 const Chip: Component<{ content: string }> = (props) => (
@@ -20,7 +21,7 @@ const ProfileView: Component = () => {
           </a>
 
           <a href="/settings">
-            settings
+            <MdiCog class="text-xl" />
           </a>
         </nav>
       </header>
@@ -43,7 +44,7 @@ const ProfileView: Component = () => {
                     {me().username} ({me().isPrivate ? "PRIVATE" : "PUBLIC"})
                   </p>
                 </div>
-                
+
                 <p>{me().biography}</p>
                 <div class="flex items-center justify-center flex-wrap gap-2">
                   <Chip content={`${me().streakLength} days`} />

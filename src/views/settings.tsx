@@ -1,52 +1,50 @@
-import { createSignal, type Component } from "solid-js";
-import { getAuthDetails } from "@stayreal/api";
+import { JSXElement, type Component } from "solid-js";
 import auth from "../stores/auth";
 import { useNavigate } from "@solidjs/router";
+import MdiChevronLeft from '~icons/mdi/chevron-left'
+import MdiLogout from '~icons/mdi/logout'
+import MdiGithub from '~icons/mdi/github'
+import { open } from "@tauri-apps/plugin-shell";
 
 const Settings: Component = () => {
-  const [output, setOutput] = createSignal("");
   const navigate = useNavigate();
-  const storeAsJSON = () => JSON.stringify({
-    deviceId: auth.store.deviceId,
-    accessToken: auth.store.accessToken,
-    refreshToken: auth.store.refreshToken
-  }, null, 2);
+
+  const Entry: Component<{ title: string, icon: JSXElement, onClick: () => void }> = (props) => (
+    <button
+      type="button"
+      onClick={props.onClick}
+      class="flex items-center justify-between w-full px-4 py-2 bg-white/10 rounded-lg"
+    >
+      <div class="flex items-center gap-4">
+        {props.icon}
+        <p>{props.title}</p>
+      </div>
+    </button>
+  );
+
 
   return (
-    <div class="mt-[env(safe-area-inset-top)] p-4">
-      <div class="flex flex-col gap-2">
-        <button onClick={async () => {
-          const output = await getAuthDetails();
-          setOutput(JSON.stringify(output, null, 2));
-        }}>
-          read native auth details
-        </button>
+    <>
+      <header class="pt-[env(safe-area-inset-top)]">
+        <nav class="flex items-center justify-between px-4 pb-2 pt-4">
+          <a href="/feed">
+            <MdiChevronLeft class="text-xl" />
+          </a>
+        </nav>
+      </header>
 
-        <button onClick={async () => {
-          auth.refresh();
-        }}>
-          make a manual refresh
-        </button>
-
-        <button onClick={async () => {
-          await auth.logout();
-          navigate("/");
-        }}>
-          logout
-        </button>
+      <div class="p-4">
+        <div class="flex flex-col gap-2">
+          <Entry title="Logout" icon={<MdiLogout />} onClick={async () => {
+            await auth.logout();
+            navigate("/");
+          }} />
+          <Entry title="Report an issue on GitHub" icon={<MdiGithub />} onClick={() => {
+            open("https://github.com/Vexcited/StayReal/issues");
+          }} />
+        </div>
       </div>
-
-      <pre>
-currently in the `auth` store:
-{storeAsJSON()}
-      </pre>
-
-      <pre>
-currently stored auth details:
-
-{output() || "click the button above to read the native auth details"}
-      </pre>
-    </div>
+    </>
   )
 };
 
