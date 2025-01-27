@@ -9,8 +9,11 @@ import feed from "~/stores/feed";
 import FeedUserOverview from "../components/feed/user/overview";
 import PullableScreen from "../components/pullable-screen";
 import { tryToStartNotificationService } from "../utils/notification-service";
+import { ProfileInexistentError } from "~/api/requests/person/me";
+import { useNavigate } from "@solidjs/router";
 
 const FeedView: Component = () => {
+  const navigate = useNavigate();
   const [moment, setMoment] = createSignal<Moment>();
   const [isScrolling, setIsScrolling] = createSignal(false);
 
@@ -21,7 +24,15 @@ const FeedView: Component = () => {
 
       await me.refetch();
       await Promise.all([feed.refetch(), fetchLastMoment().then(setMoment)]);
-    } finally {
+    }
+    catch (error) {
+      if (error instanceof ProfileInexistentError) {
+        navigate("/create-profile");
+      }
+      // TODO: handle those by showing something in the UI
+      else throw error;
+    }
+    finally {
       setIsRefreshing(false);
     }
   };

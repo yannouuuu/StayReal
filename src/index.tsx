@@ -23,6 +23,10 @@ const routes = [
     component: lazy(() => import("~/views/login"))
   },
   {
+    path: "/create-profile",
+    component: lazy(() => import("~/views/create-profile"))
+  },
+  {
     path: "/profile",
     component: lazy(() => import("~/views/profile"))
   },
