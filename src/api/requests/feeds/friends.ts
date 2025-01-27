@@ -1,7 +1,7 @@
 import { fetch } from "@tauri-apps/plugin-http";
-import auth from "../../../stores/auth"
-import { BEREAL_DEFAULT_HEADERS } from "../../constants";
-import { ApiMedia } from "../../types/media";
+import auth from "~/stores/auth"
+import { BEREAL_DEFAULT_HEADERS } from "~/api/constants";
+import type { ApiMedia } from "~/api/types/media";
 
 export interface FeedPost {
   id: string
@@ -159,6 +159,11 @@ export interface FeedsFriends {
 }
 
 export const feeds_friends = async (): Promise<FeedsFriends> => {
+  if (auth.isDemo()) {
+    const { DEMO_FEEDS_FRIENDS } = await import("~/api/demo/feeds/friends");
+    return DEMO_FEEDS_FRIENDS();
+  }
+
   const response = await fetch("https://mobile-l7.bereal.com/api/feeds/friends-v1", {
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),

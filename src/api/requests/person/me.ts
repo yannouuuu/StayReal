@@ -63,6 +63,12 @@ export interface PersonMe {
  * case you should do the onboarding process.
  */
 export const person_me = async (): Promise<PersonMe> => {
+  if (auth.isDemo()) {
+    const { DEMO_PERSON_ME } = await import("~/api/demo/person/me");
+    await setRegion(DEMO_PERSON_ME.region);
+    return DEMO_PERSON_ME;
+  }
+
   const response = await fetch("https://mobile-l7.bereal.com/api/person/me", {
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),
