@@ -17,6 +17,11 @@ export type CommentPost = {
 }
 
 export const content_posts_comment = async (postId: string, postUserId: string, content: string): Promise<CommentPost> => {
+  if (auth.isDemo()) {
+    const { DEMO_CONTENT_POSTS_COMMENT } = await import("~/api/demo/content/posts/comment");
+    return DEMO_CONTENT_POSTS_COMMENT(postId, postUserId, content);
+  }
+
   const response = await fetch(`https://mobile-l7.bereal.com/api/content/comments?postId=${postId}&postUserId=${postUserId}`, {
     method: "POST",
     headers: {

@@ -16,6 +16,11 @@ export interface RelationshipsFriends {
 }
 
 export const relationships_friends = async (): Promise<RelationshipsFriends> => {
+  if (auth.isDemo()) {
+    const { DEMO_RELATIONSHIPS_FRIENDS_LIST } = await import("~/api/demo/relationships/friends/list");
+    return DEMO_RELATIONSHIPS_FRIENDS_LIST;
+  }
+
   const response = await fetch("https://mobile-l7.bereal.com/api/relationships/friends", {
     headers: {
       ...BEREAL_DEFAULT_HEADERS(auth.store.deviceId),

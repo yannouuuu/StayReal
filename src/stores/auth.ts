@@ -2,6 +2,9 @@ import { createRoot, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { refreshToken, getAuthDetails, type AuthDetails, setAuthDetails, clearAuthDetails } from "@stayreal/api";
 import { wait } from "../utils/wait";
+import feed from "./feed";
+import me from "./me";
+import { DEMO_ACCESS_TOKEN, DEMO_REFRESH_TOKEN } from "~/utils/demo";
 
 export default createRoot(() => {
   const [store, setStore] = createStore<{ loading: boolean } & AuthDetails>({
@@ -13,9 +16,17 @@ export default createRoot(() => {
 
   const refresh = async (retry = 0): Promise<void> => {
     try {
-      await refreshToken(); // refresh it natively
-      const mutation = await getAuthDetails();
-      setStore({ ...mutation });
+      if (isDemo()) {
+        setStore({
+          accessToken: DEMO_ACCESS_TOKEN,
+          refreshToken: DEMO_REFRESH_TOKEN(store.refreshToken) // should increase of 1
+        });
+      }
+      else {
+        await refreshToken(); // refresh it natively
+        const mutation = await getAuthDetails();
+        setStore({ ...mutation });
+      }
     }
     catch (error) {
       // we might be limited by the API sometimes, we receive a 400 error
@@ -38,7 +49,7 @@ export default createRoot(() => {
     setStore(mutation);
   };
 
-  const logout = async () => {
+  const clear = async () => {
     await clearAuthDetails();
     setStore({
       loading: false,
@@ -47,6 +58,14 @@ export default createRoot(() => {
       refreshToken: "",
     });
   }
+
+  const logout = async () => {
+    me.clear();
+    feed.clear();
+    await clear();
+  };
+
+  const isDemo = () => store.accessToken === DEMO_ACCESS_TOKEN;
 
   onMount(async () => {
     try {
@@ -61,5 +80,5 @@ export default createRoot(() => {
     }
   });
 
-  return { store, save, refresh, logout };
+  return { store, save, refresh, logout, isDemo };
 });

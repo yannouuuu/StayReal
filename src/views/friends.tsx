@@ -66,7 +66,7 @@ const FriendsView: Component = () => {
           </div>
         </div>
 
-        <div class="fixed bottom-8 left-4 right-4 z-50">
+        {/* <div class="fixed bottom-8 left-4 right-4 z-50">
           <div
             class="bg-[#1a1a1a]/80 rounded-full p-0.75 flex items-center justify-between shadow-lg shadow-black/20"
             classList={{
@@ -95,11 +95,11 @@ const FriendsView: Component = () => {
               )}
             </For>
           </div>
-        </div>
+        </div> */}
 
         <div class="px-4 mb-6 cursor-pointer focus:scale-[0.98] active:scale-95 transition-transform">
           <div class="relative bg-[#121212] rounded-2xl p-3.5 overflow-hidden">
-            <Show when={me.get()?.profilePicture}>
+            <Show when={me.get()!.profilePicture}>
               {(profilePicture) => (
                 <div
                   class="absolute inset-0 opacity-30 bg-cover bg-center scale-120"
@@ -114,29 +114,23 @@ const FriendsView: Component = () => {
             <div
               class="relative flex items-center justify-between cursor-pointer"
               onClick={async () => {
-                const shareUrl = `bere.al/${me.get()?.username}`;
+                const shareUrl = `https://bere.al/${me.get()!.username}`;
                 await navigator.clipboard.writeText(shareUrl);
 
-                if (navigator.share) {
-                  try {
-                    await navigator.share({
-                      title: "Join me on BeReal.",
-                      text: "Add me on BeReal.!",
-                      url: shareUrl,
-                    });
-                  } catch (err) {
-                    console.log("Share failed");
-                  }
-                }
+                await navigator.share({
+                  title: "Join me on BeReal.",
+                  text: "Add me on BeReal.!",
+                  url: shareUrl,
+                }).catch(() => void 0);
               }}
             >
               <div class="flex items-center gap-4">
                 <Show
-                  when={me.get()?.profilePicture}
+                  when={me.get()!.profilePicture}
                   fallback={
                     <div class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center flex-shrink">
                       <p class="text-white/90">
-                        {me.get()?.username[0] || "?"}
+                        {me.get()!.username[0]}
                       </p>
                     </div>
                   }
@@ -145,7 +139,7 @@ const FriendsView: Component = () => {
                     <img
                       class="w-11 h-11 rounded-full"
                       src={profilePicture().url}
-                      alt={me.get()?.username}
+                      alt={me.get()!.username}
                     />
                   )}
                 </Show>
@@ -154,7 +148,7 @@ const FriendsView: Component = () => {
                     Invite friends on BeReal.
                   </p>
                   <p class="text-sm text-white/50">
-                    bere.al/{me.get()?.username}
+                    bere.al/{me.get()!.username}
                   </p>
                 </div>
               </div>

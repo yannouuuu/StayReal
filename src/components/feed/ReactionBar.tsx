@@ -11,7 +11,7 @@ const ReactionBar: Component<{
   const [loading, setLoading] = createSignal(false);
 
   const currentReaction = createMemo(() => {
-    const reaction = props.post.realMojis.find(r => r.user.id === me.get().id);
+    const reaction = props.post.realMojis.find(r => r.user.id === me.get()?.id);
     return reaction ?? null;
   });
 
@@ -43,7 +43,9 @@ const ReactionBar: Component<{
         "animate-pulse": loading(),
       }}
     >
-      <For each={me.get().realmojis}>
+      <For each={me.get()?.realmojis ?? []} fallback={
+        <p>You have no realmojis configured.</p>
+      }>
         {(realmoji) => (
           <button type="button" class="relative" onClick={() => react(realmoji.emoji)}>
             <p class="absolute bottom-0 right-0 text-sm z-40"

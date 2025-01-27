@@ -26,15 +26,27 @@ const ProfileView: Component = () => {
         </nav>
       </header>
 
-      <main class="pt-16 space-y-8 mt-[env(safe-area-inset-top)]">
+      <main class="pt-16 px-6 space-y-8 mt-[env(safe-area-inset-top)]">
         <Show when={me.get()} fallback={<p>Loading your profile...</p>}>
           {me => (
             <>
               <div class="flex flex-col items-center text-center gap-4">
-                <img
-                  class="rounded-full h-42 w-42" src={me().profilePicture?.url}
-                  alt={me().username}
-                />
+                <Show
+                  when={me().profilePicture}
+                  fallback={
+                    <div class="h-42 w-42 rounded-full bg-white/10 flex items-center justify-center flex-shrink">
+                      <p class="text-white/90 text-4xl">{me().username[0]}</p>
+                    </div>
+                  }
+                >
+                  {(profilePicture) => (
+                    <img
+                      class="h-42 w-42 rounded-full"
+                      src={profilePicture().url}
+                      alt={me().username}
+                    />
+                  )}
+                </Show>
 
                 <div class="flex flex-col">
                   <h1 class="text-2xl font-700 line-height-none">

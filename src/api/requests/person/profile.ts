@@ -1,7 +1,7 @@
-import { BEREAL_DEFAULT_HEADERS } from "../../constants";
+import { BEREAL_DEFAULT_HEADERS } from "~/api/constants";
 import { fetch } from "@tauri-apps/plugin-http";
-import { ApiMedia } from "../../types/media";
-import auth from "../../../stores/auth";
+import { ApiMedia } from "~/api/types/media";
+import auth from "~/stores/auth";
 
 export interface PersonProfile {
   id: string
