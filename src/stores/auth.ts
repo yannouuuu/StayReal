@@ -2,6 +2,8 @@ import { createRoot, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { refreshToken, getAuthDetails, type AuthDetails, setAuthDetails, clearAuthDetails } from "@stayreal/api";
 import { wait } from "../utils/wait";
+import feed from "./feed";
+import me from "./me";
 
 export default createRoot(() => {
   const [store, setStore] = createStore<{ loading: boolean } & AuthDetails>({
@@ -38,7 +40,7 @@ export default createRoot(() => {
     setStore(mutation);
   };
 
-  const logout = async () => {
+  const clear = async () => {
     await clearAuthDetails();
     setStore({
       loading: false,
@@ -46,6 +48,12 @@ export default createRoot(() => {
       accessToken: "",
       refreshToken: "",
     });
+  }
+
+  const logout = async () => {
+    feed.clear();
+    me.clear();
+    await clear();
   }
 
   onMount(async () => {

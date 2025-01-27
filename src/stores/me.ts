@@ -9,13 +9,18 @@ export default createRoot(() => {
   const STORAGE_KEY = "person_me";
   const INITIAL_DATA = localStorage.getItem(STORAGE_KEY);
 
-  const [get, _set] = createSignal<PersonMe>(INITIAL_DATA && JSON.parse(INITIAL_DATA));
+  const [get, _set] = createSignal(INITIAL_DATA ? <PersonMe>JSON.parse(INITIAL_DATA) : null);
   const refetch = () => person_me().then(set);
 
   const set = (value: PersonMe): void => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
     _set(value);
-  }
+  };
 
-  return { get, set, refetch };
+  const clear = (): void => {
+    localStorage.removeItem(STORAGE_KEY);
+    _set(null);
+  };
+
+  return { get, set, clear, refetch };
 });
