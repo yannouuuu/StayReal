@@ -1,5 +1,6 @@
 import { onMount, createSignal, type Component, onCleanup, Show } from "solid-js";
 import { Portal } from "solid-js/web";
+import { message } from "@tauri-apps/plugin-dialog";
 
 const Arkose: Component<{
   key: string
@@ -77,8 +78,9 @@ const Arkose: Component<{
       case "error":
       case "failed":
       case "js:error":
-        alert("Uh oh, something went wrong. Please try again.");
-        console.error(data.response);
+        message("Uh oh, something went wrong, please try again. If the issue persists, please open an issue on GitHub.", {
+          kind: "error"
+        });
         break;
       case "completed":
         props.onVerify(data.response.token);
