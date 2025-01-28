@@ -3,7 +3,7 @@ import me from "~/stores/me";
 import MdiPeople from "~icons/mdi/people";
 import MdiRefresh from "~icons/mdi/refresh";
 import FeedFriendsOverview from "../components/feed/friends/overview";
-
+import { ask } from "@tauri-apps/plugin-dialog";
 import { fetchLastMoment, type Moment } from "@stayreal/api";
 import feed from "~/stores/feed";
 import FeedUserOverview from "../components/feed/user/overview";
@@ -11,6 +11,8 @@ import PullableScreen from "../components/pullable-screen";
 import { tryToStartNotificationService } from "../utils/notification-service";
 import { ProfileInexistentError } from "~/api/requests/person/me";
 import { useNavigate } from "@solidjs/router";
+import auth from "~/stores/auth";
+import { patchPersonMeCancelDelete } from "~/api/requests/person/me/cancel-delete";
 
 const FeedView: Component = () => {
   const navigate = useNavigate();
@@ -23,6 +25,23 @@ const FeedView: Component = () => {
       setIsRefreshing(true);
 
       await me.refetch();
+      if (me.get()?.accountDeleteScheduledAt) {
+        const answer = await ask(`Your account is scheduled for deletion on ${new Date(me.get()!.accountDeleteScheduledAt!).toLocaleString()}. Deletion is permanent. If you change your mind, tap on Login and Cancel Deletion.`, {
+          kind: "warning",
+          okLabel: "Login and Cancel Deletion",
+          cancelLabel: "Logout",
+        });
+
+        if (!answer) {
+          await auth.logout();
+          navigate("/login");
+        }
+        else {
+          await patchPersonMeCancelDelete();
+          await me.refetch();
+        }
+      }
+
       await Promise.all([feed.refetch(), fetchLastMoment().then(setMoment)]);
     }
     catch (error) {

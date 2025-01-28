@@ -61,6 +61,7 @@ export interface PersonMe {
   customRealmoji: "" // TODO: ??
   gender: "MALE" | "FEMALE" // not sure about the female one
   isPrivate: boolean
+  accountDeleteScheduledAt?: string
 }
 
 /**
