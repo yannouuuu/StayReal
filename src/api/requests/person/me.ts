@@ -11,6 +11,13 @@ export class ProfileInexistentError extends Error {
   }
 }
 
+export class ProfileDeletionAlreadyScheduledError extends Error {
+  constructor() {
+    super("profile is already scheduled for deletion");
+    this.name = "ProfileDeletionAlreadyScheduledError";
+  }
+}
+
 export interface PersonMe {
   id: string
   username: string
@@ -201,6 +208,13 @@ export const deletePersonMe = async (): Promise<DeletePersonMe> => {
   if (response.status === 401) {
     await auth.refresh();
     return deletePersonMe();
+  }
+
+  const json = await response.json();
+
+  // when the account deletion is already scheduled
+  if (response.status === 409 && json.errorKey === "account-deleting-already-in-process") {
+    throw new ProfileDeletionAlreadyScheduledError();
   }
 
   if (response.status !== 200) {

@@ -6,7 +6,7 @@ import MdiLogout from '~icons/mdi/logout'
 import MdiGithub from '~icons/mdi/github'
 import MdiDelete from '~icons/mdi/delete'
 import { open } from "@tauri-apps/plugin-shell";
-import { deletePersonMe } from "~/api/requests/person/me";
+import { deletePersonMe, ProfileDeletionAlreadyScheduledError } from "~/api/requests/person/me";
 import { confirm, message } from '@tauri-apps/plugin-dialog';
 
 const Settings: Component = () => {
@@ -51,10 +51,22 @@ const Settings: Component = () => {
 
             if (!confirmation) return;
 
-            const deletion = await deletePersonMe();
-            await auth.logout();
+            try {
+              const deletion = await deletePersonMe();
+              await message(`Your account has been scheduled for deletion: ${new Date(deletion.accountDeleteScheduledAt).toLocaleString()}`);
+            }
+            catch (error) {
+              if (error instanceof ProfileDeletionAlreadyScheduledError) {
+                await message("Your account is already scheduled for deletion", { kind: 'warning' });
+                navigate("/");
+              }
+              else {
+                await message("Failed to delete your account, please try again later", { kind: 'error' });
+                return;
+              }
+            }
 
-            await message(`Your account has been scheduled for deletion: ${new Date(deletion.accountDeleteScheduledAt).toLocaleString()}`);
+            await auth.logout();
             navigate("/");
           }} />
         </div>
