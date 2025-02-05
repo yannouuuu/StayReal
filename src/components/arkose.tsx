@@ -4,6 +4,7 @@ import { message } from "@tauri-apps/plugin-dialog";
 
 const Arkose: Component<{
   key: string
+  dataExchange: string
   onVerify: (token?: string) => void
 }> = (props) => {
   const html = () => `
@@ -31,7 +32,7 @@ const Arkose: Component<{
         selector: '#challenge',
         publicKey: ${JSON.stringify(props.key)},
         mode: 'inline',
-        data: { blob: "" },
+        data: { blob: ${JSON.stringify(props.dataExchange)} },
         language: '',
         isSDK: true,
         accessibilitySettings: {

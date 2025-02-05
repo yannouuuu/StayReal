@@ -13,6 +13,7 @@ import Arkose from "~/components/arkose";
 import auth from "~/stores/auth";
 import { DEMO_ACCESS_TOKEN, DEMO_PHONE_NUMBER, DEMO_REFRESH_TOKEN } from "~/utils/demo";
 import MdiChevronLeft from '~icons/mdi/chevron-left'
+import { postVonageDataExchange } from "~/api/requests/auth/vonage/data-exchange";
 
 const LoginView: Component = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const LoginView: Component = () => {
 
     phoneNumber: "",
     arkoseToken: "",
+    arkoseDataExchange: "",
     requestID: "",
     otp: "",
   })
@@ -38,9 +40,15 @@ const LoginView: Component = () => {
     // Captcha is always needed, except if we're trying
     // to authenticate on the demonstration account.
     if (!state.arkoseToken && phoneNumber !== DEMO_PHONE_NUMBER) {
+      const dataExchange = await postVonageDataExchange({
+        deviceID: state.deviceID,
+        phoneNumber,
+      })
+
       setState({
         loading: true,
-        waitingOnArkose: true
+        waitingOnArkose: true,
+        arkoseDataExchange: dataExchange,
       });
 
       return;
@@ -146,6 +154,7 @@ const LoginView: Component = () => {
           <Show when={state.waitingOnArkose}>
             <Arkose
               key={BEREAL_ARKOSE_PUBLIC_KEY}
+              dataExchange={state.arkoseDataExchange}
               onVerify={(token) => {
                 if (token) {
                   setState({
