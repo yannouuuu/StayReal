@@ -43,10 +43,11 @@ export const upload_content = async (url: string, headers: Record<string, string
 export const content_posts_create = async (inputs: {
   isLate: boolean
   retakeCounter: number
-  bucketName: string,
+  frontBucketName: string,
   frontCameraPath: string
   frontCameraHeight: number
   frontCameraWidth: number,
+  backBucketName: string,
   backCameraPath: string
   backCameraHeight: number
   backCameraWidth: number,
@@ -63,7 +64,7 @@ export const content_posts_create = async (inputs: {
     body: JSON.stringify({
       visibility: ["friends"],
       frontCamera: {
-        bucket: inputs.bucketName,
+        bucket: inputs.frontBucketName,
         path: inputs.frontCameraPath,
         height: inputs.frontCameraHeight,
         width: inputs.frontCameraWidth,
@@ -74,7 +75,7 @@ export const content_posts_create = async (inputs: {
       retakeCounter: inputs.retakeCounter,
       location: inputs.location || null,
       backCamera: {
-        bucket: inputs.bucketName,
+        bucket: inputs.backBucketName,
         path: inputs.backCameraPath,
         height: inputs.backCameraHeight,
         width: inputs.backCameraWidth,
