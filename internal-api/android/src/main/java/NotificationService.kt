@@ -31,8 +31,14 @@ class NotificationService : Service() {
   private val cache = Cache(this)
   private val handler = Handler(Looper.getMainLooper())
   private val interval: Long = 5000 // 5 seconds
+  private var isServiceStarted = false
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    if (isServiceStarted) {
+      return START_STICKY
+    }
+
+    isServiceStarted = true
     startForegroundService()
     handler.post(runnableCode)
     return START_STICKY
@@ -44,18 +50,18 @@ class NotificationService : Service() {
       val channel =
               NotificationChannel(
                       channelId,
-                      "BeReal Moments (Service)",
+                      "Moments (Service)",
                       NotificationManager.IMPORTANCE_DEFAULT
               )
 
       val manager = getSystemService(NotificationManager::class.java)
-      manager.createNotificationChannel(channel)
+      manager?.createNotificationChannel(channel)
     }
 
     try {
       val notification =
               NotificationCompat.Builder(this, channelId)
-                      .setContentTitle("Listening to BeReal events")
+                      .setContentTitle("Listening to events")
                       .setContentText("Read the FAQ to learn more about this.")
                       .setSmallIcon(R.drawable.ic_stayreal)
                       .setOngoing(true)
@@ -74,6 +80,7 @@ class NotificationService : Service() {
     } catch (e: Exception) {
       Log.d("NotificationService", "Failed to start foreground service, see the stack trace below.")
       e.printStackTrace()
+      stopSelf()
     }
   }
 
@@ -110,7 +117,7 @@ class NotificationService : Service() {
     val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val channelId = "moments"
-    val channelName = "BeReal Moments"
+    val channelName = "Moments"
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       val notificationChannel =
@@ -144,5 +151,6 @@ class NotificationService : Service() {
   override fun onDestroy() {
     super.onDestroy()
     handler.removeCallbacks(runnableCode)
+    isServiceStarted = false
   }
 }
