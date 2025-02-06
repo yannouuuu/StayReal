@@ -8,6 +8,8 @@ const COMMANDS: &[&str] = &[
   "is_permission_granted",
   "request_permission",
   "start_notification_service",
+  "convert_jpeg_to_webp",
+  "compress_webp_to_size",
 ];
 
 fn main() {

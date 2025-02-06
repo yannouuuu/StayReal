@@ -1,4 +1,7 @@
 use crate::{models::*, InternalApi, InternalApiExtension};
+use caesium::{
+  compress_to_size_in_memory, convert_in_memory, parameters::CSParameters, SupportedFileTypes,
+};
 use tauri::{command, plugin::PermissionState, AppHandle, Runtime, State};
 
 #[command]
@@ -61,4 +64,28 @@ pub(crate) async fn request_permission<R: Runtime>(
 #[command]
 pub(crate) async fn start_notification_service<R: Runtime>(app: AppHandle<R>) -> crate::Result<()> {
   app.api().start_notification_service()
+}
+
+#[command]
+pub(crate) async fn convert_jpeg_to_webp<R: Runtime>(
+  _app: AppHandle<R>,
+  payload: ConvertJpegToWebpArgs,
+) -> crate::Result<Vec<u8>> {
+  let parameters = CSParameters::new();
+  let webp = convert_in_memory(payload.jpeg, &parameters, SupportedFileTypes::WebP)?;
+
+  Ok(webp)
+}
+
+#[command]
+pub(crate) async fn compress_webp_to_size<R: Runtime>(
+  _app: AppHandle<R>,
+  payload: CompressWebpToSizeArgs,
+) -> crate::Result<Vec<u8>> {
+  let mut parameters = CSParameters::new();
+
+  let compressed =
+    compress_to_size_in_memory(payload.webp, &mut parameters, payload.max_size, true)?;
+
+  Ok(compressed)
 }

@@ -11,6 +11,8 @@ Default permissions for the plugin
 - `allow-request-permission`
 - `allow-is-permission-granted`
 - `allow-start-notification-service`
+- `allow-compress-webp-to-size`
+- `allow-convert-jpeg-to-webp`
 
 ## Permission Table
 
@@ -43,6 +45,58 @@ Enables the clear_auth_details command without any pre-configured scope.
 <td>
 
 Denies the clear_auth_details command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`internal-api:allow-compress-webp-to-size`
+
+</td>
+<td>
+
+Enables the compress_webp_to_size command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`internal-api:deny-compress-webp-to-size`
+
+</td>
+<td>
+
+Denies the compress_webp_to_size command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`internal-api:allow-convert-jpeg-to-webp`
+
+</td>
+<td>
+
+Enables the convert_jpeg_to_webp command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`internal-api:deny-convert-jpeg-to-webp`
+
+</td>
+<td>
+
+Denies the convert_jpeg_to_webp command without any pre-configured scope.
 
 </td>
 </tr>

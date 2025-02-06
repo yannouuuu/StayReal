@@ -305,6 +305,26 @@
           "const": "deny-clear-auth-details"
         },
         {
+          "description": "Enables the compress_webp_to_size command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-compress-webp-to-size"
+        },
+        {
+          "description": "Denies the compress_webp_to_size command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-compress-webp-to-size"
+        },
+        {
+          "description": "Enables the convert_jpeg_to_webp command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-convert-jpeg-to-webp"
+        },
+        {
+          "description": "Denies the convert_jpeg_to_webp command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-convert-jpeg-to-webp"
+        },
+        {
           "description": "Enables the fetch_last_moment command without any pre-configured scope.",
           "type": "string",
           "const": "allow-fetch-last-moment"

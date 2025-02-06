@@ -52,3 +52,19 @@ export async function isPermissionGranted(): Promise<boolean> {
 export async function startNotificationService(): Promise<void> {
   return invoke('plugin:internal-api|start_notification_service')
 }
+
+export async function convertJpegToWebp(jpeg: Uint8Array): Promise<Uint8Array> {
+  const bytes = await invoke<number[]>('plugin:internal-api|convert_jpeg_to_webp', {
+    payload: { jpeg }
+  });
+
+  return Uint8Array.from(bytes);
+}
+
+export async function compressWebpToSize(webp: Uint8Array, maxSize: number): Promise<Uint8Array> {
+  const bytes = await invoke<number[]>('plugin:internal-api|compress_webp_to_size', {
+    payload: { webp, maxSize }
+  });
+
+  return Uint8Array.from(bytes);
+}

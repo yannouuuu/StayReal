@@ -28,3 +28,16 @@ pub struct Moment {
   pub start_date: String,
   pub end_date: String,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ConvertJpegToWebpArgs {
+  pub jpeg: Vec<u8>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CompressWebpToSizeArgs {
+  pub webp: Vec<u8>,
+  pub max_size: usize,
+}

@@ -1,8 +1,9 @@
-import { type Component, createSignal, Show } from "solid-js";
+import { batch, type Component, createSignal, Show } from "solid-js";
 import { content_posts_create, content_posts_upload_url, upload_content } from "../api/requests/content/posts/upload";
 import { createMediaPermissionRequest, createStream } from "@solid-primitives/stream";
 import { useNavigate } from "@solidjs/router";
 import auth from "~/stores/auth";
+import { compressWebpToSize, convertJpegToWebp } from "@stayreal/api";
 
 const UploadView: Component = () => {
   createMediaPermissionRequest();
@@ -86,6 +87,8 @@ const UploadView: Component = () => {
   const [frontImage, setFrontImage] = createSignal<File | undefined>(undefined);
   const [backImage, setBackImage] = createSignal<File | undefined>(undefined);
   const [loading, setLoading] = createSignal(false);
+  const [uploading, setUploading] = createSignal(false);
+  const [compressing, setCompressing] = createSignal(false);
 
   /**
    * capture back and front at exact same time.
@@ -95,6 +98,7 @@ const UploadView: Component = () => {
       setLoading(true);
       const inputs: Array<Promise<File | undefined>> = [];
 
+      // No OP function to avoid Promise.all from rejecting
       const no_op = async () => undefined;
 
       if (frontImage() === undefined) {
@@ -117,37 +121,69 @@ const UploadView: Component = () => {
 
   const handleUpload = async () => {
     try {
-      setLoading(true);
+      batch(() => {
+        setLoading(true);
+        setCompressing(true);
+      });
+
+      // Compress and convert images to WebP.
+      const [backWebpImage, frontWebpImage] = await Promise.all([backImage(), frontImage()].map(async (file) => {
+        if (!file) throw new Error("an image is missing");
+
+        // Sending data over Tauri's IPC requires Uint8Array for bytes.
+        const buffer = await file.arrayBuffer();
+        let image = new Uint8Array(buffer);
+
+        // BeReal only supports WebP images so we need conversion.
+        image = await convertJpegToWebp(image);
+
+        // 1MB is the maximum size for the image to be uploaded.
+        const MAX_SIZE = 1000000;
+
+        if (image.byteLength > MAX_SIZE) {
+          image = await compressWebpToSize(image, MAX_SIZE);
+        }
+
+        const blob = new Blob([image], { type: "image/webp" });
+        file = new File([blob], "image.webp", { type: "image/webp" });
+        return file;
+      }));
+
+      batch(() => {
+        setCompressing(false);
+        setUploading(true);
+      });
 
       if (auth.isDemo()) {
         const { DEMO_CONTENT_POSTS_UPLOAD } = await import("~/api/demo/content/posts/upload");
-        await DEMO_CONTENT_POSTS_UPLOAD(frontImage()!, backImage()!, new Date());
+        await DEMO_CONTENT_POSTS_UPLOAD(frontWebpImage, backWebpImage, new Date());
       }
       else {
-        // get the signed URLs for uploading the images
-        const { data: [back, front] } = await content_posts_upload_url();
+        // Get the signed URLs for uploading the images.
+        const { data: bucket } = await content_posts_upload_url();
 
-        // upload the images
+        // Upload the images to the bucket.
         await Promise.all([
-          upload_content(back.url, back.headers, backImage()!),
-          upload_content(front.url, front.headers, frontImage()!)
+          upload_content(bucket[0].url, bucket[0].headers, backWebpImage),
+          upload_content(bucket[1].url, bucket[1].headers, frontWebpImage)
         ]);
 
-        // create the post with the uploaded images
+        // Create the post with the uploaded images.
         await content_posts_create({
           // NOTE: always `false` when it's not the primary post...
           isLate: false,
+          takenAt: new Date(),
 
           backCameraWidth: 1500,
           backCameraHeight: 2000,
-          backCameraPath: back.path,
+          backCameraPath: bucket[0].path,
+          backBucketName: bucket[0].bucket,
 
           frontCameraWidth: 1500,
           frontCameraHeight: 2000,
-          frontCameraPath: front.path,
+          frontCameraPath: bucket[1].path,
+          frontBucketName: bucket[1].bucket,
 
-          bucketName: front.bucket, // or back.bucket, they are the same
-          takenAt: new Date(),
 
           // TODO: probably increment each time you hit the "cancel" button
           retakeCounter: 0,
@@ -162,69 +198,76 @@ const UploadView: Component = () => {
         // TODO: show an alert or something
       }
 
-      // navigate to the feed to see the new post
+      // Navigate to the feed to see the new post.
       navigate("/feed");
     }
     finally {
-      setLoading(false);
+      batch(() => {
+        setLoading(false);
+        setCompressing(false);
+        setUploading(false);
+      })
     }
   };
 
-  const handleFileSelector = async (type: "front" | "back") => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.onchange = async () => {
-      if (!input.files || input.files.length === 0) return;
-      const file = input.files[0];
+  // const handleFileSelector = async (type: "front" | "back") => {
+  //   const input = document.createElement("input");
+  //   input.type = "file";
+  //   input.accept = "image/*";
+  //   input.onchange = async () => {
+  //     if (!input.files || input.files.length === 0) return;
+  //     const file = input.files[0];
 
-      // we should draw to canvas !
-      const image = new Image();
-      image.src = URL.createObjectURL(file);
+  //     // we should draw to canvas !
+  //     const image = new Image();
+  //     image.src = URL.createObjectURL(file);
 
-      const canvas = (type === "front") ? frontVideoPreview : backVideoPreview;
+  //     const canvas = (type === "front") ? frontVideoPreview : backVideoPreview;
 
-      if (!canvas) {
-        console.error("could not get canvas element");
-        return;
-      }
+  //     if (!canvas) {
+  //       console.error("could not get canvas element");
+  //       return;
+  //     }
 
-      const context = canvas.getContext("2d");
+  //     const context = canvas.getContext("2d");
 
-      if (!context) {
-        console.error("could not get canvas context");
-        return;
-      }
+  //     if (!context) {
+  //       console.error("could not get canvas context");
+  //       return;
+  //     }
 
-      image.onload = async () => {
-        const {
-          drawHeight,
-          drawWidth,
-          offsetX,
-          offsetY
-        } = coverImageForCanvas(image.width, image.height, canvas);
+  //     image.onload = async () => {
+  //       const {
+  //         drawHeight,
+  //         drawWidth,
+  //         offsetX,
+  //         offsetY
+  //       } = coverImageForCanvas(image.width, image.height, canvas);
 
-        context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
-        const blob = await renderToBlob(canvas);
+  //       context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+  //       const blob = await renderToBlob(canvas);
 
-        if (type === "front") setFrontImage(blob);
-        else setBackImage(blob);
-      };
-    };
-    input.click();
-  }
+  //       if (type === "front") setFrontImage(blob);
+  //       else setBackImage(blob);
+  //     };
+  //   };
+  //   input.click();
+  // };
 
   const renderToBlob = async (canvas: HTMLCanvasElement): Promise<File> => {
     const blob = await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob((blob) => {
-        if (!blob) reject(new Error("failed to render image"));
-        else resolve(blob);
-      }, "image/webp", .75);
-      // TODO: compress using rust...
-      // => quality doesn't work on safari
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) reject(new Error("failed to render image"));
+          else resolve(blob);
+        },
+        // We use have to use `image/jpeg` because `image/webp` is not supported in Safari (WebView for macOS/iOS)
+        // https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob#browser_compatibility
+        "image/jpeg"
+      );
     });
 
-    return new File([blob], "image.webp", { type: "image/webp" });
+    return new File([blob], "image.jpeg", { type: "image/jpeg" });
   }
 
   return (
@@ -286,16 +329,16 @@ const UploadView: Component = () => {
         />
       </div>
 
-      <div class="pb-8 pt-4 flex justify-between px-4 items-center">
+      <div class="pb-8 pt-4 flex justify-center px-4 items-center">
         <Show when={!frontImage() || !backImage()}>
-          <div class="flex flex-col gap-2">
+          {/* <div class="flex flex-col gap-2">
             <button type="button" onClick={() => handleFileSelector("front")}>
               select front
             </button>
             <button type="button" onClick={() => handleFileSelector("back")}>
               select back
             </button>
-          </div>
+          </div> */}
 
           <button
             type="button"
@@ -305,20 +348,22 @@ const UploadView: Component = () => {
             onClick={() => handleDualCapture()}
           />
 
-          <select class="h-fit text-white bg-black border border-white">
+          {/* <select class="h-fit text-white bg-black border border-white">
             <option selected>single</option>
             <option>delayed</option>
             <option>manual</option>
-          </select>
-
+          </select> */}
         </Show>
 
         <Show when={frontImage() && backImage()}>
           <button type="button"
+            disabled={loading()}
             onClick={() => handleUpload()}
             class="bg-white text-black font-600 py-3.5 px-8 rounded-2xl mx-auto"
           >
-            Upload a BeReal.
+            {!uploading() && !compressing() && "Upload"}
+            {compressing() && "Compressing..."}
+            {uploading() && "Uploading..."}
           </button>
         </Show>
       </div>

@@ -1,6 +1,6 @@
-use std::path::PathBuf;
-
+use caesium::error::CaesiumError;
 use serde::{ser::Serializer, Serialize};
+use std::path::PathBuf;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -27,6 +27,8 @@ pub enum Error {
   UnsafePathBuf(&'static str),
   #[error("an error occurred while refreshing the token")]
   RefreshTokenError(),
+  #[error(transparent)]
+  Caesium(#[from] CaesiumError),
 }
 
 impl Serialize for Error {
