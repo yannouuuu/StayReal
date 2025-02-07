@@ -321,7 +321,7 @@ jobs:
           export APPLE_API_KEY_PATH=$RUNNER_TEMP/apple-api-key.p8
           pnpm tauri ios build --ci
 
-      - name: (Android) upload .apk
+      - name: (Android) distribute .apk
         if: matrix.os == 'android'
         uses: actions/upload-artifact@v4
         with:
@@ -329,7 +329,7 @@ jobs:
           path: |
             src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
 
-      - name: (iOS) upload .ipa
+      - name: (iOS) distribute .ipa
         if: matrix.os == 'ios'
         uses: actions/upload-artifact@v4
         with:

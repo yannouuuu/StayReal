@@ -5,8 +5,8 @@
   <b>An open-source, lightweight and privacy-focused BeReal alternative client.</b>
 </p>
 <p align="center">
-  <a href="https://github.com/Vexcited/StayReal/actions/workflows/build.yml">
-    <img src="https://github.com/Vexcited/StayReal/actions/workflows/build.yml/badge.svg?branch=main" alt="Build Badge">
+  <a href="https://github.com/Vexcited/StayReal/actions/workflows/nightly.yml">
+    <img src="https://github.com/Vexcited/StayReal/actions/workflows/nightly.yml/badge.svg?branch=main" alt="Nightly Build Badge">
   </a>
   <a href="https://github.com/Vexcited/StayReal/tree/main/LICENSE.md">
     <img src="https://img.shields.io/github/license/Vexcited/StayReal.svg?color=green" alt="License Badge">
@@ -34,25 +34,25 @@
   <tr>
     <td width="30%">
       <div align="center">
-        <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-pc-windows-msvc-msi.zip">&nearr;&nbsp;MSI</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-pc-windows-msvc-nsis.zip">&nearr;&nbsp;NSIS</a>
+        <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-x86_64-pc-windows-msvc-msi.zip">&nearr;&nbsp;MSI</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-x86_64-pc-windows-msvc-nsis.zip">&nearr;&nbsp;NSIS</a>
         <br>
-        <b>aarch64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-aarch64-pc-windows-msvc-nsis.zip">&nearr;&nbsp;NSIS</a>
+        <b>aarch64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-aarch64-pc-windows-msvc-nsis.zip">&nearr;&nbsp;NSIS</a>
       </div>
     </td>
     <td width="30%">
       <div align="center">
-        <b>aarch64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-aarch64-apple-darwin-dmg.zip">&nearr;&nbsp;DMG</a>
+        <b>aarch64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-aarch64-apple-darwin-dmg.zip">&nearr;&nbsp;DMG</a>
         <br>
-        <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-apple-darwin-dmg.zip">&nearr;&nbsp;DMG</a>
+        <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-x86_64-apple-darwin-dmg.zip">&nearr;&nbsp;DMG</a>
       </div>
     </td>
     <td width="40%">
       <div align="center">
-        <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-unknown-linux-gnu-deb.zip">&nearr;&nbsp;DEB</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-unknown-linux-gnu-rpm.zip">&nearr;&nbsp;RPM</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-x86_64-unknown-linux-gnu-appimage.zip">&nearr;&nbsp;AppImage</a>
+        <b>x86_64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-x86_64-unknown-linux-gnu-deb.zip">&nearr;&nbsp;DEB</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-x86_64-unknown-linux-gnu-rpm.zip">&nearr;&nbsp;RPM</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-x86_64-unknown-linux-gnu-appimage.zip">&nearr;&nbsp;AppImage</a>
         <br>
-        <b>aarch64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-aarch64-unknown-linux-gnu-deb.zip">&nearr;&nbsp;DEB</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-aarch64-unknown-linux-gnu-rpm.zip">&nearr;&nbsp;RPM</a>
+        <b>aarch64</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-aarch64-unknown-linux-gnu-deb.zip">&nearr;&nbsp;DEB</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-aarch64-unknown-linux-gnu-rpm.zip">&nearr;&nbsp;RPM</a>
         <br>
-        <b>armv7</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-armv7-unknown-linux-gnueabihf-deb.zip">&nearr;&nbsp;DEB</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-armv7-unknown-linux-gnueabihf-rpm.zip">&nearr;&nbsp;RPM</a>
+        <b>armv7</b> : <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-armv7-unknown-linux-gnueabihf-deb.zip">&nearr;&nbsp;DEB</a>, <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-armv7-unknown-linux-gnueabihf-rpm.zip">&nearr;&nbsp;RPM</a>
       </div>
     </td>
   </tr>
@@ -63,13 +63,13 @@
     <th><br>
       <img src=".github/assets/android.svg" width="20%" align="center" />
       <div>
-        <br><p align="center">Android (<code>.apk</code>)<br><i>These builds ARE signed.</i></p>
+        <br><p align="center">Android (<code>.apk</code>)<br><i>These builds are signed.</i></p>
       </div>
     </th>
     <th><br>
       <img src=".github/assets/apple.svg" width="20%" align="center" />
       <div>
-        <br><p align="center">iOS (<code>.ipa</code>)<br><i>These builds ARE NOT signed, you need to <a href="https://github.com/DanTheMan827/ios-app-signer" target="_blank">sign them yourself</a>.</i></p>
+        <br><p align="center">iOS (<code>.ipa</code>)<br><i>This build is signed.</i></p>
       </div>
     </th>
   </tr>
@@ -77,18 +77,18 @@
   <tr>
     <td width="50%">
       <div align="center">
-        <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-aarch64-apk.zip">&nearr;&nbsp;aarch64</a>
+        <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-android-aarch64-apk.zip">&nearr;&nbsp;aarch64</a>
         <br>
-        <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-x86_64-apk.zip">&nearr;&nbsp;x86_64</a>
+        <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-android-x86_64-apk.zip">&nearr;&nbsp;x86_64</a>
         <br>
-        <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-armv7-apk.zip">&nearr;&nbsp;armv7</a>
+        <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-android-armv7-apk.zip">&nearr;&nbsp;armv7</a>
         <br>
-        <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-android-i686-apk.zip">&nearr;&nbsp;i686</a>
+        <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-android-i686-apk.zip">&nearr;&nbsp;i686</a>
       </div>
     </td>
     <td width="50%">
       <div align="center">
-        <a href="https://nightly.link/Vexcited/StayReal/workflows/build/main/stayreal-ios-aarch64-ipa.zip">&nearr;&nbsp;aarch64</a>
+        <a href="https://nightly.link/Vexcited/StayReal/workflows/nightly/main/stayreal-ios-aarch64-ipa.zip">&nearr;&nbsp;aarch64</a>
       </div>
     </td>
   </tr>
@@ -98,7 +98,7 @@
 
 - [x] Authentication
   - Accounts with parental control are not supported, if you have one, please open an issue so we can work on it.
-- [ ] Account creation (currently WIP)
+- [x] Account creation
 - [ ] My Profile
   - [x] Informations
   - [x] Realmojis
@@ -112,10 +112,10 @@
   - [x] Users
   - [x] Posts
   - [x] Swipper for multiple posts
-  - [ ] Comments
+  - [x] Comments
   - [x] Reactions
 - [x] Post a BeReal
-- [ ] Comment under a post
+- [x] Comment under a post
 - [x] React to a post with your realmojis
 - [ ] Accept a friend request
 - [ ] Friends recommendations
@@ -129,8 +129,8 @@
 Some advanced features that are not in the original application.
 
 - [ ] Light mode
-- [x] Upload from gallery (not only camera)
-- [ ] Manual camera (there is no delay between primary image and secondary image)
+- [ ] Upload from gallery
+- [ ] Manual camera (remove delay between primary image and secondary image, letting you to manually take the secondary image)
 - [x] Cache today's feed data to device `localStorage` (for faster reloading), this is a temporary solution until we implement the task below
 - [ ] Cache data to device local database (for faster reloading and offline access)
 
@@ -141,20 +141,6 @@ Only the necessary data is stored on the device, and the application does not co
 - [x] No tracking
 - [x] No analytics
 - [x] No ads
-
-## FAQ
-
-### Why is there a permanent notification on Android?
-
-The notification is used to keep the notification service running in the background, so you can receive notifications even when the application is closed.
-
-This is a limitation of the Android operating system, and I don't know any way to make this better. If you have any idea, please open an issue or even better, a pull request.
-
-Note that you can hide this specific notification called `BeReal Moments (Service)` in the Android settings, but there's a chance that the service will be killed and you will receive no more notification.
-
-### Why is the application not available on the stores?
-
-I'm currently waiting until StayReal is in a good enough state to publish it.
 
 ## 🛠️ Development
 
