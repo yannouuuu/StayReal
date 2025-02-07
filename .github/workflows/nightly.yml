@@ -1,7 +1,7 @@
 name: nightly build
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.ref }}-nightly
   cancel-in-progress: true
 
 on:

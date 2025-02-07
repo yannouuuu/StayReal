@@ -1,7 +1,7 @@
 name: sync to codeberg
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.ref }}-codeberg
   cancel-in-progress: true
 
 on:
