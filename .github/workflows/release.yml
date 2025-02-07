@@ -1,0 +1,129 @@
+name: mobile build for distribution
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-mobile:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu-22.04
+            os: android
+          - platform: macos-latest
+            os: 'ios'
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: install frontend dependencies
+        run: |
+          pnpm install
+          cd internal-api
+          pnpm install
+          pnpm build
+
+      - name: (Android) install Java
+        if: matrix.os == 'android'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - if: matrix.os == 'android'
+        uses: android-actions/setup-android@v3
+
+      - name: (Android) install NDK
+        if: matrix.os == 'android'
+        run: |
+          echo "y" | sdkmanager --install "ndk;25.2.9519653"
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
+          echo "NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
+
+      - name: (Android) setup signing
+        if: matrix.os == 'android'
+        run: |
+          cd src-tauri/gen/android
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" > keystore.properties
+          echo "password=${{ secrets.ANDROID_KEY_PASSWORD }}" >> keystore.properties
+          base64 -d <<< "${{ secrets.ANDROID_KEY_BASE64 }}" > $RUNNER_TEMP/keystore.jks
+          echo "storeFile=$RUNNER_TEMP/keystore.jks" >> keystore.properties
+
+      - name: (iOS) setup signing
+        if: matrix.os == 'ios'
+        run: |
+          base64 -d <<< "${{ secrets.APPLE_API_KEY_BASE64 }}" > $RUNNER_TEMP/apple-api-key.p8
+
+      - name: (Android) setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        if: matrix.os == 'android'
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      - name: (iOS) setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        if: matrix.os == 'ios'
+        with:
+          targets: aarch64-apple-ios
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            src-tauri -> target
+            internal-api -> target
+          prefix-key: rust-${{ hashFiles('**/Cargo.lock') }}
+          shared-key: ${{ matrix.platform }}-${{ matrix.os }}
+
+      - name: (Android) install dependencies
+        if: matrix.os == 'android'
+        run: |
+          cargo install cargo-ndk
+
+      - name: (Android) build .aab
+        if: matrix.os == 'android'
+        env:
+          NDK_HOME: ${{ env.NDK_HOME }}
+        run: |
+          pnpm tauri android build --aab --ci
+
+      - name: (iOS) build .ipa
+        if: matrix.os == 'ios'
+        env:
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+        run: |
+          export APPLE_API_KEY_PATH=$RUNNER_TEMP/apple-api-key.p8
+          pnpm tauri ios build --ci
+
+      - name: (Android) upload .aab
+        if: matrix.os == 'android'
+        uses: actions/upload-artifact@v4
+        with:
+          name: stayreal-android-aab
+          path: |
+            src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab
+
+      - name: (iOS) upload .ipa
+        if: matrix.os == 'ios'
+        uses: actions/upload-artifact@v4
+        with:
+          name: stayreal-ios-ipa
+          path: |
+            src-tauri/gen/apple/build/arm64/StayReal.ipa
