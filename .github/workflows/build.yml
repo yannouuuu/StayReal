@@ -1,4 +1,4 @@
-name: 'Build Desktop and Mobile'
+name: nightly build
 
 on:
   workflow_dispatch:
@@ -238,11 +238,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - name: setup pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: latest
 
-      - uses: actions/setup-node@v4
+      - name: setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'pnpm'
@@ -280,7 +282,13 @@ jobs:
           base64 -d <<< "${{ secrets.ANDROID_KEY_BASE64 }}" > $RUNNER_TEMP/keystore.jks
           echo "storeFile=$RUNNER_TEMP/keystore.jks" >> keystore.properties
 
-      - uses: dtolnay/rust-toolchain@stable
+      - name: (iOS) setup signing
+        if: matrix.os == 'ios'
+        run: |
+          base64 -d <<< "${{ secrets.APPLE_API_KEY_BASE64 }}" > $RUNNER_TEMP/apple-api-key.p8
+
+      - name: setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target-full }}
 
@@ -297,31 +305,23 @@ jobs:
         run: |
           cargo install cargo-ndk
 
-      - name: (Android) build
+      - name: (Android) build .apk
         if: matrix.os == 'android'
         env:
           NDK_HOME: ${{ env.NDK_HOME }}
         run: |
-          pnpm tauri android build --target ${{ matrix.target-short }} --apk
+          pnpm tauri android build --target ${{ matrix.target-short }} --apk --ci
 
-      - name: (iOS) build
+      - name: (iOS) build .ipa
         if: matrix.os == 'ios'
         env:
-          APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_DEVELOPMENT_TEAM }}
-          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
-          IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
-          IOS_MOBILE_PROVISION: ${{ secrets.IOS_MOBILE_PROVISION }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
         run: |
-          # current workaround for the tauri ios build until we have a real certificate...
-          wget https://github.com/Vexcited/tauri/releases/download/0.0.0/vtauri -O $(pwd)/vtauri
-          chmod +x vtauri
+          export APPLE_API_KEY_PATH=$RUNNER_TEMP/apple-api-key.p8
+          pnpm tauri ios build --ci
 
-          sed -i '' "s|pnpm tauri ios|$(pwd)/vtauri ios|g" $(pwd)/src-tauri/gen/apple/project.yml
-          sed -i '' "s|pnpm tauri ios|$(pwd)/vtauri ios|g" $(pwd)/src-tauri/gen/apple/stayreal.xcodeproj/project.pbxproj
-
-          $(pwd)/vtauri ios build --target ${{ matrix.target-short }} --ci
-
-      - name: (Android) distribute (signed) .apk
+      - name: (Android) upload .apk
         if: matrix.os == 'android'
         uses: actions/upload-artifact@v4
         with:
@@ -329,7 +329,7 @@ jobs:
           path: |
             src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
 
-      - name: (iOS) distribute (unsigned) .ipa
+      - name: (iOS) upload .ipa
         if: matrix.os == 'ios'
         uses: actions/upload-artifact@v4
         with:
