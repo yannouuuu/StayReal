@@ -70,6 +70,9 @@ jobs:
         if: matrix.os == 'ios'
         run: |
           base64 -d <<< "${{ secrets.APPLE_API_KEY_BASE64 }}" > $RUNNER_TEMP/apple-api-key.p8
+          # See <https://tauri.app/distribute/app-store/#authentication>
+          mkdir -p ~/.private_keys/AuthKey
+          cp $RUNNER_TEMP/apple-api-key.p8 ~/.private_keys/AuthKey/_${{ secrets.APPLE_API_KEY }}.p8
 
       - name: (Android) setup Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -110,7 +113,7 @@ jobs:
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
         run: |
           export APPLE_API_KEY_PATH=$RUNNER_TEMP/apple-api-key.p8
-          pnpm tauri ios build --ci
+          pnpm tauri ios build --export-method app-store-connect --ci
 
       - name: (Android) distribute .aab
         if: matrix.os == 'android'
@@ -120,10 +123,22 @@ jobs:
           path: |
             src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab
 
-      - name: (iOS) distribute .ipa
+      - name: (iOS) distribute .ipa to GitHub
         if: matrix.os == 'ios'
         uses: actions/upload-artifact@v4
         with:
           name: stayreal-ios-ipa
           path: |
             src-tauri/gen/apple/build/arm64/StayReal.ipa
+
+      - name: (iOS) distribute .ipa to App Store Connect
+        if: matrix.os == 'ios'
+        env:
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+        run: |
+          xcrun altool --upload-app \
+            --type ios \
+            --file "src-tauri/gen/apple/build/arm64/StayReal.ipa" \
+            --apiKey $APPLE_API_KEY \
+            --apiIssuer $APPLE_API_ISSUER
