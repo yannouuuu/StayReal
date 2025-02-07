@@ -187,7 +187,11 @@ pnpm tauri android build
 pnpm tauri ios build
 ```
 
-If you want to know more about the pipeline used to build the application, you can check the [&nearr;&nbsp;GitHub Actions workflow](./.github/workflows/build.yml).
+If you want to know more about the pipeline used to build the application, you can check the [&nearr;&nbsp;GitHub Actions workflow](.github/workflows/nightly.yml).
+
+### Publication to stores
+
+Every release, publication to stores, is triggered by [`pnpx tauri-version <bump>`](https://github.com/s3xysteak/tauri-version) and the [workflow](.github/workflows/release.yml) is triggered by a tag push.
 
 ## 🙏 Acknowledgments
 
