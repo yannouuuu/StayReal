@@ -8,9 +8,6 @@ Default permissions for the plugin
 - `allow-refresh-token`
 - `allow-set-region`
 - `allow-fetch-last-moment`
-- `allow-request-permission`
-- `allow-is-permission-granted`
-- `allow-start-notification-service`
 - `allow-compress-webp-to-size`
 - `allow-convert-jpeg-to-webp`
 

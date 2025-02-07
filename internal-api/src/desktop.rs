@@ -2,10 +2,7 @@ use std::{collections::HashMap, path::PathBuf};
 
 use reqwest::header::{HeaderMap, HeaderValue};
 use serde::de::DeserializeOwned;
-use tauri::{
-  plugin::{PermissionState, PluginApi},
-  AppHandle, Manager, Runtime,
-};
+use tauri::{plugin::PluginApi, AppHandle, Manager, Runtime};
 
 use base64::{engine::general_purpose::STANDARD as b64, Engine as _};
 use hex::FromHex;
@@ -202,17 +199,5 @@ impl<R: Runtime> InternalApi<R> {
     };
 
     Ok(moment)
-  }
-
-  pub fn request_permission(&self) -> crate::Result<PermissionState> {
-    Ok(PermissionState::Granted)
-  }
-
-  pub fn permission_state(&self) -> crate::Result<PermissionState> {
-    Ok(PermissionState::Granted)
-  }
-
-  pub fn start_notification_service(&self) -> crate::Result<()> {
-    Ok(())
   }
 }

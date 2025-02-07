@@ -120,7 +120,7 @@
 - [ ] Accept a friend request
 - [ ] Friends recommendations
 - [x] Listing of friends
-- [x] Notifications (only for Android)
+- [ ] Notifications (removed, waiting for a proper solution)
 - [ ] Settings
   - [ ] Update region for moments
 

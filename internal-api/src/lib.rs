@@ -40,9 +40,6 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
       commands::refresh_token,
       commands::set_region,
       commands::fetch_last_moment,
-      commands::is_permission_granted,
-      commands::request_permission,
-      commands::start_notification_service,
       commands::convert_jpeg_to_webp,
       commands::compress_webp_to_size
     ])

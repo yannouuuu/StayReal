@@ -8,7 +8,6 @@ import { fetchLastMoment, type Moment } from "@stayreal/api";
 import feed from "~/stores/feed";
 import FeedUserOverview from "../components/feed/user/overview";
 import PullableScreen from "../components/pullable-screen";
-import { tryToStartNotificationService } from "../utils/notification-service";
 import { ProfileInexistentError } from "~/api/requests/person/me";
 import { useNavigate } from "@solidjs/router";
 import auth from "~/stores/auth";
@@ -57,7 +56,8 @@ const FeedView: Component = () => {
   };
 
   onMount(() =>
-    Promise.all([tryToStartNotificationService(), handleRefresh()])
+    handleRefresh()
+    // Promise.all([tryToStartNotificationService(), handleRefresh()])
   );
 
   return (

@@ -41,18 +41,6 @@ export async function fetchLastMoment(): Promise<Moment> {
   return invoke('plugin:internal-api|fetch_last_moment');
 }
 
-export async function requestPermission(): Promise<PermissionState> {
-  return invoke<PermissionState>('plugin:internal-api|request_permission' )
-}
-
-export async function isPermissionGranted(): Promise<boolean> {
-  return invoke('plugin:internal-api|is_permission_granted')
-}
-
-export async function startNotificationService(): Promise<void> {
-  return invoke('plugin:internal-api|start_notification_service')
-}
-
 export async function convertJpegToWebp(jpeg: Uint8Array): Promise<Uint8Array> {
   const bytes = await invoke<number[]>('plugin:internal-api|convert_jpeg_to_webp', {
     payload: { jpeg }

@@ -36,16 +36,7 @@ internal class SetRegionArgs {
 
 val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-const val LOCAL_NOTIFICATIONS = "permissionState"
-
-@TauriPlugin(
-        permissions =
-                [
-                        Permission(
-                                strings = [Manifest.permission.POST_NOTIFICATIONS],
-                                alias = "permissionState"
-                        )]
-)
+@TauriPlugin()
 class ApiPlugin(private val activity: Activity) : Plugin(activity) {
   private val requests = Requests(activity)
   private val cache = Cache(activity)
@@ -121,71 +112,5 @@ class ApiPlugin(private val activity: Activity) : Plugin(activity) {
         with(Dispatchers.Main) { invoke.reject(error.message) }
       }
     }
-  }
-
-  @Command
-  override fun checkPermissions(invoke: Invoke) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-      val permissionsResultJSON = JSObject()
-      permissionsResultJSON.put("permissionState", getPermissionState())
-      invoke.resolve(permissionsResultJSON)
-    } else {
-      super.checkPermissions(invoke)
-    }
-  }
-
-  @Command
-  override fun requestPermissions(invoke: Invoke) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-      permissionState(invoke)
-    } else {
-      if (getPermissionState(LOCAL_NOTIFICATIONS) !== PermissionState.GRANTED) {
-        requestPermissionForAlias(LOCAL_NOTIFICATIONS, invoke, "permissionsCallback")
-      }
-    }
-  }
-
-  @Command
-  fun permissionState(invoke: Invoke) {
-    val permissionsResultJSON = JSObject()
-    permissionsResultJSON.put("permissionState", getPermissionState())
-    invoke.resolve(permissionsResultJSON)
-  }
-
-  @PermissionCallback
-  private fun permissionsCallback(invoke: Invoke) {
-    val permissionsResultJSON = JSObject()
-    permissionsResultJSON.put("permissionState", getPermissionState())
-    invoke.resolve(permissionsResultJSON)
-  }
-
-  private fun getPermissionState(): String {
-    val notificationManager = NotificationManagerCompat.from(activity)
-
-    return if (notificationManager.areNotificationsEnabled()) {
-      "granted"
-    } else {
-      "denied"
-    }
-  }
-
-  @Command
-  fun startNotificationService(invoke: Invoke) {
-    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.POST_NOTIFICATIONS) !=
-                    PackageManager.PERMISSION_GRANTED
-    ) {
-      invoke.reject("notifications permission denied")
-      return
-    }
-
-    val intent = Intent(activity, NotificationService::class.java)
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      activity.startForegroundService(intent)
-    } else {
-      activity.startService(intent)
-    }
-
-    invoke.resolve()
   }
 }
