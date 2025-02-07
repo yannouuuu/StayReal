@@ -4,6 +4,8 @@ import { createMediaPermissionRequest, createStream } from "@solid-primitives/st
 import { useNavigate } from "@solidjs/router";
 import auth from "~/stores/auth";
 import { compressWebpToSize, convertJpegToWebp } from "@stayreal/api";
+import { wait } from "~/utils/wait";
+import MdiChevronLeft from '~icons/mdi/chevron-left'
 
 const UploadView: Component = () => {
   createMediaPermissionRequest();
@@ -12,10 +14,10 @@ const UploadView: Component = () => {
   const [frontStream] = createStream({ video: { facingMode: { exact: "user" }, height: 1000, width: 1500 } });
   const [backStream] = createStream({ video: { facingMode: { exact: "environment" }, height: 1000, width: 1500 } });
 
-  let frontVideo: HTMLVideoElement | undefined;
-  let backVideo: HTMLVideoElement | undefined;
-  let frontVideoPreview: HTMLCanvasElement | undefined;
-  let backVideoPreview: HTMLCanvasElement | undefined;
+  const [frontVideo, setFrontVideo] = createSignal<HTMLVideoElement>();
+  const [backVideo, setBackVideo] = createSignal<HTMLVideoElement>();
+  const [frontVideoPreview, setFrontVideoPreview] = createSignal<HTMLCanvasElement>();
+  const [backVideoPreview, setBackVideoPreview] = createSignal<HTMLCanvasElement>();
 
   const coverImageForCanvas = (width: number, height: number, canvas: HTMLCanvasElement) => {
     const context = canvas.getContext("2d");
@@ -89,35 +91,67 @@ const UploadView: Component = () => {
   const [loading, setLoading] = createSignal(false);
   const [uploading, setUploading] = createSignal(false);
   const [compressing, setCompressing] = createSignal(false);
+  const [reversed, setReversed] = createSignal(false);
 
-  /**
-   * capture back and front at exact same time.
-   */
-  const handleDualCapture = async () => {
+  const isCapturingPrimary = () => frontImage() === undefined && backImage() === undefined;
+
+  // /**
+  //  * capture back and front at exact same time.
+  //  */
+  // const handleDualCapture = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const inputs: Array<Promise<File | undefined>> = [];
+
+  //     // No OP function to avoid Promise.all from rejecting
+  //     const no_op = async () => undefined;
+
+  //     if (frontImage() === undefined) {
+  //       inputs.push(captureFromVideo(frontVideo!, frontVideoPreview!));
+  //     } else inputs.push(no_op());
+
+  //     if (backImage() === undefined) {
+  //       inputs.push(captureFromVideo(backVideo!, backVideoPreview!));
+  //     } else inputs.push(no_op());
+
+  //     const [frontBlob, backBlob] = await Promise.all(inputs);
+
+  //     if (frontBlob) setFrontImage(frontBlob);
+  //     if (backBlob) setBackImage(backBlob);
+  //   }
+  //   finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const handleCapture = async (): Promise<void> => {
     try {
       setLoading(true);
-      const inputs: Array<Promise<File | undefined>> = [];
 
-      // No OP function to avoid Promise.all from rejecting
-      const no_op = async () => undefined;
+      if (reversed()) {
+        const image = await captureFromVideo(frontVideo()!, frontVideoPreview()!);
+        setFrontImage(image);
+      }
+      else {
+        const image = await captureFromVideo(backVideo()!, backVideoPreview()!);
+        setBackImage(image);
+      }
 
-      if (frontImage() === undefined) {
-        inputs.push(captureFromVideo(frontVideo!, frontVideoPreview!));
-      } else inputs.push(no_op());
+      await wait(2000);
 
-      if (backImage() === undefined) {
-        inputs.push(captureFromVideo(backVideo!, backVideoPreview!));
-      } else inputs.push(no_op());
-
-      const [frontBlob, backBlob] = await Promise.all(inputs);
-
-      if (frontBlob) setFrontImage(frontBlob);
-      if (backBlob) setBackImage(backBlob);
+      if (reversed()) {
+        const image = await captureFromVideo(backVideo()!, backVideoPreview()!);
+        setBackImage(image);
+      }
+      else {
+        const image = await captureFromVideo(frontVideo()!, frontVideoPreview()!);
+        setFrontImage(image);
+      }
     }
     finally {
       setLoading(false);
     }
-  };
+  }
 
   const handleUpload = async () => {
     try {
@@ -275,7 +309,7 @@ const UploadView: Component = () => {
       <header class="py-4">
         <nav class="flex items-center justify-between px-4">
           <a href="/feed">
-            back
+            <MdiChevronLeft class="text-xl" />
           </a>
           <Show when={backImage() && frontImage()}>
             <button type="button"
@@ -284,7 +318,7 @@ const UploadView: Component = () => {
                 setFrontImage(undefined);
               }}
             >
-              cancel
+              Retry
             </button>
           </Show>
         </nav>
@@ -302,29 +336,29 @@ const UploadView: Component = () => {
           width: "min(50vh, calc(100vw * (1500 / 2000)))"
         }}
       >
-        <div class="absolute top-4 left-4 w-full max-w-[calc(20vh*(1500/2000))] h-20vh">
-          <canvas ref={frontVideoPreview}
-            class="absolute inset-0 z-15 rounded-xl h-full w-full object-cover border-2 border-black"
-            classList={{ "opacity-0": frontImage() === undefined }}
-          />
-
-          {/* @ts-expect-error : special directive ("prop:") */}
-          <video ref={frontVideo} prop:srcObject={frontStream()}
-            class="absolute inset-0 z-10 rounded-xl h-full w-full object-cover border-2 border-black"
-            classList={{ "opacity-0": frontImage() !== undefined }}
-            autoplay
-          />
-        </div>
-
-        <canvas ref={backVideoPreview}
+        <canvas ref={!reversed() ? setBackVideoPreview : setFrontVideoPreview}
           class="absolute inset-0 z-5 rounded-2xl h-full w-full object-cover"
-          classList={{ "opacity-0": backImage() === undefined }}
+          classList={{ "opacity-0": (backImage() === undefined && frontImage() === undefined) }}
         />
 
         {/* @ts-expect-error : special directive ("prop:") */}
-        <video ref={backVideo} prop:srcObject={backStream()}
+        <video ref={!reversed() ? setBackVideo : setFrontVideo} prop:srcObject={!reversed() ? backStream() : frontStream()}
           class="absolute inset-0 z-0 rounded-2xl h-full w-full object-cover"
-          classList={{ "opacity-0": backImage() !== undefined }}
+          classList={{ "opacity-0": !isCapturingPrimary() }}
+          autoplay
+        />
+
+        <div class="absolute top-4 left-4 w-full max-w-[calc(20vh*(1500/2000))] h-20vh">
+          <canvas ref={!reversed() ? setFrontVideoPreview : setBackVideoPreview}
+            class="absolute inset-0 z-15 rounded-xl h-full w-full object-cover border-2 border-black"
+            classList={{ "opacity-0": (!reversed() ? frontImage() === undefined : backImage() === undefined) || isCapturingPrimary() }}
+          />
+        </div>
+
+        {/* @ts-expect-error : special directive ("prop:") */}
+        <video ref={!reversed() ? setFrontVideo : setBackVideo} prop:srcObject={!reversed() ? frontStream() : backStream()}
+          class="absolute inset-0 z-10 rounded-2xl h-full w-full object-cover"
+          classList={{ "opacity-0": isCapturingPrimary() || (backImage() !== undefined && frontImage() !== undefined) }}
           autoplay
         />
       </div>
@@ -345,7 +379,7 @@ const UploadView: Component = () => {
             title="Capture"
             disabled={loading()}
             class="h-24 w-24 bg-white/5 border-6 border-white rounded-full disabled:(bg-white animate-pulse animation-duration-100)"
-            onClick={() => handleDualCapture()}
+            onClick={() => handleCapture()}
           />
 
           {/* <select class="h-fit text-white bg-black border border-white">
