@@ -86,21 +86,6 @@ class ApiPlugin: Plugin {
       )
     }
   }
-
-  // TODO, see https://github.com/tauri-apps/plugins-workspace/blob/v2/plugins/notification/ios/Sources/NotificationHandler.swift
-  @objc public override func checkPermissions(_ invoke: Invoke) {
-    invoke.resolve(["permissionState": "prompt"])
-  }
-
-  // TODO, see https://github.com/tauri-apps/plugins-workspace/blob/v2/plugins/notification/ios/Sources/NotificationHandler.swift
-  @objc public override func requestPermissions(_ invoke: Invoke) {
-    invoke.resolve(["permissionState": "granted"])
-  }
-
-  // TODO, ???
-  @objc public func startNotificationService(_ invoke: Invoke) {
-    invoke.resolve()
-  }
 }
 
 @_cdecl("init_plugin_internal_api")
