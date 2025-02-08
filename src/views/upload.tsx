@@ -8,7 +8,7 @@ import { wait } from "~/utils/wait";
 import MdiChevronLeft from '~icons/mdi/chevron-left'
 
 const UploadView: Component = () => {
-  createMediaPermissionRequest();
+  createMediaPermissionRequest("video");
   const navigate = useNavigate();
 
   const [frontStream] = createStream({ audio: false, video: { facingMode: { exact: "user" }, height: 1000, width: 1500 } });
@@ -91,7 +91,7 @@ const UploadView: Component = () => {
   const [loading, setLoading] = createSignal(false);
   const [uploading, setUploading] = createSignal(false);
   const [compressing, setCompressing] = createSignal(false);
-  const [reversed, setReversed] = createSignal(false);
+  const [reversed, setReversed] = createSignal(true);
 
   const isCapturingPrimary = () => frontImage() === undefined && backImage() === undefined;
 
@@ -345,7 +345,9 @@ const UploadView: Component = () => {
         <video ref={!reversed() ? setBackVideo : setFrontVideo} prop:srcObject={!reversed() ? backStream() : frontStream()}
           class="absolute inset-0 z-0 rounded-2xl h-full w-full object-cover"
           classList={{ "opacity-0": !isCapturingPrimary() }}
-          autoplay
+          playsinline={true}
+          controls={false}
+          autoplay={true}
         />
 
         <div class="absolute top-4 left-4 w-full max-w-[calc(20vh*(1500/2000))] h-20vh">
@@ -359,7 +361,9 @@ const UploadView: Component = () => {
         <video ref={!reversed() ? setFrontVideo : setBackVideo} prop:srcObject={!reversed() ? frontStream() : backStream()}
           class="absolute inset-0 z-10 rounded-2xl h-full w-full object-cover"
           classList={{ "opacity-0": isCapturingPrimary() || (backImage() !== undefined && frontImage() !== undefined) }}
-          autoplay
+          playsinline={true}
+          controls={false}
+          autoplay={true}
         />
       </div>
 
