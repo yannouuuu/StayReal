@@ -1,5 +1,4 @@
 use serde::de::DeserializeOwned;
-use serde::Deserialize;
 use tauri::{
   plugin::{PluginApi, PluginHandle},
   AppHandle, Runtime,
