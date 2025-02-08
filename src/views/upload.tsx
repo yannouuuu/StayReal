@@ -39,7 +39,7 @@ const UploadView: Component = () => {
   const [frontVideoPreview, setFrontVideoPreview] = createSignal<HTMLCanvasElement>();
   const [backVideoPreview, setBackVideoPreview] = createSignal<HTMLCanvasElement>();
 
-  const coverImageForCanvas = (width: number, height: number, canvas: HTMLCanvasElement) => {
+  const calculateDimensionsForCanvas = (width: number, height: number, canvas: HTMLCanvasElement) => {
     const context = canvas.getContext("2d");
 
     if (!context) {
@@ -81,8 +81,8 @@ const UploadView: Component = () => {
   }
 
   /**
-   * capture a webp image from the video element.
-   * also displays the preview on the canvas element.
+   * Capture an image from the <video> element and
+   * displays the preview on the <canvas> element.
    */
   const captureFromVideo = async (video: HTMLVideoElement, canvas: HTMLCanvasElement): Promise<File> => new Promise((resolve, reject) => {
     const context = canvas.getContext("2d");
@@ -97,9 +97,17 @@ const UploadView: Component = () => {
       drawWidth,
       offsetX,
       offsetY
-    } = coverImageForCanvas(video.videoWidth, video.videoHeight, canvas);
+    } = calculateDimensionsForCanvas(video.videoWidth, video.videoHeight, canvas);
 
-    context.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
+    if (video === frontVideo()) { // we need to mirror for the front camera
+      context.save();
+      context.scale(-1, 1); // flip horizontally
+      context.drawImage(video, -offsetX - drawWidth, offsetY, drawWidth, drawHeight);
+      context.restore();
+    }
+    else {
+      context.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
+    }
 
     renderToBlob(canvas)
       .then(resolve)
@@ -344,7 +352,7 @@ const UploadView: Component = () => {
         {/* @ts-expect-error : special directive ("prop:") */}
         <video ref={!state.reversed ? setBackVideo : setFrontVideo} prop:srcObject={stream()}
           class="absolute inset-0 z-0 rounded-2xl h-full w-full object-cover"
-          classList={{ "opacity-0": !isCapturingPrimary() }}
+          classList={{ "opacity-0": !isCapturingPrimary(), "transform-rotate-y-180": state.reversed }}
           playsinline={true}
           controls={false}
           autoplay={true}
@@ -360,7 +368,10 @@ const UploadView: Component = () => {
         {/* @ts-expect-error : special directive ("prop:") */}
         <video ref={!state.reversed ? setFrontVideo : setBackVideo} prop:srcObject={stream()}
           class="absolute inset-0 z-10 rounded-2xl h-full w-full object-cover"
-          classList={{ "opacity-0": isCapturingPrimary() || (backImage() !== undefined && frontImage() !== undefined) }}
+          classList={{
+            "opacity-0": isCapturingPrimary() || (backImage() !== undefined && frontImage() !== undefined),
+            "transform-rotate-y-180": !state.reversed
+          }}
           playsinline={true}
           controls={false}
           autoplay={true}
