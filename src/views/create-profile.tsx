@@ -33,7 +33,7 @@ const CreateProfileView: Component = () => {
     try {
       setUsernameLoading(true);
 
-      const username = (event.currentTarget as HTMLInputElement).value.trim();
+      const username = (event.currentTarget as HTMLInputElement).value.trim().toLowerCase();
       setUsername(username);
       if (!username) return;
 
