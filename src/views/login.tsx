@@ -118,8 +118,8 @@ const LoginView: Component = () => {
   };
 
   return (
-    <main class="h-100dvh flex flex-col px-4 py-6">
-      <header class="flex items-center relative w-full h-8 mt-[env(safe-area-inset-top)]">
+    <main class="h-screen flex flex-col px-4 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+      <header class="shrink-0 flex items-center relative w-full h-8 pt-6">
         <Show when={state.step === "otp"}>
           <button type="button"
             onClick={() => {
@@ -144,7 +144,7 @@ const LoginView: Component = () => {
       </h1>
 
       <form
-        class="flex flex-col gap-4 h-full mb-[env(safe-area-inset-bottom)]"
+        class="flex flex-col gap-4 h-full pb-6"
         onSubmit={(event) => {
           event.preventDefault();
           runAuthentication();
