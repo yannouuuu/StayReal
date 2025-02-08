@@ -31,7 +31,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'pnpm'
 
       - name: install frontend dependencies
         run: |
@@ -85,14 +84,6 @@ jobs:
         if: matrix.os == 'ios'
         with:
           targets: aarch64-apple-ios
-
-      - uses: swatinem/rust-cache@v2
-        with:
-          workspaces: |
-            src-tauri -> target
-            internal-api -> target
-          prefix-key: rust-${{ hashFiles('**/Cargo.lock') }}
-          shared-key: ${{ matrix.platform }}-${{ matrix.os }}
 
       - name: (Android) install dependencies
         if: matrix.os == 'android'
