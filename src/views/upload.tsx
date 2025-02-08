@@ -1,6 +1,5 @@
 import { type Component, createSignal, Show } from "solid-js";
-import { content_posts_create, content_posts_upload_url, upload_content } from "../api/requests/content/posts/upload";
-import { createMediaPermissionRequest } from "@solid-primitives/stream";
+import { content_posts_create, content_posts_upload_url, upload_content } from "~/api/requests/content/posts/upload";
 import { useNavigate } from "@solidjs/router";
 import auth from "~/stores/auth";
 import { compressWebpToSize, convertJpegToWebp } from "@stayreal/api";
@@ -9,10 +8,7 @@ import MdiChevronLeft from '~icons/mdi/chevron-left'
 import { createStore } from "solid-js/store";
 
 const UploadView: Component = () => {
-  createMediaPermissionRequest("video");
   const navigate = useNavigate();
-
-  const [stream, setStream] = createSignal<MediaStream | undefined>();
 
   /**
    * We can't create two streams at the same time because of iOS limitations
@@ -35,6 +31,7 @@ const UploadView: Component = () => {
   };
 
   // When the user first loads the page, we want to show the back camera.
+  const [stream, setStream] = createSignal<MediaStream | undefined>();
   updateCameraStream("environment");
 
   const [frontVideo, setFrontVideo] = createSignal<HTMLVideoElement>();
@@ -118,7 +115,7 @@ const UploadView: Component = () => {
     uploading: false,
     compressing: false,
     reversed: false,
-  })
+  });
 
   const handleCapture = async (): Promise<void> => {
     try {

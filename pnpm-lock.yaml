@@ -23,9 +23,6 @@ importers:
       '@solid-primitives/script-loader':
         specifier: ^2.3.0
         version: 2.3.0(solid-js@1.9.4)
-      '@solid-primitives/stream':
-        specifier: ^0.6.14
-        version: 0.6.14(solid-js@1.9.4)
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.4)
@@ -707,11 +704,6 @@ packages:
 
   '@solid-primitives/static-store@0.1.0':
     resolution: {integrity: sha512-6Coau0Kv/dF83UQpbBzc+gnJafOQAPe2jCbB4jmTK5UocsR5cWmFBVRm3kin+nZFVaO4WkuELw0cKANWgTVh8Q==}
-    peerDependencies:
-      solid-js: ^1.6.12
-
-  '@solid-primitives/stream@0.6.14':
-    resolution: {integrity: sha512-6x3RUSpX3Towa3YYpG+mJZp/7FijhTLUbalvyqhMVxkVEYFn7ri6+2rjPryHIO+T5FwjSkiWspipCM6NGY82Ng==}
     peerDependencies:
       solid-js: ^1.6.12
 
@@ -1945,11 +1937,6 @@ snapshots:
       solid-js: 1.9.4
 
   '@solid-primitives/static-store@0.1.0(solid-js@1.9.4)':
-    dependencies:
-      '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
-      solid-js: 1.9.4
-
-  '@solid-primitives/stream@0.6.14(solid-js@1.9.4)':
     dependencies:
       '@solid-primitives/utils': 6.3.0(solid-js@1.9.4)
       solid-js: 1.9.4
