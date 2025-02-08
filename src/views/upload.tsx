@@ -1,18 +1,39 @@
-import { batch, type Component, createSignal, Show } from "solid-js";
+import { type Component, createSignal, Show } from "solid-js";
 import { content_posts_create, content_posts_upload_url, upload_content } from "../api/requests/content/posts/upload";
-import { createMediaPermissionRequest, createStream } from "@solid-primitives/stream";
+import { createMediaPermissionRequest } from "@solid-primitives/stream";
 import { useNavigate } from "@solidjs/router";
 import auth from "~/stores/auth";
 import { compressWebpToSize, convertJpegToWebp } from "@stayreal/api";
 import { wait } from "~/utils/wait";
 import MdiChevronLeft from '~icons/mdi/chevron-left'
+import { createStore } from "solid-js/store";
 
 const UploadView: Component = () => {
   createMediaPermissionRequest("video");
   const navigate = useNavigate();
 
-  const [frontStream] = createStream({ audio: false, video: { facingMode: { exact: "user" }, height: 1000, width: 1500 } });
-  const [backStream] = createStream({ audio: false, video: { facingMode: { exact: "environment" }, height: 1000, width: 1500 } });
+  const [stream, setStream] = createSignal<MediaStream | undefined>();
+
+  /**
+   * We can't create two streams at the same time because of iOS limitations
+   * so we have to update the stream when the user switches cameras.
+   */
+  const updateCameraStream = async (facingMode: "user" | "environment"): Promise<void> => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode }
+      });
+
+      setStream(stream);
+    }
+    catch (error) {
+      console.error("error getting stream:", error);
+    }
+  };
+
+  // When the user first loads the page, we want to show the back camera.
+  updateCameraStream("environment");
 
   const [frontVideo, setFrontVideo] = createSignal<HTMLVideoElement>();
   const [backVideo, setBackVideo] = createSignal<HTMLVideoElement>();
@@ -88,47 +109,20 @@ const UploadView: Component = () => {
 
   const [frontImage, setFrontImage] = createSignal<File | undefined>(undefined);
   const [backImage, setBackImage] = createSignal<File | undefined>(undefined);
-  const [loading, setLoading] = createSignal(false);
-  const [uploading, setUploading] = createSignal(false);
-  const [compressing, setCompressing] = createSignal(false);
-  const [reversed, setReversed] = createSignal(true);
-
   const isCapturingPrimary = () => frontImage() === undefined && backImage() === undefined;
 
-  // /**
-  //  * capture back and front at exact same time.
-  //  */
-  // const handleDualCapture = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const inputs: Array<Promise<File | undefined>> = [];
-
-  //     // No OP function to avoid Promise.all from rejecting
-  //     const no_op = async () => undefined;
-
-  //     if (frontImage() === undefined) {
-  //       inputs.push(captureFromVideo(frontVideo!, frontVideoPreview!));
-  //     } else inputs.push(no_op());
-
-  //     if (backImage() === undefined) {
-  //       inputs.push(captureFromVideo(backVideo!, backVideoPreview!));
-  //     } else inputs.push(no_op());
-
-  //     const [frontBlob, backBlob] = await Promise.all(inputs);
-
-  //     if (frontBlob) setFrontImage(frontBlob);
-  //     if (backBlob) setBackImage(backBlob);
-  //   }
-  //   finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const [state, setState] = createStore({
+    capturing: false,
+    uploading: false,
+    compressing: false,
+    reversed: false,
+  })
 
   const handleCapture = async (): Promise<void> => {
     try {
-      setLoading(true);
+      setState("capturing", true);
 
-      if (reversed()) {
+      if (state.reversed) {
         const image = await captureFromVideo(frontVideo()!, frontVideoPreview()!);
         setFrontImage(image);
       }
@@ -137,9 +131,10 @@ const UploadView: Component = () => {
         setBackImage(image);
       }
 
+      await updateCameraStream(state.reversed ? "environment" : "user");
       await wait(2000);
 
-      if (reversed()) {
+      if (state.reversed) {
         const image = await captureFromVideo(backVideo()!, backVideoPreview()!);
         setBackImage(image);
       }
@@ -149,16 +144,13 @@ const UploadView: Component = () => {
       }
     }
     finally {
-      setLoading(false);
+      setState("capturing", false);
     }
   }
 
   const handleUpload = async () => {
     try {
-      batch(() => {
-        setLoading(true);
-        setCompressing(true);
-      });
+      setState("compressing", true); // and converting to WebP...
 
       // Compress and convert images to WebP.
       const [backWebpImage, frontWebpImage] = await Promise.all([backImage(), frontImage()].map(async (file) => {
@@ -183,9 +175,9 @@ const UploadView: Component = () => {
         return file;
       }));
 
-      batch(() => {
-        setCompressing(false);
-        setUploading(true);
+      setState({
+        compressing: false,
+        uploading: true,
       });
 
       if (auth.isDemo()) {
@@ -236,10 +228,9 @@ const UploadView: Component = () => {
       navigate("/feed");
     }
     finally {
-      batch(() => {
-        setLoading(false);
-        setCompressing(false);
-        setUploading(false);
+      setState({
+        compressing: false,
+        uploading: false
       })
     }
   };
@@ -305,7 +296,7 @@ const UploadView: Component = () => {
   }
 
   return (
-    <div class="min-h-100dvh grid gap-4 rows-[auto_1fr_auto] pt-[env(safe-area-inset-top)]">
+    <div class="min-h-screen grid gap-4 rows-[auto_1fr_auto] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
       <header class="py-4">
         <nav class="flex items-center justify-between px-4">
           <a href="/feed">
@@ -316,6 +307,8 @@ const UploadView: Component = () => {
               onClick={() => {
                 setBackImage(undefined);
                 setFrontImage(undefined);
+                // We revert the camera to original state.
+                updateCameraStream(state.reversed ? "environment" : "user");
               }}
             >
               Retry
@@ -336,13 +329,13 @@ const UploadView: Component = () => {
           width: "min(50vh, calc(100vw * (1500 / 2000)))"
         }}
       >
-        <canvas ref={!reversed() ? setBackVideoPreview : setFrontVideoPreview}
+        <canvas ref={!state.reversed ? setBackVideoPreview : setFrontVideoPreview}
           class="absolute inset-0 z-5 rounded-2xl h-full w-full object-cover"
           classList={{ "opacity-0": (backImage() === undefined && frontImage() === undefined) }}
         />
 
         {/* @ts-expect-error : special directive ("prop:") */}
-        <video ref={!reversed() ? setBackVideo : setFrontVideo} prop:srcObject={!reversed() ? backStream() : frontStream()}
+        <video ref={!state.reversed ? setBackVideo : setFrontVideo} prop:srcObject={stream()}
           class="absolute inset-0 z-0 rounded-2xl h-full w-full object-cover"
           classList={{ "opacity-0": !isCapturingPrimary() }}
           playsinline={true}
@@ -351,14 +344,14 @@ const UploadView: Component = () => {
         />
 
         <div class="absolute top-4 left-4 w-full max-w-[calc(20vh*(1500/2000))] h-20vh">
-          <canvas ref={!reversed() ? setFrontVideoPreview : setBackVideoPreview}
+          <canvas ref={!state.reversed ? setFrontVideoPreview : setBackVideoPreview}
             class="absolute inset-0 z-15 rounded-xl h-full w-full object-cover border-2 border-black"
-            classList={{ "opacity-0": (!reversed() ? frontImage() === undefined : backImage() === undefined) || isCapturingPrimary() }}
+            classList={{ "opacity-0": (!state.reversed ? frontImage() === undefined : backImage() === undefined) || isCapturingPrimary() }}
           />
         </div>
 
         {/* @ts-expect-error : special directive ("prop:") */}
-        <video ref={!reversed() ? setFrontVideo : setBackVideo} prop:srcObject={!reversed() ? frontStream() : backStream()}
+        <video ref={!state.reversed ? setFrontVideo : setBackVideo} prop:srcObject={stream()}
           class="absolute inset-0 z-10 rounded-2xl h-full w-full object-cover"
           classList={{ "opacity-0": isCapturingPrimary() || (backImage() !== undefined && frontImage() !== undefined) }}
           playsinline={true}
@@ -369,39 +362,24 @@ const UploadView: Component = () => {
 
       <div class="pb-8 pt-4 flex justify-center px-4 items-center">
         <Show when={!frontImage() || !backImage()}>
-          {/* <div class="flex flex-col gap-2">
-            <button type="button" onClick={() => handleFileSelector("front")}>
-              select front
-            </button>
-            <button type="button" onClick={() => handleFileSelector("back")}>
-              select back
-            </button>
-          </div> */}
-
           <button
             type="button"
             title="Capture"
-            disabled={loading()}
+            disabled={state.capturing}
             class="h-24 w-24 bg-white/5 border-6 border-white rounded-full disabled:(bg-white animate-pulse animation-duration-100)"
             onClick={() => handleCapture()}
           />
-
-          {/* <select class="h-fit text-white bg-black border border-white">
-            <option selected>single</option>
-            <option>delayed</option>
-            <option>manual</option>
-          </select> */}
         </Show>
 
         <Show when={frontImage() && backImage()}>
           <button type="button"
-            disabled={loading()}
+            disabled={state.uploading || state.compressing}
             onClick={() => handleUpload()}
             class="bg-white text-black font-600 py-3.5 px-8 rounded-2xl mx-auto"
           >
-            {!uploading() && !compressing() && "Upload"}
-            {compressing() && "Compressing..."}
-            {uploading() && "Uploading..."}
+            {!state.uploading && !state.compressing && "Upload"}
+            {state.compressing && "Compressing..."}
+            {state.uploading && "Uploading..."}
           </button>
         </Show>
       </div>
