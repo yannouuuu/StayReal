@@ -11,8 +11,8 @@ const UploadView: Component = () => {
   createMediaPermissionRequest();
   const navigate = useNavigate();
 
-  const [frontStream] = createStream({ video: { facingMode: { exact: "user" }, height: 1000, width: 1500 } });
-  const [backStream] = createStream({ video: { facingMode: { exact: "environment" }, height: 1000, width: 1500 } });
+  const [frontStream] = createStream({ audio: false, video: { facingMode: { exact: "user" }, height: 1000, width: 1500 } });
+  const [backStream] = createStream({ audio: false, video: { facingMode: { exact: "environment" }, height: 1000, width: 1500 } });
 
   const [frontVideo, setFrontVideo] = createSignal<HTMLVideoElement>();
   const [backVideo, setBackVideo] = createSignal<HTMLVideoElement>();
