@@ -20,12 +20,14 @@ const UploadView: Component = () => {
    */
   const updateCameraStream = async (facingMode: "user" | "environment"): Promise<void> => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      // Close the previous stream.
+      if (stream()) stream()!.getTracks().forEach(track => track.stop());
+      setStream(undefined);
+
+      await navigator.mediaDevices.getUserMedia({
         audio: false,
         video: { facingMode }
-      });
-
-      setStream(stream);
+      }).then(setStream);
     }
     catch (error) {
       console.error("error getting stream:", error);
@@ -297,10 +299,10 @@ const UploadView: Component = () => {
 
   return (
     <div class="min-h-screen grid gap-4 rows-[auto_1fr_auto] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
-      <header class="py-4">
-        <nav class="flex items-center justify-between px-4">
-          <a href="/feed">
-            <MdiChevronLeft class="text-xl" />
+      <header>
+        <nav class="flex items-center justify-between px-4 h-[72px]">
+          <a href="/feed" class="p-2.5 rounded-full ml-[-10px]" aria-label="Back to feed">
+            <MdiChevronLeft class="text-2xl" />
           </a>
           <Show when={backImage() && frontImage()}>
             <button type="button"
@@ -329,6 +331,14 @@ const UploadView: Component = () => {
           width: "min(50vh, calc(100vw * (1500 / 2000)))"
         }}
       >
+        <Show when={!stream()}>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <p class="text-white text-center">
+              Loading stream...
+            </p>
+          </div>
+        </Show>
+
         <canvas ref={!state.reversed ? setBackVideoPreview : setFrontVideoPreview}
           class="absolute inset-0 z-5 rounded-2xl h-full w-full object-cover"
           classList={{ "opacity-0": (backImage() === undefined && frontImage() === undefined) }}

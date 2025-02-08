@@ -14,20 +14,20 @@ const ProfileView: Component = () => {
 
   return (
     <>
-      <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent pb-2 pt-[env(safe-area-inset-top)]">
-        <nav class="flex items-center justify-between px-4 pb-2 pt-4">
-          <a href="/feed">
-            <MdiChevronLeft class="text-xl" />
+      <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent pt-[env(safe-area-inset-top)]">
+        <nav class="flex items-center justify-between px-4 h-[72px]">
+          <a href="/feed" class="p-2.5 rounded-full ml-[-10px]" aria-label="Back to feed">
+            <MdiChevronLeft class="text-2xl" />
           </a>
 
-          <a href="/settings">
+          <a href="/settings" aria-label="Go to settings">
             <MdiCog class="text-xl" />
           </a>
         </nav>
       </header>
 
-      <main class="pt-16 px-6 space-y-8 mt-[env(safe-area-inset-top)]">
-        <Show when={me.get()} fallback={<p>Loading your profile...</p>}>
+      <main class="pb-16 pt-20 px-6 space-y-8 mt-[env(safe-area-inset-top)] mb-[env(safe-area-inset-bottom)]">
+        <Show when={me.get()} fallback={<p class="text-center pt-8 animate-pulse">Loading your profile...</p>}>
           {me => (
             <>
               <div class="flex flex-col items-center text-center gap-4">

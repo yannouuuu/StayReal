@@ -80,8 +80,8 @@ const FriendsView: Component = () => {
 
   return (
     <main>
-      <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent pt-[env(safe-area-inset-top)] max-h-[72px] h-full">
-        <nav class="flex items-center justify-between px-4 pb-2 pt-4">
+      <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent pt-[env(safe-area-inset-top)]">
+        <nav class="flex items-center justify-between px-4 h-[72px]">
           <div class="w-8" />
 
           <p
@@ -97,7 +97,7 @@ const FriendsView: Component = () => {
         </nav>
       </header>
 
-      <div class="py-16">
+      <div class="pb-16 pt-20 mt-[env(safe-area-inset-top)] mb-[env(safe-area-inset-bottom)]">
         <div class="px-4 mb-6">
           <div class="relative flex items-center">
             <MdiMagnify class="absolute w-6 h-6 left-4 text-white/40 text-2xl" />

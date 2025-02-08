@@ -28,9 +28,9 @@ const Settings: Component = () => {
   return (
     <>
       <header class="pt-[env(safe-area-inset-top)]">
-        <nav class="flex items-center justify-between px-4 pb-2 pt-4">
-          <a href="/profile">
-            <MdiChevronLeft class="text-xl" />
+        <nav class="flex items-center justify-between px-4 h-[72px]">
+          <a href="/profile" class="p-2.5 rounded-full ml-[-10px]" aria-label="Back to profile">
+            <MdiChevronLeft class="text-2xl" />
           </a>
         </nav>
       </header>

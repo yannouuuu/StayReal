@@ -62,8 +62,8 @@ const FeedView: Component = () => {
 
   return (
     <div>
-      <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent pt-[env(safe-area-inset-top)] max-h-[72px] h-full">
-        <nav class="flex items-center justify-between px-4 pb-2 pt-4">
+      <header class="z-20 fixed top-0 inset-x-0 bg-gradient-to-b from-black to-transparent pt-[env(safe-area-inset-top)]">
+        <nav class="flex items-center justify-between px-4 h-[72px]">
           <a href="/friends" aria-label="Relationships">
             <MdiPeople class="text-xl" />
           </a>
@@ -112,7 +112,7 @@ const FeedView: Component = () => {
         </nav>
       </header>
 
-      <div class="py-16 mt-[env(safe-area-inset-top)]">
+      <div class="py-16 mt-[env(safe-area-inset-top)] mb-[env(safe-area-inset-bottom)]">
         <PullableScreen
           onRefresh={handleRefresh}
           shouldPullToRefresh={!isScrolling()}
