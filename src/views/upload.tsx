@@ -22,7 +22,7 @@ const UploadView: Component = () => {
 
       await navigator.mediaDevices.getUserMedia({
         audio: false,
-        video: { facingMode }
+        video: { facingMode: { exact: facingMode } }
       }).then(setStream);
     }
     catch (error) {
@@ -315,7 +315,7 @@ const UploadView: Component = () => {
                 setBackImage(undefined);
                 setFrontImage(undefined);
                 // We revert the camera to original state.
-                updateCameraStream(state.reversed ? "environment" : "user");
+                updateCameraStream(!state.reversed ? "environment" : "user");
               }}
             >
               Retry
