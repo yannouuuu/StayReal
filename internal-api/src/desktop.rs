@@ -20,8 +20,8 @@ pub fn init<R: Runtime, C: DeserializeOwned>(
 }
 
 const BEREAL_IOS_BUNDLE_ID: &str = "AlexisBarreyat.BeReal";
-const BEREAL_IOS_VERSION: &str = "4.4.0";
-const BEREAL_IOS_BUILD: &str = "19715";
+const BEREAL_IOS_VERSION: &str = "4.8.0";
+const BEREAL_IOS_BUILD: &str = "19795";
 const BEREAL_CLIENT_SECRET: &str = "962D357B-B134-4AB6-8F53-BEA2B7255420";
 const BEREAL_HMAC_KEY_HEX: &str =
   "3536303337663461663232666236393630663363643031346532656337316233";
@@ -63,7 +63,7 @@ impl<R: Runtime> InternalApi<R> {
   fn bereal_default_headers(&self, device_id: &str) -> HeaderMap {
     let mut headers = HeaderMap::new();
     headers.insert("bereal-platform", HeaderValue::from_static("iOS"));
-    headers.insert("bereal-os-version", HeaderValue::from_static("18.2"));
+    headers.insert("bereal-os-version", HeaderValue::from_static("18.3"));
     headers.insert(
       "bereal-app-version",
       HeaderValue::from_static(BEREAL_IOS_VERSION),
@@ -76,6 +76,23 @@ impl<R: Runtime> InternalApi<R> {
     headers.insert("bereal-app-language", HeaderValue::from_static("en-US"));
     headers.insert("bereal-device-id", device_id.parse().unwrap());
 
+    headers.insert(
+      "bereal-experiment-new-design",
+      HeaderValue::from_static("false"),
+    );
+    headers.insert(
+      "bereal-experiment-ranking",
+      HeaderValue::from_static("false"),
+    );
+    headers.insert(
+      "bereal-experiment-new-profile",
+      HeaderValue::from_static("false"),
+    );
+    headers.insert(
+      "bereal-experiment-unlimited-bereals",
+      HeaderValue::from_static("false"),
+    );
+
     let bereal_timezone = iana_time_zone::get_timezone().unwrap();
     headers.insert("bereal-timezone", bereal_timezone.parse().unwrap());
 
@@ -83,7 +100,7 @@ impl<R: Runtime> InternalApi<R> {
     headers.insert("bereal-signature", bereal_signature.parse().unwrap());
 
     let user_agent = format!(
-      "BeReal/{BEREAL_IOS_VERSION} ({BEREAL_IOS_BUNDLE_ID}; build:{BEREAL_IOS_BUILD}; iOS 18.2.0)"
+      "BeReal/{BEREAL_IOS_VERSION} ({BEREAL_IOS_BUNDLE_ID}; build:{BEREAL_IOS_BUILD}; iOS 18.3.0)"
     );
     headers.insert("user-agent", user_agent.parse().unwrap());
 

@@ -5,22 +5,26 @@ class Requests {
   private var authentication = Authentication.shared
 
   private let appIOSBundleId = "AlexisBarreyat.BeReal"
-  private let appIOSVersion = "4.4.0"
-  private let appIOSBuild = "19715"
+  private let appIOSVersion = "4.8.0"
+  private let appIOSBuild = "19795"
   private let clientSecret = "962D357B-B134-4AB6-8F53-BEA2B7255420"
 
   private func defaultHeaders(deviceId: String) -> [String: String] {
     return [
       "bereal-platform": "iOS",
-      "bereal-os-version": "18.2",
+      "bereal-os-version": "18.3",
       "bereal-app-version": appIOSVersion,
       "bereal-app-version-code": appIOSBuild,
       "bereal-device-language": "en",
       "bereal-app-language": "en-US",
       "bereal-device-id": deviceId,
+      "bereal-experiment-new-design": "false",
+      "bereal-experiment-ranking": "false",
+      "bereal-experiment-new-profile": "false",
+      "bereal-experiment-unlimited-bereals": "false",
       "bereal-timezone": TimeZone.current.identifier,
       "bereal-signature": BeRealSignature.create(deviceId: deviceId),
-      "user-agent": "BeReal/\(appIOSVersion) (\(appIOSBundleId); build:\(appIOSBuild); iOS 18.2.0)",
+      "user-agent": "BeReal/\(appIOSVersion) (\(appIOSBundleId); build:\(appIOSBuild); iOS 18.3.0)",
     ]
   }
 
