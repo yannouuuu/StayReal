@@ -127,7 +127,7 @@ const FeedUserOverview: Component<{
 
           <a href="/upload"
             class="scale-80 flex-[0_0_auto] min-w-0 max-w-full rounded-lg h-140px border-2 border-white/75 flex items-center justify-center w-100px text-center"
-            aria-label="Make a new BeReal."
+            aria-label="Make a new moment"
           >
             <MdiPlus class="text-3xl" />
           </a>

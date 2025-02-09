@@ -12,6 +12,7 @@ import { ProfileInexistentError } from "~/api/requests/person/me";
 import { useNavigate } from "@solidjs/router";
 import auth from "~/stores/auth";
 import { patchPersonMeCancelDelete } from "~/api/requests/person/me/cancel-delete";
+import MdiCamera from '~icons/mdi/camera'
 
 const FeedView: Component = () => {
   const navigate = useNavigate();
@@ -131,14 +132,14 @@ const FeedView: Component = () => {
                     fallback={
                       <div class="text-center flex flex-col gap-1 px-4 mx-4 bg-white/10 py-4 rounded-2xl">
                         <p class="mb-4">
-                          You haven't posted any BeReal today !
+                          You haven't posted anything today.
                         </p>
 
                         <a
                           href="/upload"
-                          class="block text-center py-3 font-600 bg-white text-black rounded-2xl"
+                          class="flex items-center justify-center gap-2 block text-center py-3 font-600 bg-white text-black rounded-2xl"
                         >
-                          StayReal by posting a BeReal.
+                          <MdiCamera /> StayReal.
                         </a>
 
                         <Show when={moment()}>

@@ -129,7 +129,7 @@ const CreateProfileView: Component = () => {
             disabled={!birthdate() || creationLoading()}
             class="text-black bg-white rounded-2xl w-full py-3 mt-auto focus:(outline outline-white outline-offset-2) disabled:opacity-30"
           >
-            Join BeReal.
+            Join
           </button>
         </Show>
       </form>

@@ -85,7 +85,7 @@ const ProfileView: Component = () => {
 
               <div>
                 <p class="text-white/50 text-center text-xs md:text-sm">
-                  Joined BeReal the {new Date(me().createdAt).toLocaleString()}
+                  Joined the {new Date(me().createdAt).toLocaleString()}
                 </p>
               </div>
             </>
