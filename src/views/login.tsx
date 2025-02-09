@@ -14,6 +14,8 @@ import auth from "~/stores/auth";
 import { DEMO_ACCESS_TOKEN, DEMO_PHONE_NUMBER, DEMO_REFRESH_TOKEN } from "~/utils/demo";
 import MdiChevronLeft from '~icons/mdi/chevron-left'
 import { postVonageDataExchange } from "~/api/requests/auth/vonage/data-exchange";
+import Otp from "~/components/otp";
+import MdiLoading from '~icons/mdi/loading'
 
 const LoginView: Component = () => {
   const navigate = useNavigate();
@@ -37,25 +39,24 @@ const LoginView: Component = () => {
     // Make sure there's no whitespace in the phone number.
     const phoneNumber = state.phoneNumber.split(" ").join("");
 
-    // Captcha is always needed, except if we're trying
-    // to authenticate on the demonstration account.
-    if (!state.arkoseToken && phoneNumber !== DEMO_PHONE_NUMBER) {
-      const dataExchange = await postVonageDataExchange({
-        deviceID: state.deviceID,
-        phoneNumber,
-      })
-
-      setState({
-        loading: true,
-        waitingOnArkose: true,
-        arkoseDataExchange: dataExchange,
-      });
-
-      return;
-    }
-
     try {
       setState("loading", true);
+
+      // Captcha is always needed, except if we're trying
+      // to authenticate on the demonstration account.
+      if (!state.arkoseToken && phoneNumber !== DEMO_PHONE_NUMBER) {
+        const dataExchange = await postVonageDataExchange({
+          deviceID: state.deviceID,
+          phoneNumber,
+        })
+
+        setState({
+          waitingOnArkose: true,
+          arkoseDataExchange: dataExchange,
+        });
+
+        return;
+      }
 
       if (state.step === "phone") {
         let requestID: string;
@@ -170,12 +171,14 @@ const LoginView: Component = () => {
           </Show>
 
           <input
-            class="w-full max-w-280px mx-auto rounded-2xl py-3 px-4 text-white bg-white/5 text-2xl font-600 tracking-wide outline-none placeholder:text-white/40 focus:(outline outline-white outline-offset-2)"
-            type="text"
+            class="w-full max-w-280px mx-auto rounded-2xl py-3 px-4 text-white bg-white/10 text-2xl font-600 tracking-wide outline-none placeholder:text-white/40 focus:(outline outline-white outline-offset-2)"
+            type="tel"
             inputMode="tel"
+            autocomplete="tel"
             value={state.phoneNumber}
             onInput={e => setState("phoneNumber", e.currentTarget.value)}
             placeholder="+33 6 12 34 56 78"
+            required
           />
 
           <p class="mt-8 text-sm text-center px-4 text-white/75">
@@ -183,39 +186,45 @@ const LoginView: Component = () => {
           </p>
 
           <button type="submit" disabled={state.loading || !state.phoneNumber}
-            class="text-black bg-white rounded-2xl w-full py-3 mt-auto focus:(outline outline-white outline-offset-2) disabled:opacity-30"
+            class="text-black bg-white rounded-2xl w-full py-3 mt-auto focus:(outline outline-white outline-offset-2) disabled:opacity-30 transition-all"
           >
-            Send Verification Text
+            <Show when={state.loading} fallback={"Send Verification Text"}>
+              <div class="flex items-center justify-center">
+                <MdiLoading class="text-black text-xl animate-spin animate-duration-750" />
+              </div>
+            </Show>
           </button>
         </Show>
         <Show when={state.step === "otp"}>
-          <input
-            class="w-full max-w-160px mx-auto rounded-2xl py-3 px-4 text-white text-center bg-transparent text-2xl font-600 outline-none placeholder:text-white/40 tracking-widest focus:(outline outline-white outline-offset-2)"
-            type="text"
-            maxLength={6}
-            inputMode="numeric"
-            value={state.otp}
-            onInput={e => setState("otp", e.currentTarget.value)}
-            placeholder="••••••"
+          <Otp
+            submit={(code) => {
+              setState("otp", code);
+              runAuthentication();
+            }}
           />
 
-          <Show when={state.phoneNumber !== DEMO_PHONE_NUMBER} fallback={
-            <p class="mt-8 text-sm text-center px-4 text-white/75">
-              You're authenticating on the demonstration account, your OTP code is 123456
-            </p>
+          <Show when={!state.loading} fallback={
+            <div class="flex items-center justify-center mt-8">
+              <MdiLoading class="text-white text-2xl animate-spin animate-duration-750" />
+            </div>
           }>
-            <p class="mt-8 text-sm text-center px-4 text-white/75">
-              Verification code sent to {state.phoneNumber}
-            </p>
+            <Show when={state.phoneNumber !== DEMO_PHONE_NUMBER} fallback={
+              <p class="mt-8 text-sm text-center px-4 text-white/75">
+                You're authenticating on the demonstration account, your OTP code is 123456
+              </p>
+            }>
+              <p class="mt-8 text-sm text-center px-4 text-white/75">
+                Verification code sent to {state.phoneNumber}
+              </p>
+            </Show>
           </Show>
-
-          <button type="submit" disabled={state.loading || state.otp.length !== 6}
-            class="text-black bg-white rounded-2xl w-full py-3 mt-auto focus:(outline outline-white outline-offset-2) disabled:opacity-30"
-          >
-            Check Verification Code
-          </button>
         </Show>
-        <p class="text-white/40 text-xs text-center" aria-hidden="true">device-id: {state.deviceID}</p>
+
+        <p class="text-white/40 text-xs text-center" aria-hidden="true"
+          classList={{ "mt-auto": state.step === "otp" }}
+        >
+          device-id: {state.deviceID}
+        </p>
       </form>
     </main>
   );
