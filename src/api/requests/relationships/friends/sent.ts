@@ -1,3 +1,4 @@
+import { ApiMedia } from "~/api/types/media";
 import auth from "../../../../stores/auth";
 import { BEREAL_DEFAULT_HEADERS } from "../../../constants";
 import { fetch } from "@tauri-apps/plugin-http";
@@ -7,6 +8,7 @@ export interface RelationshipsFriendsSent {
     id: string
     username: string
     fullname: string
+    profilePicture?: ApiMedia
     status: "sent"
     mutualFriends: number
     updatedAt: string
