@@ -1,7 +1,7 @@
-import { FeedsFriends } from "~/api/requests/feeds/friends";
-import { DEMO_RELATIONSHIPS_FRIENDS_LIST } from "../relationships/friends/list";
+import type { GetFeedsFriends } from "~/api/requests/feeds/friends";
+import { DEMO_RELATIONSHIPS_FRIENDS_LIST } from "~/api/demo/relationships/friends/list";
 
-export const DEMO_FEEDS_FRIENDS: FeedsFriends = {
+export const DEMO_FEEDS_FRIENDS: GetFeedsFriends = {
   eventProtoBytes: [],
   maxPostsPerMoment: 1,
   friendsPosts: [

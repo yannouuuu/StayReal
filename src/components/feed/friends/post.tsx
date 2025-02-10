@@ -1,6 +1,6 @@
 import { type Component, createSignal, Show } from "solid-js";
 import { content_posts_repost } from "~/api/requests/content/posts/repost";
-import { FeedPost } from "~/api/requests/feeds/friends";
+import { Post } from "~/api/requests/feeds/friends";
 import PostRealMojis from "~/components/feed/realmojis";
 import feed from "~/stores/feed";
 import me from "~/stores/me";
@@ -8,7 +8,7 @@ import SolarSmileCircleBold from '~icons/solar/smile-circle-bold'
 import ReactionBar from "../ReactionBar";
 
 const FeedFriendsPost: Component<{
-  post: FeedPost
+  post: Post
 
   /**
    * User ID of the post owner.

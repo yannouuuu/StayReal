@@ -1,5 +1,5 @@
 import { createEffect, createSignal, For, type Setter, type Component, Show } from "solid-js";
-import type { FeedPost, PostsOverview } from "~/api/requests/feeds/friends";
+import type { Post, PostsOverview } from "~/api/requests/feeds/friends";
 import PostRealMojis from "~/components/feed/realmojis";
 // import { useNavigate } from "@solidjs/router";
 import MdiPlus from '~icons/mdi/plus'
@@ -26,7 +26,7 @@ const FeedUserOverview: Component<{
   // const navigate = useNavigate();
 
   const [activeIndex, setActiveIndex] = createSignal(props.overview.posts.length - 1);
-  const activePost = (): FeedPost | undefined  => props.overview.posts[activeIndex()];
+  const activePost = (): Post | undefined  => props.overview.posts[activeIndex()];
 
   let tweenNodes: HTMLElement[] = [];
   const setTweenNodes = (api: EmblaCarouselType): void => {

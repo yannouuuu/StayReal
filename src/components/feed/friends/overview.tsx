@@ -1,5 +1,5 @@
 import { Component, createEffect, createMemo, createSignal, For, type Setter, Show } from "solid-js";
-import type { FeedPost, PostsOverview } from "~/api/requests/feeds/friends";
+import type { Post, PostsOverview } from "~/api/requests/feeds/friends";
 import createEmblaCarousel from 'embla-carousel-solid'
 import MdiDotsVertical from '~icons/mdi/dots-vertical';
 import MdiRepost from '~icons/mdi/repost';
@@ -31,7 +31,7 @@ const FeedFriendsOverview: Component<{
   );
 
   const [activeIndex, setActiveIndex] = createSignal(props.overview.posts.length - 1);
-  const activePost = (): FeedPost | undefined => props.overview.posts[activeIndex()];
+  const activePost = (): Post | undefined => props.overview.posts[activeIndex()];
 
   const setActiveNode = (api: EmblaCarouselType): void => {
     setActiveIndex(api.selectedScrollSnap());

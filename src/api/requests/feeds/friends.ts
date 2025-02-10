@@ -4,7 +4,7 @@ import { BEREAL_DEFAULT_HEADERS } from "~/api/constants";
 import type { ApiMedia } from "~/api/types/media";
 import type { CommentPost } from "../content/posts/comment";
 
-export interface FeedPost {
+export interface Post {
   id: string
   momentId: string
   primary: ApiMedia & {
@@ -39,22 +39,22 @@ export interface FeedPost {
   }>
 
   music?: {
-    isrc: string,
-    track: string,
-    artist: string,
-    /** URL */
-    artwork: string,
+    isrc: string
+    track: string
+    artist: string
+    /** URL of the artwork. */
+    artwork: string
     /**
-     * .m4a audio preview URL for Apple Music
+     * .m4a audio preview URL, only for Apple Music.
      */
-    preview: string,
+    preview?: string
     /**
      * URL to open the music on their respective store (Apple Music, Spotify)
      */
-    openUrl: string,
-    visibility: "public",
-    provider: "apple",
-    providerId: string,
+    openUrl: string
+    visibility: "public"
+    provider: "apple" | "spotify"
+    providerId: string
     audioType: "track"
   },
 
@@ -131,7 +131,7 @@ export interface PostsOverview {
   region: string
   contentMappingEnabled: boolean
 
-  posts: Array<FeedPost>
+  posts: Array<Post>
 
   moment?: {
     id: string
@@ -139,8 +139,8 @@ export interface PostsOverview {
   }
 }
 
-export interface FeedsFriends {
-  // null if user has no posts for the on going moment
+export interface GetFeedsFriends {
+  /** `null` if user has no posts for the on going moment. */
   userPosts: PostsOverview | null
   friendsPosts: Array<PostsOverview>
 
@@ -149,7 +149,7 @@ export interface FeedsFriends {
   eventProtoBytes: unknown[]
 }
 
-export const feeds_friends = async (): Promise<FeedsFriends> => {
+export const getFeedsFriends = async (): Promise<GetFeedsFriends> => {
   if (auth.isDemo()) {
     const { DEMO_FEEDS_FRIENDS } = await import("~/api/demo/feeds/friends");
     return DEMO_FEEDS_FRIENDS;
@@ -165,7 +165,7 @@ export const feeds_friends = async (): Promise<FeedsFriends> => {
   // if token expired, refresh it and retry
   if (response.status === 401) {
     await auth.refresh();
-    return feeds_friends();
+    return getFeedsFriends();
   }
 
   return response.json();
