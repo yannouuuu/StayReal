@@ -36,7 +36,17 @@ const routes = [
   },
   {
     path: "/friends",
-    component: lazy(() => import("~/views/friends"))
+    component: lazy(() => import("~/layouts/friends")),
+    children: [
+      {
+        path: "/connections",
+        component: lazy(() => import("~/views/friends/connections"))
+      },
+      {
+        path: "/requests",
+        component: lazy(() => import("~/views/friends/requests"))
+      },
+    ]
   },
   {
     path: "/settings",
