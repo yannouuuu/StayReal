@@ -8,6 +8,11 @@
     <title>StayReal</title>
 
     <style>
+      html {
+        /* Prevents weird behaviors on iOS */
+        -webkit-touch-callout: none;
+      }
+
       /* https://stackoverflow.com/a/60516252 */
       :root {
         touch-action: pan-x pan-y;
@@ -26,6 +31,16 @@
         border: 0;
       }
     </style>
+
+    <script>
+      // Prevents right-click context menu on desktop
+      // and long-press context menu on mobile.
+      window.oncontextmenu = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+      };
+    </script>
   </head>
 
   <body class="font-sans bg-black text-white select-none overscroll-none">
