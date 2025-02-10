@@ -144,14 +144,11 @@ const FriendsView: Component = () => {
 
         <div class="px-4 mb-6 cursor-pointer focus:scale-[0.98] active:scale-95 transition-transform">
           <div class="relative bg-[#121212] rounded-2xl p-3.5 overflow-hidden">
-            <Show when={me.get()!.profilePicture}>
+            <Show when={!isAndroid && me.get()!.profilePicture}>
               {(profilePicture) => (
                 <div
-                  class="absolute inset-0 opacity-30 bg-cover bg-center scale-120"
-                  classList={{ "blur-xl": !isAndroid }}
-                  style={{
-                    "background-image": `url(${profilePicture().url})`,
-                  }}
+                  class="absolute inset-0 opacity-30 scale-120 blur-xl bg-cover bg-center"
+                  style={{ "background-image": `url(${profilePicture().url})` }}
                 />
               )}
             </Show>
@@ -170,27 +167,17 @@ const FriendsView: Component = () => {
               }}
             >
               <div class="flex items-center gap-4">
-                <Show
-                  when={me.get()!.profilePicture}
-                  fallback={
-                    <div class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center flex-shrink">
-                      <p class="text-white/90">
-                        {me.get()!.username[0]}
-                      </p>
-                    </div>
-                  }
-                >
-                  {(profilePicture) => (
-                    <img
-                      class="w-11 h-11 rounded-full"
-                      src={profilePicture().url}
-                      alt={me.get()!.username}
-                    />
-                  )}
-                </Show>
+                <ProfilePicture
+                  fullName={me.get()!.fullname}
+                  username={me.get()!.username}
+                  media={me.get()!.profilePicture}
+                  size={44}
+                  textSize={16}
+                />
+
                 <div class="flex flex-col gap-0.5">
                   <p class="text-white font-500 text-[15px]">
-                    Invite friends on BeReal.
+                    Invite friends
                   </p>
                   <p class="text-sm text-white/50">
                     bere.al/{me.get()!.username}

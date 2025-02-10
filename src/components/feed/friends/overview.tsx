@@ -16,6 +16,7 @@ import MdiSend from '~icons/mdi/send'
 import me from "~/stores/me";
 import { content_posts_comment } from "~/api/requests/content/posts/comment";
 import feed from "~/stores/feed";
+import ProfilePicture from "~/components/profile-picture";
 
 const FeedFriendsOverview: Component<{
   overview: PostsOverview
@@ -80,19 +81,13 @@ const FeedFriendsOverview: Component<{
   return (
     <div>
       <div class="flex items-center gap-3 px-4 bg-white/6 py-2.5 rounded-t-2xl">
-        <Show when={props.overview.user.profilePicture} fallback={
-          <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-            <p class="text-center font-500">{props.overview.user.username[0]}</p>
-          </div>
-        }>
-          {profilePicture => (
-            <img
-              class="w-9 h-9 rounded-full"
-              src={profilePicture().url}
-              alt={`Profile picture of ${props.overview.user.username}`}
-            />
-          )}
-        </Show>
+        <ProfilePicture
+          username={props.overview.user.username}
+          media={props.overview.user.profilePicture}
+          size={32}
+          textSize={12}
+        />
+
         <div class="flex flex-col gap-.5">
           <p class="font-600 w-fit">
             {props.overview.user.username}
@@ -213,19 +208,12 @@ const FeedFriendsOverview: Component<{
           </For>
 
           <form onSubmit={handlePostComment} class="flex items-center gap-2 mt-2">
-            <Show when={me.get()?.profilePicture} fallback={
-              <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                <p class="text-center font-500">{me.get()?.username[0] ?? "?"}</p>
-              </div>
-            }>
-              {profilePicture => (
-                <img
-                  class="w-6 h-6 rounded-full shrink-0"
-                  src={profilePicture().url}
-                  alt={`Profile picture of ${me.get()!.username}`}
-                />
-              )}
-            </Show>
+            <ProfilePicture
+              username={me.get()!.username}
+              media={me.get()?.profilePicture}
+              size={24}
+              textSize={8}
+            />
             <input
               type="text"
               placeholder="Add a comment..."

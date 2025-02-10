@@ -2,6 +2,7 @@ import { For, onMount, Show, type Component } from "solid-js";
 import MdiChevronLeft from '~icons/mdi/chevron-left'
 import MdiCog from '~icons/mdi/cog'
 import me from "~/stores/me";
+import ProfilePicture from "~/components/profile-picture";
 
 const Chip: Component<{ content: string }> = (props) => (
   <div class="bg-white/15 rounded-full py-1.5 px-2.5">
@@ -31,22 +32,13 @@ const ProfileView: Component = () => {
           {me => (
             <>
               <div class="flex flex-col items-center text-center gap-4">
-                <Show
-                  when={me().profilePicture}
-                  fallback={
-                    <div class="h-42 w-42 rounded-full bg-white/10 flex items-center justify-center flex-shrink">
-                      <p class="text-white/90 text-4xl">{me().username[0]}</p>
-                    </div>
-                  }
-                >
-                  {(profilePicture) => (
-                    <img
-                      class="h-42 w-42 rounded-full"
-                      src={profilePicture().url}
-                      alt={me().username}
-                    />
-                  )}
-                </Show>
+                <ProfilePicture
+                  username={me().username}
+                  media={me().profilePicture}
+                  fullName={me().fullname}
+                  size={168}
+                  textSize={64}
+                />
 
                 <div class="flex flex-col">
                   <h1 class="text-2xl font-700 line-height-none">

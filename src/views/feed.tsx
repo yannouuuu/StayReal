@@ -13,6 +13,7 @@ import { useNavigate } from "@solidjs/router";
 import auth from "~/stores/auth";
 import { patchPersonMeCancelDelete } from "~/api/requests/person/me/cancel-delete";
 import MdiCamera from '~icons/mdi/camera'
+import ProfilePicture from "~/components/profile-picture";
 
 const FeedView: Component = () => {
   const navigate = useNavigate();
@@ -92,22 +93,12 @@ const FeedView: Component = () => {
             </button>
 
             <a href="/profile" aria-label="My profile" class="flex-shrink">
-              <Show
-                when={me.get()?.profilePicture}
-                fallback={
-                  <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink">
-                    <p class="text-white/90">{me.get()?.username[0] || "?"}</p>
-                  </div>
-                }
-              >
-                {(profilePicture) => (
-                  <img
-                    class="w-8 h-8 rounded-full"
-                    src={profilePicture().url}
-                    alt={me.get()?.username}
-                  />
-                )}
-              </Show>
+              <ProfilePicture
+                media={me.get()?.profilePicture}
+                username={me.get()?.username || ""}
+                size={32}
+                textSize={12}
+              />
             </a>
           </div>
         </nav>

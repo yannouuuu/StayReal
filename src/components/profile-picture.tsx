@@ -3,9 +3,10 @@ import type { ApiMedia } from "~/api/types/media";
 
 const ProfilePicture: Component<{
   media: ApiMedia | null | undefined
-  fullName: string | undefined
+  fullName?: string | undefined
   username: string
   size: number
+  textSize?: number
 }> = (props) => {
   const [isUnavailable, setUnavailable] = createSignal(false);
   const name = () => props.fullName || props.username;
@@ -20,10 +21,12 @@ const ProfilePicture: Component<{
       when={!isUnavailable() && props.media}
       fallback={
         <div
-          class="rounded-full bg-white/20 flex items-center justify-center"
+          class="shrink-0 rounded-full bg-white/20 flex items-center justify-center"
           style={style()}
         >
-          <span class="text-[24px] font-500 uppercase leading-[0] translate-y-[2px]">
+          <span class="font-500 uppercase leading-[0] translate-y-[2px]"
+            style={{ "font-size": `${props.textSize ?? 24}px` }}
+          >
             {name()[0]}
           </span>
         </div>
@@ -31,7 +34,7 @@ const ProfilePicture: Component<{
     >
       {(media) => (
         <img
-          class="rounded-full"
+          class="shrink-0 rounded-full"
           src={media().url}
           alt={name()}
           onError={() => setUnavailable(true)}
