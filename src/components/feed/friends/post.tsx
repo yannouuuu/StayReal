@@ -15,46 +15,69 @@ const FeedFriendsPost: Component<{
    */
   postUserId: string
 }> = (props) => {
+  const [useVideo, setVideo] = createSignal<HTMLVideoElement>();
   const [isReversed, setIsReversed] = createSignal(false);
-  const [videoRef, setVideoRef] = createSignal<HTMLVideoElement>();
   const [isFocusing, setIsFocusing] = createSignal(false);
   const [isReacting, setIsReacting] = createSignal(false);
 
   const primaryURL = () => isReversed() ? props.post.secondary.url : props.post.primary.url;
   const secondaryURL = () => isReversed() ? props.post.primary.url : props.post.secondary.url;
 
+  // On mobile, when having pointer down and scrolling
+  // doesn't trigger `pointerup`, but `pointercancel` instead.
+  const unfocusEvents = ["pointerup", "pointercancel", "pointermove"];
+
+  // Timer to wait before finally focusing the image.
   let timer: ReturnType<typeof setTimeout> | undefined;
 
-  // On mobile, when having pointer down and scrolling
-  // doesn't trigger pointerup, but pointercancel instead.
-  // That's why we need to handle both.
-  const upEvents = ["pointerup", "pointercancel", "pointermove"];
+  // Movement delta to determine if the user moved enough to unfocus.
+  let delta = 0;
 
-  const handleVideoUnfocus = () => {
+  // We should only unfocus when the user moves the pointer enough
+  // since subtle movements should not unfocus the image on mobile.
+  const shouldSkipUnfocusAttempt = (event: Event): boolean => {
+    // `pointerup` and `pointercancel` should always unfocus.
+    if (event.type !== "pointermove") return false;
+
+    delta += Math.abs((event as PointerEvent).movementX) + Math.abs((event as PointerEvent).movementY);
+    if (delta < 10) return true;
+    return false;
+  }
+
+  /**
+   * When we unfocus the image, we should show again
+   * the elements around the primary image.
+   *
+   * Concerning BTS videos, we should hide the video
+   * and reset it to the beginning.
+   */
+  const handleUnfocus = (event: Event): void => {
+    if (shouldSkipUnfocusAttempt(event)) return;
+
     if (timer) clearTimeout(timer);
     setIsFocusing(false);
 
-    const video = videoRef();
-    if (video) {
+    const video = useVideo();
+    if (video) { // hide, pause and reset the video
       video.classList.add("hidden");
       video.pause();
       video.currentTime = 0;
     }
 
-    upEvents.forEach(name => document.removeEventListener(name, handleVideoUnfocus));
+    unfocusEvents.forEach(name => document.removeEventListener(name, handleUnfocus));
   };
 
-  const handleImageUnfocus = () => {
-    if (timer) clearTimeout(timer);
-    setIsFocusing(false);
-
-    upEvents.forEach(name => document.removeEventListener(name, handleImageUnfocus));
-  };
-
-  const handleFocus = (event: PointerEvent) => {
+  /**
+   * What happens when the user focuses (long presses) on the image.
+   *
+   * We should wait for a certain amount of time before hiding
+   * the elements around the primary image.
+   *
+   * Concerning BTS videos, we should show the video and play it.
+   */
+  const handleFocus = (event: PointerEvent): void => {
     // We ignore right-clicking.
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    if (timer) clearTimeout(timer);
 
     // If we're currently reacting, clicking on the focused image
     // should remove the reaction bar.
@@ -63,17 +86,15 @@ const FeedFriendsPost: Component<{
       return;
     }
 
-    if (videoRef()) {
-      upEvents.forEach(name => document.addEventListener(name, handleVideoUnfocus));
-    }
-    else {
-      upEvents.forEach(name => document.addEventListener(name, handleImageUnfocus));
-    }
+    if (timer) clearTimeout(timer);
+    delta = 0;
+
+    unfocusEvents.forEach(name => document.addEventListener(name, handleUnfocus));
 
     timer = setTimeout(() => {
       setIsFocusing(true);
 
-      const video = videoRef();
+      const video = useVideo();
       if (video) {
         video.classList.remove("hidden");
         video.play();
@@ -124,14 +145,14 @@ const FeedFriendsPost: Component<{
       />
 
       <Show when={props.post.postType === "bts"}>
-        <video ref={setVideoRef}
+        <video ref={setVideo}
           class="hidden absolute inset-0 rounded-2xl max-h-80vh"
           src={props.post.btsMedia!.url}
           controls={false}
           autoplay={false}
           muted={false}
           playsinline
-          onEnded={handleVideoUnfocus}
+          onEnded={handleUnfocus}
         ></video>
 
         <div class="z-25 absolute top-4 right-4 bg-black/50 px-3.5 py-1 rounded-2xl transition-opacity"
@@ -189,7 +210,8 @@ const FeedFriendsPost: Component<{
       </div>
 
       {/*
-        * Repost feature :
+        * Repost feature
+        * --------------
         * We should show it only when the current user is tagged in the post
         * and the post is not already reposted by the current user.
         */}
