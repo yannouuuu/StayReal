@@ -45,8 +45,11 @@ const Settings: Component = () => {
             open("https://github.com/Vexcited/StayReal/issues");
           }} />
           <Entry title="Request account deletion" icon={<MdiDelete />} onClick={async () => {
-            const confirmation = await confirm("Are you sure you want to delete your account ? You'll be able to revert this action later.", {
+            const confirmation = await confirm("You will be logged out immediately and your account and all your data will be scheduled to be permanently deleted in 15 days.\n\nIf you log in within those 15 days, your account will no longer be deleted.", {
+              title: "So, you want to delete your account?",
               kind: 'warning',
+              cancelLabel: "I changed my mind",
+              okLabel: "Yes, I'm sure"
             });
 
             if (!confirmation) return;
