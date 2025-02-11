@@ -1,4 +1,4 @@
-import { type Component, createSignal, Show } from "solid-js";
+import { type Component, createEffect, createSignal, on, onCleanup, Show } from "solid-js";
 import { content_posts_repost } from "~/api/requests/content/posts/repost";
 import { Post } from "~/api/requests/feeds/friends";
 import PostRealMojis from "~/components/feed/realmojis";
@@ -6,6 +6,7 @@ import feed from "~/stores/feed";
 import me from "~/stores/me";
 import SolarSmileCircleBold from '~icons/solar/smile-circle-bold'
 import ReactionBar from "../ReactionBar";
+import { Gesture } from "@use-gesture/vanilla";
 
 const FeedFriendsPost: Component<{
   post: Post
@@ -16,6 +17,8 @@ const FeedFriendsPost: Component<{
   postUserId: string
 }> = (props) => {
   const [useVideo, setVideo] = createSignal<HTMLVideoElement>();
+  const [useImage, setImage] = createSignal<HTMLImageElement>();
+
   const [isReversed, setIsReversed] = createSignal(false);
   const [isFocusing, setIsFocusing] = createSignal(false);
   const [isReacting, setIsReacting] = createSignal(false);
@@ -102,6 +105,55 @@ const FeedFriendsPost: Component<{
     }, 350);
   };
 
+  createEffect(on(useImage, (image) => {
+    if (!image) return;
+
+
+    let scale = 1;
+    let transformX = 0;
+    let transformY = 0;
+    const update = () =>
+      image.style.transform = `translate(${transformX}px, ${transformY}px) scale(${scale})`;
+
+    const gesture = new Gesture(image, {
+      onDrag: ({ delta: [dx, dy], pinching }) => {
+        if (!pinching) return;
+
+        transformX += dx;
+        transformY += dy;
+        update();
+      },
+      onPinch: ({ first, origin: [ox, oy], movement: [ms], offset: [s], memo }) => {
+        if (first) {
+          const { width, height, x: boundX, y: boundY } = image.getBoundingClientRect();
+          const tx = ox - (boundX + width / 2)
+          const ty = oy - (boundY + height / 2)
+          memo = [transformX, transformY, tx, ty]
+        }
+
+        transformX = memo[0] - (ms - 1) * memo[2];
+        transformY = memo[1] - (ms - 1) * memo[3]
+
+        scale = s;
+        update();
+
+        return memo;
+      },
+      onPinchEnd: () => {
+        scale = 1;
+        transformY = 0;
+        transformX = 0;
+        image.style.transform = "";
+      }
+    }, {
+      eventOptions: { passive: false },
+      drag: { from: () => [transformX, transformY] },
+      pinch: { from: [1, 0], threshold: 0.1 }
+    });
+
+    onCleanup(() => gesture.destroy());
+  }))
+
   const [isReposting, setIsReposting] = createSignal(false);
   const handleRepost = async () => {
     setIsReposting(true);
@@ -137,7 +189,7 @@ const FeedFriendsPost: Component<{
         }}
       />
 
-      <img
+      <img ref={setImage}
         class="rounded-2xl max-h-80vh"
         alt="Primary image"
         src={primaryURL()}

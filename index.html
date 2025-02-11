@@ -40,6 +40,11 @@
         event.stopPropagation();
         return false;
       };
+
+      const handler = (event) => event.preventDefault();
+      document.addEventListener('gesturestart', handler);
+      document.addEventListener('gesturechange', handler);
+      document.addEventListener('gestureend', handler);
     </script>
   </head>
 
