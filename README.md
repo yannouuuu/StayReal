@@ -96,33 +96,69 @@
 
 ## ✨ Features
 
-- [x] Authentication
-  - Accounts with parental control are not supported, if you have one, please open an issue so we can work on it.
+### Authentication
+
+> Note that accounts with parental control are not supported, if you have one, please open an issue so we can work on it.
+
+- [ ] Automatically convert your phone number to international format
+- [x] Send OTP
+- [x] Verify OTP
+- [x] Logout
 - [x] Account creation
-- [ ] My Profile
-  - [x] Informations
-  - [x] Realmojis
-  - [ ] Memories
-  - [ ] Pinned
-- [ ] User Profile
-- [ ] Feed
-  - [x] My posts
-  - [ ] Comments on my posts
-  - [x] Swipper for my posts
-  - [x] Users
-  - [x] Posts
-  - [x] Swipper for multiple posts
-  - [x] Comments
-  - [x] Reactions
-- [x] Post a BeReal
+- [x] Account deletion (with 15 days cooldown)
+- [x] Revert account deletion on login (within 15 days)
+- [x] Keep user logged in (through a refresh token)
+
+### User Profile
+
+- [x] Informations
+- [x] Realmojis
+- [ ] Memories
+- [ ] Pinned
+
+### Others Profile
+
+- [ ] Informations
+- [ ] Pinned
+
+### Upload
+
+- [x] Post a new BeReal
+- [ ] Flip camera
+- [x] Take a photo from A side (primary image), wait for a few seconds, then take a photo from B side (secondary image)
+- [ ] Caption
+- [ ] Location
+- [ ] Retry count
+
+### Feed
+
+- [x] See my posts in small view
+- [ ] See comments on my posts (you can only see count)
+- [ ] See reactions on my posts (you can only see a sample)
 - [x] Comment under a post
-- [x] React to a post with your realmojis
-- [ ] Accept a friend request
-- [ ] Friends recommendations
+- [x] See posts in large view (as a swiper of multiple posts)
+- [x] See comments under a post (you can only see a sample)
+- [x] See reactions on a post (you can only see a sample)
+- [x] React to a post with your Realmojis
+- [x] Open primary/secondary image in your browser (through image URL)
+
+### Relationships
+
+- [x] Search
 - [x] Listing of friends
+- [x] See sent friend requests
+- [x] Unsend a sent friend request
+- [x] See received friend requests
+- [x] Accept a received friend request
+- [x] Reject a received friend request
+- [x] Send a friend request
+- [ ] Unfriend someone
+- [ ] Suggestions (mutuals, contacts, ...)
+
+### Settings
+
 - [ ] Notifications (removed, waiting for a proper solution)
-- [ ] Settings
-  - [ ] Update region for moments
+- [ ] Update region for moments
 
 ### Advanced
 
@@ -191,7 +227,7 @@ If you want to know more about the pipeline used to build the application, you c
 
 ### Publication to stores
 
-Every release, publication to stores, is triggered by [`pnpx tauri-version <bump> -m "chore: release v%s"`](https://github.com/s3xysteak/tauri-version) followed by `git push --follow-tags` so the [workflow](.github/workflows/release.yml) gets triggered by the tag push.
+Every release, publication to stores, is triggered by [`pnpx tauri-version <bump> -m "chore: release v%s"`](https://github.com/s3xysteak/tauri-version) followed by `git push --follow-tags` so the [&nearr;&nbsp;release workflow](.github/workflows/release.yml) gets triggered by the tag push.
 
 ## 🙏 Acknowledgments
 
