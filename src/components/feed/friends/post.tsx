@@ -132,9 +132,10 @@ const FeedFriendsPost: Component<{
         }
 
         transformX = memo[0] - (ms - 1) * memo[2];
-        transformY = memo[1] - (ms - 1) * memo[3]
-
+        transformY = memo[1] - (ms - 1) * memo[3];
         scale = s;
+
+        if (!isFocusing()) setIsFocusing(true);
         update();
 
         return memo;
@@ -144,6 +145,7 @@ const FeedFriendsPost: Component<{
         transformY = 0;
         transformX = 0;
         image.style.transform = "";
+        setIsFocusing(false);
       }
     }, {
       eventOptions: { passive: false },
