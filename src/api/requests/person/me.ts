@@ -197,6 +197,12 @@ export interface DeletePersonMe {
 }
 
 export const deletePersonMe = async (): Promise<DeletePersonMe> => {
+  if (auth.isDemo()) {
+    const { DEMO_PERSON_ME, DEMO_PERSON_ME_DELETION_DATE } = await import("~/api/demo/person/me");
+    DEMO_PERSON_ME.accountDeleteScheduledAt = DEMO_PERSON_ME_DELETION_DATE();
+    return DEMO_PERSON_ME as unknown as DeletePersonMe;
+  }
+
   const response = await fetch("https://mobile-l7.bereal.com/api/person/me", {
     method: "DELETE",
     headers: {

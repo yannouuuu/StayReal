@@ -3,6 +3,12 @@ import { BEREAL_DEFAULT_HEADERS } from "~/api/constants";
 import auth from "~/stores/auth";
 
 export const patchPersonMeCancelDelete = async (): Promise<void> => {
+  if (auth.isDemo()) {
+    const { DEMO_PERSON_ME } = await import("~/api/demo/person/me");
+    delete DEMO_PERSON_ME.accountDeleteScheduledAt;
+    return;
+  }
+
   const response = await fetch("https://mobile-l7.bereal.com/api/person/me/cancel-delete", {
     method: "PATCH",
     headers: {

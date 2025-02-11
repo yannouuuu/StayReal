@@ -27,4 +27,10 @@ export const DEMO_PERSON_ME = {
   type: "USER",
   userFreshness: "returning",
   username: "demo",
-} satisfies PersonMe;
+} as PersonMe;
+
+export const DEMO_PERSON_ME_DELETION_DATE = (): string => {
+  const date = new Date();
+  date.setDate(date.getDate() + 15);
+  return date.toISOString();
+};
