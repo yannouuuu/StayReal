@@ -132,9 +132,9 @@
 
 ### Feed
 
-- [x] See my posts in small view
-- [ ] See comments on my posts (you can only see count)
-- [ ] See reactions on my posts (you can only see a sample)
+- [x] See your posts in small view
+- [x] See comments on your posts (you can only see count)
+- [x] See reactions on your posts (you can only see a sample)
 - [x] Comment under a post
 - [x] See posts in large view (as a swiper of multiple posts)
 - [x] See comments under a post (you can only see a sample)
